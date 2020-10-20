@@ -87,8 +87,8 @@ func show_menu():
 		_main_menu.set_mode_continue();
 	else:
 		_main_menu.set_mode_game_start();
-		left_saber.visible = false;
-		right_saber.visible = false;
+		left_saber.hide();
+		right_saber.hide();
 
 	ui_raycast.visible = true;
 	$MainMenu_OQ_UI2DCanvas.visible = true;
