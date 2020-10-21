@@ -23,7 +23,7 @@ func hide():
 	# This check makes sure that we are not already in the hidden state
 	# (where we translated the light saber to the hilt) to avoid playing it back
 	# again from the fully extended light saber position
-	if (is_extended()):
+	if (is_extended() and _anim.current_animation != "QuickHide"):
 		_anim.play("Hide");
 
 
