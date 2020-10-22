@@ -38,7 +38,7 @@ func _load_playlists():
 	_playlists = vr.load_json_file(path + "Playlists.json");
 	if not _playlists:
 		_playlists = [];
-	
+		
 	var seek_path = bspath + "Playlists/";
 	var dir = Directory.new();
 	var err = dir.open(seek_path);
@@ -53,7 +53,7 @@ func _load_playlists():
 					_playlists+=new_lists;
 			file_name = dir.get_next();
 	
-	_autogen_playlists(bspath+"Songs/","BeatSaber/Songs/");
+	_autogen_playlists(bspath+"Songs/", "BeepSaber/Songs/");
 	
 	if (!_playlists):
 		vr.log_error("No Playlists.json found in " + path + " or " + seek_path);
@@ -103,7 +103,7 @@ func _set_cur_playlist(pl):
 		else:
 			playlist.modulate = Color(1, 1, 1)
 	
-	var Songs = $Playlist/Songs
+	var Songs = $SongsMenu/Songs
 	
 	for song in Songs.get_children():
 		song.queue_free()
@@ -115,7 +115,7 @@ func _set_cur_playlist(pl):
 			to_select = _wire_song_dat(dat,to_select);
 
 func _wire_song_dat(dat, to_select):
-	var Songs = $Playlist/Songs
+	var Songs = $SongsMenu/Songs
 	var newSongButton = SongButton.instance();
 	newSongButton.id = dat;
 	newSongButton.info = _load_song_info(_song_path(dat));
@@ -190,7 +190,7 @@ func _select_song(id):
 
 	$cover.texture = _load_cover(_song_path(id), _map_info._coverImageFilename);
 	
-	var Songs = $Playlist/Songs
+	var Songs = $SongsMenu/Songs
 	for song in Songs.get_children():
 		if song.id == id:
 			song.modulate = Color(1, 0.5, 0.5)
@@ -247,18 +247,17 @@ func _load_map_and_start():
 func _ready():	
 	if OS.get_name() != "Android":
 		bspath = dlpath+"BeepSaber/";
-	_load_playlists()
-	pass
+	vr.log_info("BeepSaber search path is " + bspath);
+
+	_load_playlists();
 
 
 func _on_Play_Button_pressed():
 	_load_map_and_start();
-	pass
 
 
 func _on_Exit_Button_pressed():
 	get_tree().quit()
-	pass;
 
 
 func _on_Restart_Button_pressed():
@@ -267,6 +266,38 @@ func _on_Restart_Button_pressed():
 
 func _on_Continue_Button_pressed():
 	_beepsaber.continue_map();
+
+
+
+const READ_PERMISSION = "android.permission.READ_EXTERNAL_STORAGE"
+
+func is_in_array(arr : Array, val):
+	for e in arr:
+		if (e == val): return true;
+	return false;
+	
+func _check_required_permissions():
+	if (!vr.inVR): return true; # desktop is always allowed
+	
+	var permissions = OS.get_granted_permissions()
+	var read_storage_permission = is_in_array(permissions, READ_PERMISSION)
+	
+	vr.log_info(str(permissions));
+	
+	if !(read_storage_permission):
+		return false;
+
+	return true;
+
+func _check_and_request_permission():
+	vr.log_info("Checking permissions")
+
+	if !(_check_required_permissions()):
+		vr.log_info("Requesting permissions")
+		OS.request_permissions()
+		return false;
+	else:
+		return true;
 
 
 
@@ -312,3 +343,11 @@ func _on_Continue_Button_pressed():
 #		unzip("res://game/data/maps/Songs/"+download_id+"/temp.zip", "res://game/data/maps/Songs/"+download_id)
 #	else:
 #		print("Failed to download song: "+download_id)
+
+
+func _on_LoadPlaylists_Button_pressed():
+	# Note: this call is non-blocking; so a user has to click again after
+	#       granting the permissions; we need to find a solutio for this
+	#       maybe polling after the button press?
+	if (_check_and_request_permission()):
+		_load_playlists();

@@ -1,7 +1,7 @@
 [
   {
-    "Name": "All",
-    "Description": "Test",
+    "Name": "Demo Song",
+    "Description": "Demo",
     "Songs": [
       {"id":"TheFatRat_Timelapse",},
     ]

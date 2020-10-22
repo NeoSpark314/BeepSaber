@@ -145,7 +145,7 @@ mesh = SubResource( 8 )
 material/0 = SubResource( 9 )
 
 [node name="MainMenu_OQ_UI2DCanvas" parent="." instance=ExtResource( 3 )]
-transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 1, 0, 1.5, -1.25494 )
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 1, 0, 1.5, -1 )
 editor_live_update = false
 transparent = false
 
@@ -165,7 +165,7 @@ background_color = Color( 0, 0, 0, 0 )
 transparent = true
 
 [node name="Multiplier_Label" parent="." instance=ExtResource( 2 )]
-transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, -1, 2, -1 )
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, -1, 2, -0.8 )
 text = "Multiplier"
 margin = 0
 billboard = false
@@ -177,7 +177,7 @@ background_color = Color( 0, 0, 0, 0 )
 transparent = true
 
 [node name="Point_Label" parent="." instance=ExtResource( 2 )]
-transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, 1, 2, -1 )
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, 1, 2, -0.8 )
 text = "Score"
 margin = 0
 billboard = false
@@ -187,5 +187,6 @@ font_size_multiplier = 1.0
 font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0, 0, 0, 0 )
 transparent = true
+
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_LeftController/LeftLightSaber" to="." method="_on_LeftLightSaber_area_entered"]
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_RightController/RightLightSaber" to="." method="_on_RightLightSaber_area_entered"]
