@@ -89,11 +89,7 @@ func _set_cur_playlist(pl):
 	var info
 	var to_select = true
 	if pl.has("Songs"):
-		for id in pl["Songs"]: #so existing playlists work the same as before
-			var dat = {"id":id};
-			to_select = _wire_song_dat(dat,to_select);
-	if pl.has("Downloads"): #a new section so we can provide additional data
-		for dat in pl["Downloads"]:
+		for dat in pl["Songs"]:
 			to_select = _wire_song_dat(dat,to_select);
 
 func _wire_song_dat(dat, to_select):
