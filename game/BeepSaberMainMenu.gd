@@ -106,7 +106,11 @@ func _wire_song_dat(dat, to_select):
 	
 func _song_path(dat):
 	if dat.has("source"): #if a source is specified then it's either in the applicable downloads folder or a subfolder
-		return dlpath + dat.source + "/" + dat.id + "/";
+		if dat.source:
+			return bspath +"Songs/" + dat.source + "/" + dat.id + "/";
+		else:
+			#windows can handle // in a path but android can't
+			return bspath +"Songs/" + dat.id + "/";
 	else:
 		return path + "Songs/" + dat.id + "/";
 	
@@ -220,7 +224,7 @@ func _load_map_and_start():
 
 func _ready():	
 	if OS.get_name() != "Android":
-		bspath = dlpath;
+		bspath = dlpath+"BeepSaber/";
 	_load_playlists()
 	pass
 
