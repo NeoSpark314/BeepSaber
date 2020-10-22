@@ -156,13 +156,23 @@ transform = Transform( 8, 0, 0, 0, 8, 0, 0, 0, 1, 0, 3, -3 )
 visible = false
 text = "Score"
 margin = 0
+billboard = false
+depth_test = true
+resize_mode = 0
+font_size_multiplier = 1.0
+font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0, 0, 0, 0 )
 transparent = true
 
 [node name="Multiplier_Label" parent="." instance=ExtResource( 2 )]
 transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, -1, 2, -1 )
-text = "Score"
+text = "Multiplier"
 margin = 0
+billboard = false
+depth_test = true
+resize_mode = 0
+font_size_multiplier = 1.0
+font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0, 0, 0, 0 )
 transparent = true
 
@@ -170,8 +180,12 @@ transparent = true
 transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, 1, 2, -1 )
 text = "Score"
 margin = 0
+billboard = false
+depth_test = true
+resize_mode = 0
+font_size_multiplier = 1.0
+font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0, 0, 0, 0 )
 transparent = true
-
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_LeftController/LeftLightSaber" to="." method="_on_LeftLightSaber_area_entered"]
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_RightController/RightLightSaber" to="." method="_on_RightLightSaber_area_entered"]
