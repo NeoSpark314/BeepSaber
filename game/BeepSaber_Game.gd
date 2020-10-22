@@ -56,6 +56,8 @@ func restart_map():
 	right_saber.show();
 	ui_raycast.visible = false;
 	$EndScore_OQ_UILabel.visible = false;
+	$Multiplier_Label.visible=true;
+	$Point_Label.visible=true;
 
 
 func continue_map():
@@ -89,6 +91,8 @@ func show_menu():
 		_main_menu.set_mode_game_start();
 		left_saber.hide();
 		right_saber.hide();
+		$Multiplier_Label.visible=false;
+		$Point_Label.visible=false;
 
 	ui_raycast.visible = true;
 	$MainMenu_OQ_UI2DCanvas.visible = true;
@@ -99,7 +103,7 @@ func _end_song_display():
 	if (_current_points > _high_score):
 		_high_score = _current_points;
 
-	$EndScore_OQ_UILabel.set_label_text("Concratulations\nYour Score: %d\nHigh Score: %d" %[_current_points, _high_score]);
+	$EndScore_OQ_UILabel.set_label_text("Congratulations\nYour Score: %d\nHigh Score: %d" %[_current_points, _high_score]);
 	$EndScore_OQ_UILabel.visible = true;
 
 
