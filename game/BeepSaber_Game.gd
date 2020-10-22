@@ -67,11 +67,11 @@ func continue_map():
 	ui_raycast.visible = false;
 
 
-func start_map(path, info, map_data):
+func start_map(info, map_data):
 	_current_map = map_data;
 	_current_info = info;
 	var snd_file = File.new()
-	snd_file.open(path + info._songFilename, File.READ)
+	snd_file.open(info._path + info._songFilename, File.READ) #works whether it's a resource or a file
 	var stream = AudioStreamOGGVorbis.new()
 	stream.data = snd_file.get_buffer(snd_file.get_len())
 	snd_file.close()

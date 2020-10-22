@@ -25,6 +25,7 @@ func set_mode_continue():
 
 
 var path = "res://game/data/maps/";
+var dlpath = str(OS.get_system_dir(3))+"/";
 var _playlists
 
 var PlaylistButton = preload("res://game/PlaylistButton.tscn")
@@ -33,9 +34,27 @@ func _load_playlists():
 	var Playlists = $PlaylistMenu/Playlists
 	
 	_playlists = vr.load_json_file(path + "Playlists.json");
-	if (!_playlists):
-		vr.log_error("No Playlists.json found in " + path);
+	var more_playlists = vr.load_json_file(dlpath + "Playlists.json");
+	#this looks in your Download directory on Quest or your <username>/Downloads directory on Windows.
+	#for this to work on Quest in needs the right permissions.
+	#make sure the Read External Storage permission checkbox is checked in your Export settings
+	#also make sure you have the correct Android Build Template installed
+	#However while this was necessary I also still needed to manually allow the app to have the necessary permission.
+	#to give the permission you need to use an adb command, so you can do this with SideQuest easily
+	# adb shell pm grant org.dammertz.vr.godot_oculus_quest_toolkit_demo android.permission.READ_EXTERNAL_STORAGE
+	#obviously you subsitute the appropriate Unique Name for the package if you change it
+	#if you want to write you would need WRITE_EXTERNAL_STORAGE (and to check that box in the export settings)
+	#there ought to be a way to request permission from the user
+	#(actually there is but it wasn't doing anything when I tried it, maybe I had the template wrong then?)
+	
+	
+	if (!_playlists and !more_playlists):
+		vr.log_error("No Playlists.json found in " + path + " or " + dlpath);
 		return false;
+	if (_playlists and more_playlists):
+		_playlists+=more_playlists;
+	elif !_playlists:
+		_playlists = more_playlists;
 	
 	for pl in _playlists:
 		var newPlaylistButton = PlaylistButton.instance()
@@ -66,28 +85,67 @@ func _set_cur_playlist(pl):
 	
 	var info
 	var to_select = true
-	for id in pl["Songs"]:
-		var newSongButton = SongButton.instance();
-		newSongButton.id = id;
-		newSongButton.info = _load_info_id(id);
-		newSongButton.connect("pressed_id", self, "_select_song");
-		Songs.add_child(newSongButton)
-		if newSongButton.info and to_select:
-			_select_song(id)
-			to_select = false
+	if pl.has("Songs"):
+		for id in pl["Songs"]: #so existing playlists work the same as before
+			var dat = {"id":id};
+			to_select = _wire_song_dat(dat,to_select);
+	if pl.has("Downloads"): #a new section so we can provide additional data
+		for dat in pl["Downloads"]:
+			to_select = _wire_song_dat(dat,to_select);
 
-func _load_info_id(id):
-	var info = vr.load_json_file(path + "Songs/" + id + "/info.dat");
-	if (!info):
-		vr.log_error("No info.dat found in " + path + "Songs/" + id);
-		#info = _download_song_id(id)
-		return info;
+func _wire_song_dat(dat, to_select):
+	var Songs = $Playlist/Songs
+	var newSongButton = SongButton.instance();
+	newSongButton.id = dat;
+	newSongButton.info = _load_song_info(_song_path(dat));
+	newSongButton.connect("pressed_id", self, "_select_song");
+	Songs.add_child(newSongButton)
+	if newSongButton.info and to_select:
+		_select_song(dat)
+		to_select = false
+	return to_select;
 	
-	if (info._difficultyBeatmapSets.size() == 0):
+func _song_path(dat):
+	if dat.has("source"): #if a source is specified then it's either in the applicable downloads folder or a subfolder
+		return dlpath + dat.source + "/" + dat.id + "/";
+	else:
+		return path + "Songs/" + dat.id + "/";
+	
+func _load_song_info(load_path):
+	var dir = Directory.new();
+	var map_info = vr.load_json_file(load_path + "Info.dat");
+	if (!map_info):
+		map_info = vr.load_json_file(load_path + "info.dat");
+		#because android is case sensitive and some maps have it lowercase, some not
+		if (!map_info):
+			#vr.log_error("Invalid info.dat found in " + load_path);
+			return false;
+		
+	if (map_info._difficultyBeatmapSets.size() == 0):
 		vr.log_error("No _difficultyBeatmapSets in info.dat");
-		return null;
+		return false;
+	map_info._path=load_path
+	return map_info;
 	
-	return info;
+func _load_cover(cover_path, filename):
+	if not (filename.ends_with(".jpg") or filename.ends_with(".png")):
+		print("wrong format");
+		return;
+	if (cover_path.begins_with("res://")):
+		return load(cover_path+filename)
+	else:
+		var tex = ImageTexture.new();
+		var img = Image.new();
+		#var uncompressed = vr.try_zipdata(cover_path, filename);
+		#if uncompressed: #in case it's in an archive (too slow on Quest though)
+		#	if filename.ends_with(".jpg"):
+		#		img.load_jpg_from_buffer(uncompressed);
+		#	elif filename.ends_with(".png"):
+		#		img.load_png_from_buffer(uncompressed);
+		#else:
+		img.load(cover_path+filename);
+		tex.create_from_image(img); #instead of loading from resources, load form file
+		return tex;	
 
 
 # a loaded beat map will have an info dictionary; this is a global variable here
@@ -100,12 +158,12 @@ var DifficultyButton = preload("res://game/DifficultyButton.tscn")
 
 func _select_song(id):
 	_map_id = id
-	_map_info = _load_info_id(id)
+	_map_info = _load_song_info(_song_path(id));
 	$SongInfo_Label.text = """Song Author: %s
 	Song Title: %s
 	Beatmap Author: %s""" %[_map_info._songAuthorName, _map_info._songName, _map_info._levelAuthorName]
 
-	$cover.texture = load(path + "Songs/" + id + "/" + _map_info._coverImageFilename);
+	$cover.texture = _load_cover(_song_path(id), _map_info._coverImageFilename);
 	
 	var Songs = $Playlist/Songs
 	for song in Songs.get_children():
@@ -148,7 +206,7 @@ func _load_map_and_start():
 		return false;
 		
 	var map_info = set0._difficultyBeatmaps[_map_difficulty];
-	var map_filename = path + "Songs/" + _map_id + "/" + map_info._beatmapFilename;
+	var map_filename = _map_info._path + map_info._beatmapFilename;
 	var map_data = vr.load_json_file(map_filename);
 	
 	if (map_data == null):
@@ -156,7 +214,7 @@ func _load_map_and_start():
 	
 	#print(info);
 
-	_beepsaber.start_map(path + "Songs/" + _map_id + "/", _map_info, map_data);
+	_beepsaber.start_map(_map_info, map_data);
 	
 	return true;
 
