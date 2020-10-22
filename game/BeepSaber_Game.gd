@@ -99,7 +99,7 @@ func _end_song_display():
 	if (_current_points > _high_score):
 		_high_score = _current_points;
 
-	$EndScore_OQ_UILabel.set_label_text("Concratulations\nYour Score: %d\nHigh Score: %d" %[_current_points, _high_score]);
+	$EndScore_OQ_UILabel.set_label_text("Congratulations\nYour Score: %d\nHigh Score: %d" %[_current_points, _high_score]);
 	$EndScore_OQ_UILabel.visible = true;
 
 
