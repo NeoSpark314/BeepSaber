@@ -26,6 +26,8 @@ func set_mode_continue():
 
 var path = "res://game/data/maps/";
 var dlpath = str(OS.get_system_dir(3))+"/";
+var bspath = "/sdcard/BeepSaber/";
+
 var _playlists
 
 var PlaylistButton = preload("res://game/PlaylistButton.tscn")
@@ -34,27 +36,27 @@ func _load_playlists():
 	var Playlists = $PlaylistMenu/Playlists
 	
 	_playlists = vr.load_json_file(path + "Playlists.json");
-	var more_playlists = vr.load_json_file(dlpath + "Playlists.json");
-	#this looks in your Download directory on Quest or your <username>/Downloads directory on Windows.
-	#for this to work on Quest in needs the right permissions.
-	#make sure the Read External Storage permission checkbox is checked in your Export settings
-	#also make sure you have the correct Android Build Template installed
-	#However while this was necessary I also still needed to manually allow the app to have the necessary permission.
-	#to give the permission you need to use an adb command, so you can do this with SideQuest easily
-	# adb shell pm grant org.dammertz.vr.godot_oculus_quest_toolkit_demo android.permission.READ_EXTERNAL_STORAGE
-	#obviously you subsitute the appropriate Unique Name for the package if you change it
-	#if you want to write you would need WRITE_EXTERNAL_STORAGE (and to check that box in the export settings)
-	#there ought to be a way to request permission from the user
-	#(actually there is but it wasn't doing anything when I tried it, maybe I had the template wrong then?)
+	if not _playlists:
+		_playlists = [];
+	
+	var seek_path = bspath + "Playlists/";
+	var dir = Directory.new();
+	var err = dir.open(seek_path);
+	if err == OK:
+		dir.list_dir_begin(true,true);
+		var file_name = dir.get_next()
+		while file_name != "":
+			if (! dir.current_is_dir() and file_name.ends_with(".json")):
+				var play_file = seek_path+file_name;
+				var new_lists = vr.load_json_file(play_file);
+				if new_lists:
+					_playlists+=new_lists;
+			file_name = dir.get_next();
 	
 	
-	if (!_playlists and !more_playlists):
-		vr.log_error("No Playlists.json found in " + path + " or " + dlpath);
+	if (!_playlists):
+		vr.log_error("No Playlists.json found in " + path + " or " + seek_path);
 		return false;
-	if (_playlists and more_playlists):
-		_playlists+=more_playlists;
-	elif !_playlists:
-		_playlists = more_playlists;
 	
 	for pl in _playlists:
 		var newPlaylistButton = PlaylistButton.instance()
@@ -66,6 +68,7 @@ func _load_playlists():
 		_set_cur_playlist([])
 	else:
 		_set_cur_playlist(_playlists[0])
+		
 
 var SongButton = preload("res://game/SongButton.tscn")
 
@@ -219,7 +222,9 @@ func _load_map_and_start():
 	return true;
 
 
-func _ready():
+func _ready():	
+	if OS.get_name() != "Android":
+		bspath = dlpath;
 	_load_playlists()
 	pass
 
