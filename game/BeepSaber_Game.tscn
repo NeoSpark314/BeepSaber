@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://game/BeepCube_Cut.material" type="Material" id=1]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DLabel.tscn" type="PackedScene" id=2]
@@ -14,6 +14,7 @@
 [ext_resource path="res://OQ_Toolkit/OQ_ARVRController/Feature_UIRayCast.tscn" type="PackedScene" id=12]
 [ext_resource path="res://game/background.tres" type="Texture" id=13]
 [ext_resource path="res://game/background_sky.tres" type="PanoramaSky" id=14]
+[ext_resource path="res://OQ_Toolkit/OQ_ARVROrigin/Feature_MixedRealityCapture.tscn" type="PackedScene" id=15]
 
 [sub_resource type="Environment" id=1]
 background_mode = 3
@@ -83,6 +84,8 @@ adjust_left_right = false
 ui_raycast_visible_button = -1
 
 [node name="Feature_VRSimulator" parent="OQ_ARVROrigin" instance=ExtResource( 6 )]
+
+[node name="Feature_MixedRealityCapture" parent="OQ_ARVROrigin" instance=ExtResource( 15 )]
 
 [node name="Track" type="Spatial" parent="."]
 
