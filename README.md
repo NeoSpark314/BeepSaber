@@ -15,6 +15,9 @@ This game uses godot 3.2. So far this implementation allows to partially load an
 
 There is one demo song included that is part of the deployed package.
 
+You can play custom songs by upacking them and putting them into folders `BeepSaber/Songs/songNameXYZ` on your Oculus Quest.
+For custom songs on desktop put them into your `Downloads/BeepSaber/Songs/songNameXYZ`.
+
 # Credits
 The included Music Track is Time Lapse by TheFatRat (https://www.youtube.com/watch?v=3fxq7kqyWO8)
 

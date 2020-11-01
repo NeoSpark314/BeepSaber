@@ -1,4 +1,4 @@
-extends TextureButton
+extends Button
 
 
 var id
@@ -7,7 +7,7 @@ var Name
 signal pressed_id(id)
 
 func _ready():
-	$Label.text = Name
+	text = Name
 
 
 func _on_DifficultyButton_pressed():

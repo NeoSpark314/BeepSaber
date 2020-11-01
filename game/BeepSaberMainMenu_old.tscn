@@ -4,8 +4,6 @@
 [ext_resource path="res://game/data/beepsaber_logo.png" type="Texture" id=2]
 [ext_resource path="res://game/BeepSaberMainMenu.gd" type="Script" id=3]
 
-
-
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 8
@@ -81,6 +79,7 @@ text = "Song Author: TheFatRat
 Song Title: Time Lapse
 Beatmap Author: Timeweaver"
 valign = 1
+
 [connection signal="pressed" from="Play_Button" to="." method="_on_Play_Button_pressed"]
 [connection signal="pressed" from="Continue_Button" to="." method="_on_Continue_Button_pressed"]
 [connection signal="pressed" from="Restart_Button" to="." method="_on_Restart_Button_pressed"]
