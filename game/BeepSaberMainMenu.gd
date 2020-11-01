@@ -14,12 +14,14 @@ func initialize(beepsaber_game):
 
 func set_mode_game_start():
 	$Play_Button.visible = true;
+	$Stop_Button.visible = false;
 	$Continue_Button.visible = false;
 	$Restart_Button.visible = false;
 
 
 func set_mode_continue():
 	$Play_Button.visible = false;
+	$Stop_Button.visible = true;
 	$Continue_Button.visible = true;
 	$Restart_Button.visible = true;
 
@@ -38,7 +40,7 @@ func _load_playlists():
 	_playlists = vr.load_json_file(path + "Playlists.json");
 	if not _playlists:
 		_playlists = [];
-		
+	
 	var seek_path = bspath + "Playlists/";
 	var dir = Directory.new();
 	var err = dir.open(seek_path);
@@ -267,6 +269,8 @@ func _on_Restart_Button_pressed():
 func _on_Continue_Button_pressed():
 	_beepsaber.continue_map();
 
+func _on_Stop_Button_pressed():
+	set_mode_game_start();
 
 
 const READ_PERMISSION = "android.permission.READ_EXTERNAL_STORAGE"

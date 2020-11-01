@@ -72,6 +72,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Stop_Button" type="Button" parent="."]
+margin_left = 987.727
+margin_top = 462.354
+margin_right = 1099.73
+margin_bottom = 510.354
+rect_pivot_offset = Vector2( -937.032, -176 )
+text = "Stop"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="beepsaber_logo" type="Sprite" parent="."]
 position = Vector2( 1280, 512 )
 scale = Vector2( 0.84375, 0.84375 )
@@ -182,5 +193,6 @@ __meta__ = {
 [connection signal="pressed" from="Continue_Button" to="." method="_on_Continue_Button_pressed"]
 [connection signal="pressed" from="Restart_Button" to="." method="_on_Restart_Button_pressed"]
 [connection signal="pressed" from="Exit_Button" to="." method="_on_Exit_Button_pressed"]
+[connection signal="pressed" from="Stop_Button" to="." method="_on_Stop_Button_pressed"]
 [connection signal="request_completed" from="HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]
 [connection signal="pressed" from="LoadPlaylists_Button" to="." method="_on_LoadPlaylists_Button_pressed"]
