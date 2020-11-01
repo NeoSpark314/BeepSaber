@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://game/BeepCube_Cut.material" type="Material" id=1]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DLabel.tscn" type="PackedScene" id=2]
@@ -14,6 +14,7 @@
 [ext_resource path="res://OQ_Toolkit/OQ_ARVRController/Feature_UIRayCast.tscn" type="PackedScene" id=12]
 [ext_resource path="res://game/background.tres" type="Texture" id=13]
 [ext_resource path="res://game/background_sky.tres" type="PanoramaSky" id=14]
+[ext_resource path="res://OQ_Toolkit/OQ_ARVROrigin/Feature_MixedRealityCapture.tscn" type="PackedScene" id=15]
 
 [sub_resource type="Environment" id=1]
 background_mode = 3
@@ -84,6 +85,8 @@ ui_raycast_visible_button = -1
 
 [node name="Feature_VRSimulator" parent="OQ_ARVROrigin" instance=ExtResource( 6 )]
 
+[node name="Feature_MixedRealityCapture" parent="OQ_ARVROrigin" instance=ExtResource( 15 )]
+
 [node name="Track" type="Spatial" parent="."]
 
 [node name="StandingGround" type="StaticBody" parent="."]
@@ -145,7 +148,7 @@ mesh = SubResource( 8 )
 material/0 = SubResource( 9 )
 
 [node name="MainMenu_OQ_UI2DCanvas" parent="." instance=ExtResource( 3 )]
-transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 1, 0, 1.5, -1.25494 )
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 1, 0, 1.5, -1 )
 editor_live_update = false
 transparent = false
 
@@ -156,20 +159,35 @@ transform = Transform( 8, 0, 0, 0, 8, 0, 0, 0, 1, 0, 3, -3 )
 visible = false
 text = "Score"
 margin = 0
+billboard = false
+depth_test = true
+resize_mode = 0
+font_size_multiplier = 1.0
+font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0, 0, 0, 0 )
 transparent = true
 
 [node name="Multiplier_Label" parent="." instance=ExtResource( 2 )]
-transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, -1, 2, -1 )
-text = "Score"
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, -1, 2, -0.8 )
+text = "Multiplier"
 margin = 0
+billboard = false
+depth_test = true
+resize_mode = 0
+font_size_multiplier = 1.0
+font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0, 0, 0, 0 )
 transparent = true
 
 [node name="Point_Label" parent="." instance=ExtResource( 2 )]
-transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, 1, 2, -1 )
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, 1, 2, -0.8 )
 text = "Score"
 margin = 0
+billboard = false
+depth_test = true
+resize_mode = 0
+font_size_multiplier = 1.0
+font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0, 0, 0, 0 )
 transparent = true
 

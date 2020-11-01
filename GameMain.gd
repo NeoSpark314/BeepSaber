@@ -5,8 +5,10 @@
 extends Node
 
 func _ready():
-	print(ARVRServer.get_interfaces())
 	vr.initialize();
+	
+	#vr.set_display_refresh_rate(60);
+	#Engine.target_fps = 60;
 	
 	vr.scene_switch_root = self;
 	

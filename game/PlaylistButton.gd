@@ -1,11 +1,11 @@
-extends TextureButton
+extends Button
 
 var pl
 
 signal pressed_pl(pl)
 
 func _ready():
-	$Label.text = pl.Name
+	text = pl.Name
 
 
 func _on_PlaylistButton_pressed():
