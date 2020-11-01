@@ -132,7 +132,7 @@ func _spawn_cube(note, current_beat):
 
 	var distance = note._time - current_beat;
 
-	cube.global_transform.origin = Vector3(line, layer + .25, -distance * beat_distance);
+	cube.global_transform.origin = Vector3(line, layer, -distance * beat_distance);
 
 	cube._cube_mesh_orientation.rotation.z = rotation_z;
 	if note._cutDirection==8:
