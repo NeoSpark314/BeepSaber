@@ -101,12 +101,14 @@ func _end_song_display():
 
 	$EndScore_OQ_UILabel.set_label_text("Concratulations\nYour Score: %d\nHigh Score: %d" %[_current_points, _high_score]);
 	$EndScore_OQ_UILabel.visible = true;
+	song_player.stop();
+	show_menu();
 
 
 const beat_distance = 4.0;
 const beats_ahead = 4.0;
 const CUBE_DISTANCE = 0.5;
-const CUBE_ROTATIONS = [180, 0, 270, 90, -135, 135, -45, 45, 202]; # The last 202 should be the dot cube
+const CUBE_ROTATIONS = [180, 0, 270, 90, -135, 135, -45, 45, 0];
 
 func _spawn_cube(note, current_beat):
 	var cube = null;
@@ -122,13 +124,15 @@ func _spawn_cube(note, current_beat):
 	var line = -(CUBE_DISTANCE * 3.0 / 2.0) + note._lineIndex * CUBE_DISTANCE;
 	var layer = CUBE_DISTANCE + note._lineLayer * CUBE_DISTANCE;
 
-	var rotation = deg2rad(CUBE_ROTATIONS[note._cutDirection]);
+	var rotation_z = deg2rad(CUBE_ROTATIONS[note._cutDirection]);
 
 	var distance = note._time - current_beat;
 
-	cube.global_transform.origin = Vector3(line, layer, -distance * beat_distance);
+	cube.global_transform.origin = Vector3(line, layer + .25, -distance * beat_distance);
 
-	cube._cube_mesh_orientation.rotation.z = rotation;
+	cube._cube_mesh_orientation.rotation.z = rotation_z;
+	if note._cutDirection==8:
+		cube._cube_mesh_orientation.rotation.y = deg2rad(180);
 
 	cube._note = note;
 
