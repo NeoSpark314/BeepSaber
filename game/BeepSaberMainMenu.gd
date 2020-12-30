@@ -61,6 +61,11 @@ func _load_playlists():
 		vr.log_error("No Playlists.json found in " + path + " or " + seek_path);
 		return false;
 	
+	# clear previous playlists
+	for child in Playlists.get_children():
+		Playlists.remove_child(child)
+		
+	# add discovered playlists
 	for pl in _playlists:
 		var newPlaylistButton = PlaylistButton.instance()
 		newPlaylistButton.pl = pl
