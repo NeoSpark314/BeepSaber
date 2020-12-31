@@ -11,6 +11,7 @@ onready var right_saber := $OQ_ARVROrigin/OQ_RightController/RightLightSaber;
 onready var ui_raycast := $OQ_ARVROrigin/OQ_RightController/Feature_UIRayCast;
 
 onready var cube_template = preload("res://game/BeepCube.tscn").instance();
+onready var wall_template = preload("res://game/Wall/Wall.tscn").instance();
 
 var cube_left = null
 var cube_right = null
@@ -27,6 +28,7 @@ var _current_map = null;
 var _current_note_speed = 1.0;
 var _current_info = null;
 var _current_note = 0;
+var _current_obstacle = 0;
 
 
 var _high_score = 0;
@@ -39,6 +41,7 @@ var _current_combo = 0;
 func restart_map():
 	song_player.play(0.0);
 	_current_note = 0;
+	_current_obstacle = 0;
 	_current_points = 0;
 	_current_multiplier = 1;
 	_current_combo = 0;
@@ -140,6 +143,43 @@ func _spawn_cube(note, current_beat):
 
 	cube._note = note;
 
+# constants used to interpret the '_type' field in map obstacles
+const WALL_TYPE_FULL_HEIGHT = 0;
+const WALL_TYPE_CROUTCH = 1;
+
+func _spawn_wall(obstacle, current_beat):
+	# instantiate new wall from template
+	var wall = wall_template.duplicate();
+	wall.duplicate_create();# gives it its own unique mesh and collision shape
+	
+	var lineLayer = 0;
+	
+	if (obstacle._type == WALL_TYPE_FULL_HEIGHT):
+		wall.height = CUBE_DISTANCE * 3;
+		lineLayer = 0;
+	elif (obstacle._type == WALL_TYPE_CROUTCH):
+		wall.height = CUBE_DISTANCE * 1;
+		lineLayer = 2;
+	else:
+		return;
+
+	track.add_child(wall);
+
+	var line = -(CUBE_DISTANCE * 3.0 / 2.0) + obstacle._lineIndex * CUBE_DISTANCE;
+	var layer = CUBE_DISTANCE + lineLayer * CUBE_DISTANCE;
+	
+	var distance = obstacle._time - current_beat;
+
+	wall.global_transform.origin = Vector3(line, layer, -distance * beat_distance);
+	wall.depth = beat_distance * obstacle._duration;
+	wall.width = CUBE_DISTANCE * obstacle._width;
+	
+	# walls have slightly difference origins offsets than cubes do, so we must
+	# translate them by half a cube distance to correct for the misalignment.
+	wall.translate(Vector3(-CUBE_DISTANCE/2.0,-CUBE_DISTANCE/2.0,0.0));
+
+	wall._obstacle = obstacle;
+
 
 func _process_map(dt):
 	if (_current_map == null):
@@ -149,11 +189,17 @@ func _process_map(dt):
 	
 	var current_beat = current_time * _current_info._beatsPerMinute / 60.0;
 
+	# spawn notes
 	var n =_current_map._notes;
 	while (_current_note < n.size() && n[_current_note]._time <= current_beat+beats_ahead):
 		_spawn_cube(n[_current_note], current_beat);
 		_current_note += 1;
 
+	# spawn obstacles (walls)
+	var o = _current_map._obstacles;
+	while (_current_obstacle < o.size() && o[_current_obstacle]._time <= current_beat+beats_ahead):
+		_spawn_wall(o[_current_obstacle], current_beat);
+		_current_obstacle += 1;
 
 	var speed = Vector3(0.0, 0.0, beat_distance * _current_info._beatsPerMinute / 60.0) * dt;
 
