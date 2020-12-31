@@ -246,8 +246,8 @@ func _process_map(dt):
 		return;
 
 	var current_time = song_player.get_playback_position();
-	
-	var current_beat = current_time * _current_info._beatsPerMinute / 60.0;
+	var bps = _current_info._beatsPerMinute / 60.0;
+	var current_beat = current_time * bps;
 
 	# spawn notes
 	var n =_current_map._notes;
@@ -261,10 +261,10 @@ func _process_map(dt):
 		_spawn_wall(o[_current_obstacle], current_beat);
 		_current_obstacle += 1;
 
-	var speed = Vector3(0.0, 0.0, beat_distance * _current_info._beatsPerMinute / 60.0) * dt;
+	var speed = Vector3(0.0, 0.0, beat_distance * bps);
 
 	for c in track.get_children():
-		c.translate(speed);
+		c.translate(speed * dt);
 
 		var depth = CUBE_DISTANCE
 		if c is Wall:
