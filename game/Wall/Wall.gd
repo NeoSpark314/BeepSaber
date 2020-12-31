@@ -12,11 +12,16 @@ export var height = 1 setget _set_height
 # depth of wall in meters (can be negative)
 export var depth = 1 setget _set_depth
 
+onready var _anim = $WallMeshOrientation/AnimationPlayer
 onready var _mesh_orientation = $WallMeshOrientation
 onready var _mesh = $WallMeshOrientation/WallMesh
 onready var _coll = $WallMeshOrientation/WallArea/CollisionShape
 
 var wall_material = preload("res://game/Wall/wall.material");
+
+func _ready():
+	# play the spawn animation when wall enters the scene
+	_anim.play("Spawn")
 
 func _set_width(value):
 	width = value
