@@ -25,7 +25,7 @@ glow_strength = 1.5
 glow_blend_mode = 0
 
 [sub_resource type="SphereShape" id=2]
-radius = 0.15
+radius = 0.07
 
 [sub_resource type="BoxShape" id=3]
 
@@ -201,5 +201,7 @@ font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0, 0, 0, 0 )
 transparent = true
 
+[connection signal="area_entered" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_entered"]
+[connection signal="area_exited" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_exited"]
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_LeftController/LeftLightSaber" to="." method="_on_LeftLightSaber_area_entered"]
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_RightController/RightLightSaber" to="." method="_on_RightLightSaber_area_entered"]

@@ -37,9 +37,12 @@ var _current_points = 0;
 var _current_multiplier = 1;
 var _current_combo = 0;
 
+var _in_wall = false;
 
 func restart_map():
 	song_player.play(0.0);
+	song_player.volume_db = 0.0;
+	_in_wall = false;
 	_current_note = 0;
 	_current_obstacle = 0;
 	_current_points = 0;
@@ -244,7 +247,11 @@ func _check_and_update_saber(controller : ARVRController, saber: Area):
 	# this check is necessary to not overwrite a rumble set from somewhere else
 	# (in this case it can come from cutting cubes)
 	if (!controller.is_simple_rumbling()): 
-		if (saber.get_overlapping_areas().size() > 0 || saber.get_overlapping_bodies().size() > 0):
+		if (_in_wall):
+			# weak rumble on both controllers when player is inside wall
+			controller.set_rumble(0.1);
+		elif (saber.get_overlapping_areas().size() > 0 || saber.get_overlapping_bodies().size() > 0):
+			# strong rumble when saber is cutting into wall or other saber
 			controller.set_rumble(0.5);
 		else:
 			controller.set_rumble(0.0);
@@ -476,6 +483,13 @@ func _cut_cube(controller : ARVRController, saber : Area, cube : Spatial):
 	# delete the original cube; we have two new halfs created above
 	cube.queue_free();
 
+# quiets song when player enters into a wall
+func _quiet_song():
+	song_player.volume_db = -15.0;
+
+# restores song volume when player leaves wall
+func _louden_song():
+	song_player.volume_db = 0.0;
 
 func _on_LeftLightSaber_area_entered(area : Area):
 	if (area.is_in_group("beepcube")):
@@ -485,3 +499,17 @@ func _on_LeftLightSaber_area_entered(area : Area):
 func _on_RightLightSaber_area_entered(area : Area):
 	if (area.is_in_group("beepcube")):
 		_cut_cube(right_controller, right_saber, area.get_parent().get_parent());
+
+func _on_PlayerHead_area_entered(area):
+	if area.is_in_group("wall"):
+		if not _in_wall:
+			_quiet_song();
+		
+		_in_wall = true;
+
+func _on_PlayerHead_area_exited(area):
+	if area.is_in_group("wall"):
+		if _in_wall:
+			_louden_song();
+		
+		_in_wall = false;
