@@ -206,8 +206,13 @@ func _process_map(dt):
 	for c in track.get_children():
 		c.translate(speed);
 
-		# remove cubes that go to far behind
-		if (c.global_transform.origin.z > 2.0):
+		var depth = CUBE_DISTANCE
+		if c is Wall:
+			# compute wall's depth based on duration
+			depth = beat_distance * c._obstacle._duration
+
+		# remove children that go to far
+		if ((c.global_transform.origin.z - depth) > 2.0):
 			c.queue_free();
 			_reset_combo();
 

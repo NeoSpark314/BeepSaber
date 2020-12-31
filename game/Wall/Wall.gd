@@ -1,5 +1,6 @@
 tool
 extends Spatial
+class_name Wall
 
 # copy of 'obstacle' struct from map data
 var _obstacle;
