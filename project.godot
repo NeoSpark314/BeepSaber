@@ -124,6 +124,14 @@ ui_end={
  ]
 }
 
+[layer_names]
+
+3d_physics/layer_1="Obstacles"
+3d_physics/layer_2="Notes"
+3d_physics/layer_3="Player"
+3d_physics/layer_4="Floor"
+3d_physics/layer_5="Saber"
+
 [physics]
 
 common/physics_fps=72

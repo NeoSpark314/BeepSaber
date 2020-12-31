@@ -20,6 +20,7 @@ mesh = SubResource( 1 )
 material/0 = ExtResource( 1 )
 
 [node name="WallArea" type="Area" parent="WallMeshOrientation"]
+collision_mask = 20
 
 [node name="CollisionShape" type="CollisionShape" parent="WallMeshOrientation/WallArea"]
 shape = SubResource( 2 )
