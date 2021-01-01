@@ -154,7 +154,7 @@ func _spawn_cube(note, current_beat):
 
 # constants used to interpret the '_type' field in map obstacles
 const WALL_TYPE_FULL_HEIGHT = 0;
-const WALL_TYPE_CROUTCH = 1;
+const WALL_TYPE_CROUCH = 1;
 
 func _spawn_wall(obstacle, current_beat):
 	# instantiate new wall from template
@@ -166,7 +166,7 @@ func _spawn_wall(obstacle, current_beat):
 	if (obstacle._type == WALL_TYPE_FULL_HEIGHT):
 		wall.height = WALL_HEIGHT;
 		height = 0;
-	elif (obstacle._type == WALL_TYPE_CROUTCH):
+	elif (obstacle._type == WALL_TYPE_CROUCH):
 		wall.height = WALL_HEIGHT / 2.0;
 		height = WALL_HEIGHT / 2.0;
 	else:
