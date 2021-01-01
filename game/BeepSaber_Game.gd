@@ -23,6 +23,9 @@ onready var song_player := $SongPlayer;
 const COLOR_LEFT := Color(1.0, 0.1, 0.1, 1.0);
 const COLOR_RIGHT := Color(0.1, 0.1, 1.0, 1.0);
 
+const CUBE_HEIGHT_OFFSET = 0.4
+const WALL_HEIGHT = 3.0
+
 
 var _current_map = null;
 var _current_note_speed = 1.0;
@@ -138,7 +141,10 @@ func _spawn_cube(note, current_beat):
 
 	var distance = note._time - current_beat;
 
-	cube.global_transform.origin = Vector3(line, layer, -distance * beat_distance);
+	cube.transform.origin = Vector3(
+		line,
+		CUBE_HEIGHT_OFFSET + layer,
+		-distance * beat_distance);
 
 	cube._cube_mesh_orientation.rotation.z = rotation_z;
 	if note._cutDirection==8:
@@ -155,25 +161,24 @@ func _spawn_wall(obstacle, current_beat):
 	var wall = wall_template.duplicate();
 	wall.duplicate_create();# gives it its own unique mesh and collision shape
 	
-	var lineLayer = 0;
+	var height = 0;
 	
 	if (obstacle._type == WALL_TYPE_FULL_HEIGHT):
-		wall.height = CUBE_DISTANCE * 3;
-		lineLayer = 0;
+		wall.height = WALL_HEIGHT;
+		height = 0;
 	elif (obstacle._type == WALL_TYPE_CROUTCH):
-		wall.height = CUBE_DISTANCE * 1;
-		lineLayer = 2;
+		wall.height = WALL_HEIGHT / 2.0;
+		height = WALL_HEIGHT / 2.0;
 	else:
 		return;
 
 	track.add_child(wall);
 
 	var line = -(CUBE_DISTANCE * 3.0 / 2.0) + obstacle._lineIndex * CUBE_DISTANCE;
-	var layer = CUBE_DISTANCE + lineLayer * CUBE_DISTANCE;
 	
 	var distance = obstacle._time - current_beat;
 
-	wall.global_transform.origin = Vector3(line, layer, -distance * beat_distance);
+	wall.transform.origin = Vector3(line,height,-distance * beat_distance);
 	wall.depth = beat_distance * obstacle._duration;
 	wall.width = CUBE_DISTANCE * obstacle._width;
 	
