@@ -43,6 +43,11 @@ _global_script_classes=[ {
 "class": "OQClass_ToolGrabLinearController",
 "language": "GDScript",
 "path": "res://OQ_Toolkit/OQ_Classes/OQClass_ToolGrabLinearController.gd"
+}, {
+"base": "Spatial",
+"class": "Wall",
+"language": "GDScript",
+"path": "res://game/Wall/Wall.gd"
 } ]
 _global_script_class_icons={
 "Feature_RigidBodyGrab": "",
@@ -51,7 +56,8 @@ _global_script_class_icons={
 "OQClass_GrabbableToolPart": "",
 "OQClass_Tool": "",
 "OQClass_ToolGrabController": "",
-"OQClass_ToolGrabLinearController": ""
+"OQClass_ToolGrabLinearController": "",
+"Wall": ""
 }
 
 [application]
@@ -123,6 +129,14 @@ ui_end={
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777230,"unicode":0,"echo":false,"script":null)
  ]
 }
+
+[layer_names]
+
+3d_physics/layer_1="Obstacles"
+3d_physics/layer_2="Notes"
+3d_physics/layer_3="Player"
+3d_physics/layer_4="Floor"
+3d_physics/layer_5="Saber"
 
 [physics]
 

@@ -11,6 +11,7 @@ onready var right_saber := $OQ_ARVROrigin/OQ_RightController/RightLightSaber;
 onready var ui_raycast := $OQ_ARVROrigin/OQ_RightController/Feature_UIRayCast;
 
 onready var cube_template = preload("res://game/BeepCube.tscn").instance();
+onready var wall_template = preload("res://game/Wall/Wall.tscn").instance();
 
 var cube_left = null
 var cube_right = null
@@ -22,11 +23,15 @@ onready var song_player := $SongPlayer;
 const COLOR_LEFT := Color(1.0, 0.1, 0.1, 1.0);
 const COLOR_RIGHT := Color(0.1, 0.1, 1.0, 1.0);
 
+const CUBE_HEIGHT_OFFSET = 0.4
+const WALL_HEIGHT = 3.0
+
 
 var _current_map = null;
 var _current_note_speed = 1.0;
 var _current_info = null;
 var _current_note = 0;
+var _current_obstacle = 0;
 
 
 var _high_score = 0;
@@ -35,10 +40,14 @@ var _current_points = 0;
 var _current_multiplier = 1;
 var _current_combo = 0;
 
+var _in_wall = false;
 
 func restart_map():
 	song_player.play(0.0);
+	song_player.volume_db = 0.0;
+	_in_wall = false;
 	_current_note = 0;
+	_current_obstacle = 0;
 	_current_points = 0;
 	_current_multiplier = 1;
 	_current_combo = 0;
@@ -132,13 +141,52 @@ func _spawn_cube(note, current_beat):
 
 	var distance = note._time - current_beat;
 
-	cube.global_transform.origin = Vector3(line, layer, -distance * beat_distance);
+	cube.transform.origin = Vector3(
+		line,
+		CUBE_HEIGHT_OFFSET + layer,
+		-distance * beat_distance);
 
 	cube._cube_mesh_orientation.rotation.z = rotation_z;
 	if note._cutDirection==8:
 		cube._cube_mesh_orientation.rotation.y = deg2rad(180);
 
 	cube._note = note;
+
+# constants used to interpret the '_type' field in map obstacles
+const WALL_TYPE_FULL_HEIGHT = 0;
+const WALL_TYPE_CROUCH = 1;
+
+func _spawn_wall(obstacle, current_beat):
+	# instantiate new wall from template
+	var wall = wall_template.duplicate();
+	wall.duplicate_create();# gives it its own unique mesh and collision shape
+	
+	var height = 0;
+	
+	if (obstacle._type == WALL_TYPE_FULL_HEIGHT):
+		wall.height = WALL_HEIGHT;
+		height = 0;
+	elif (obstacle._type == WALL_TYPE_CROUCH):
+		wall.height = WALL_HEIGHT / 2.0;
+		height = WALL_HEIGHT / 2.0;
+	else:
+		return;
+
+	track.add_child(wall);
+
+	var line = -(CUBE_DISTANCE * 3.0 / 2.0) + obstacle._lineIndex * CUBE_DISTANCE;
+	
+	var distance = obstacle._time - current_beat;
+
+	wall.transform.origin = Vector3(line,height,-distance * beat_distance);
+	wall.depth = beat_distance * obstacle._duration;
+	wall.width = CUBE_DISTANCE * obstacle._width;
+	
+	# walls have slightly difference origins offsets than cubes do, so we must
+	# translate them by half a cube distance to correct for the misalignment.
+	wall.translate(Vector3(-CUBE_DISTANCE/2.0,-CUBE_DISTANCE/2.0,0.0));
+
+	wall._obstacle = obstacle;
 
 
 func _process_map(dt):
@@ -149,19 +197,30 @@ func _process_map(dt):
 	
 	var current_beat = current_time * _current_info._beatsPerMinute / 60.0;
 
+	# spawn notes
 	var n =_current_map._notes;
 	while (_current_note < n.size() && n[_current_note]._time <= current_beat+beats_ahead):
 		_spawn_cube(n[_current_note], current_beat);
 		_current_note += 1;
 
+	# spawn obstacles (walls)
+	var o = _current_map._obstacles;
+	while (_current_obstacle < o.size() && o[_current_obstacle]._time <= current_beat+beats_ahead):
+		_spawn_wall(o[_current_obstacle], current_beat);
+		_current_obstacle += 1;
 
 	var speed = Vector3(0.0, 0.0, beat_distance * _current_info._beatsPerMinute / 60.0) * dt;
 
 	for c in track.get_children():
 		c.translate(speed);
 
-		# remove cubes that go to far behind
-		if (c.global_transform.origin.z > 2.0):
+		var depth = CUBE_DISTANCE
+		if c is Wall:
+			# compute wall's depth based on duration
+			depth = beat_distance * c._obstacle._duration
+
+		# remove children that go to far
+		if ((c.global_transform.origin.z - depth) > 2.0):
 			c.queue_free();
 			_reset_combo();
 
@@ -193,7 +252,11 @@ func _check_and_update_saber(controller : ARVRController, saber: Area):
 	# this check is necessary to not overwrite a rumble set from somewhere else
 	# (in this case it can come from cutting cubes)
 	if (!controller.is_simple_rumbling()): 
-		if (saber.get_overlapping_areas().size() > 0 || saber.get_overlapping_bodies().size() > 0):
+		if (_in_wall):
+			# weak rumble on both controllers when player is inside wall
+			controller.set_rumble(0.1);
+		elif (saber.get_overlapping_areas().size() > 0 || saber.get_overlapping_bodies().size() > 0):
+			# strong rumble when saber is cutting into wall or other saber
 			controller.set_rumble(0.5);
 		else:
 			controller.set_rumble(0.0);
@@ -425,6 +488,13 @@ func _cut_cube(controller : ARVRController, saber : Area, cube : Spatial):
 	# delete the original cube; we have two new halfs created above
 	cube.queue_free();
 
+# quiets song when player enters into a wall
+func _quiet_song():
+	song_player.volume_db = -15.0;
+
+# restores song volume when player leaves wall
+func _louden_song():
+	song_player.volume_db = 0.0;
 
 func _on_LeftLightSaber_area_entered(area : Area):
 	if (area.is_in_group("beepcube")):
@@ -434,3 +504,17 @@ func _on_LeftLightSaber_area_entered(area : Area):
 func _on_RightLightSaber_area_entered(area : Area):
 	if (area.is_in_group("beepcube")):
 		_cut_cube(right_controller, right_saber, area.get_parent().get_parent());
+
+func _on_PlayerHead_area_entered(area):
+	if area.is_in_group("wall"):
+		if not _in_wall:
+			_quiet_song();
+		
+		_in_wall = true;
+
+func _on_PlayerHead_area_exited(area):
+	if area.is_in_group("wall"):
+		if _in_wall:
+			_louden_song();
+		
+		_in_wall = false;
