@@ -1,4 +1,5 @@
 extends Panel
+class_name HighscorePanel
 
 signal close()
 

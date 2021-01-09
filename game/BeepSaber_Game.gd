@@ -97,6 +97,7 @@ func restart_map():
 	$Online_library.visible = false;
 	$OQ_UI2DKeyboard.visible = false;
 	$OQ_UI2DKeyboard_main.visible = false;
+	$Highscores_Canvas.visible = false;
 
 	left_saber.show();
 	right_saber.show();
@@ -112,6 +113,7 @@ func continue_map():
 	$MainMenu_OQ_UI2DCanvas.visible = false;
 	$Settings_canvas.visible = false;
 	$Online_library.visible = false;
+	$Highscores_Canvas.visible = false;
 
 	left_saber.show();
 	right_saber.show();
@@ -397,6 +399,7 @@ func _ready():
 	$Online_library.visible = false;
 	$OQ_UI2DKeyboard.visible = false;
 	$OQ_UI2DKeyboard_main.visible = false;
+	$Highscores_Canvas.visible = false;
 	show_menu();
 
 func update_cube_colors():
@@ -595,6 +598,10 @@ func _quiet_song():
 func _louden_song():
 	song_player.volume_db = 0.0;
 	
+# accessor method for the main highscore panel (on right side of menu)
+func highscore_panel() -> HighscorePanel:
+	return $Highscores_Canvas.ui_control
+
 func _on_LeftLightSaber_area_entered(area : Area):
 	if song_player.playing and (area.is_in_group("beepcube")):
 		_cut_cube(left_controller, left_saber, area.get_parent().get_parent());
@@ -652,3 +659,11 @@ func _on_Pause_Panel_continue_button():
 
 
 
+func _on_BeepSaber_tree_exiting():
+	# save highscores before quiting game
+	Highscores.save_hs_table()
+
+func _on_BeepSaberMainMenu_difficulty_changed(map_info, diff_name, diff_rank):
+	$Highscores_Canvas.show()
+	if highscore_panel():
+		highscore_panel().load_highscores(map_info,diff_rank)

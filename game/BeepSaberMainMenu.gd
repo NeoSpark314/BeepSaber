@@ -5,6 +5,11 @@
 # normal Beat Saber uses. So you can load here custom beat saber songs too
 extends Panel
 
+# emitted when a new map is selected
+signal map_changed(map_info);
+# emitted when a new map difficulty is selected
+signal difficulty_changed(map_info,diff_name,diff_rank);
+
 # we need the main game class here to trigger game start/restart/continue
 var _beepsaber = null;
 
@@ -175,6 +180,10 @@ func _select_song(id):
 	_map_path = _song_path(id);
 	$Delete_Button.disabled = false;
 	_map_info = _load_song_info(_map_path);
+	
+	# notify listeners that map changed
+	emit_signal("map_changed",_map_info)
+	
 	$SongInfo_Label.text = """Song Author: %s
 	Song Title: %s
 	Beatmap Author: %s""" %[_map_info._songAuthorName, _map_info._songName, _map_info._levelAuthorName]
@@ -235,6 +244,18 @@ func _select_difficulty(id):
 	_map_difficulty = item_meta["id"]
 	_map_difficulty_name = item_meta["Name"]
 	$DifficultyMenu.select(id)
+	var Difficulties = $DifficultyMenu/Playlists
+	for difficulty in Difficulties.get_children():
+		difficulty.modulate = Color(1, 1, 1)
+	Difficulties.get_child(id).modulate = Color(1, 0.5, 0.5)
+	
+	# notify listeners that difficulty has changed
+	var difficulty = _map_info._difficultyBeatmapSets[0]._difficultyBeatmaps[id]
+	emit_signal(
+		"difficulty_changed",
+		_map_info,
+		difficulty._difficulty,
+		difficulty._difficultyRank)
 
 
 func _load_map_and_start():

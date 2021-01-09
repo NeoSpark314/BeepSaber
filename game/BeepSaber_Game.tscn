@@ -22,6 +22,7 @@
 [ext_resource path="res://game/Online_library_Panel.tscn" type="PackedScene" id=20]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DKeyboard.tscn" type="PackedScene" id=21]
 [ext_resource path="res://game/Points_label_driver.tscn" type="PackedScene" id=22]
+[ext_resource path="res://game/HighscorePanel.tscn" type="PackedScene" id=23]
 
 [sub_resource type="Environment" id=1]
 background_mode = 3
@@ -134,6 +135,9 @@ transform = Transform( 1.14193, 0, 2.01698, 0, 2.3178, 0, -2.01698, 0, 1.14193, 
 [node name="settings_Panel" parent="Settings_canvas" instance=ExtResource( 19 )]
 game = NodePath("../..")
 
+[node name="MainMenu_OQ_UI2DCanvas" parent="." instance=ExtResource( 3 )]
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 1, 0, 1.5, -1 )
+
 [node name="Online_library" parent="." instance=ExtResource( 3 )]
 transform = Transform( 0.67553, 0, -1.82835, 0, 1.94915, 0, 1.82835, 0, 0.67553, 2.433, 1.49752, 0.468348 )
 
@@ -152,6 +156,14 @@ visible = false
 [node name="Points_label_driver" parent="." instance=ExtResource( 22 )]
 
 [node name="RigidBody" type="RigidBody" parent="."]
+
+[node name="Highscores_Canvas" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1.73205, 0, -1, 0, 2, 0, 1, 0, 1.73205, 2.13995, 1.42321, -0.612768 )
+
+[node name="HighscorePanel" parent="Highscores_Canvas" instance=ExtResource( 23 )]
+margin_right = 752.0
+show_close_button = false
+[connection signal="tree_exiting" from="." to="." method="_on_BeepSaber_tree_exiting"]
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_entered"]
 [connection signal="area_exited" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_exited"]
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_LeftController/LeftLightSaber" to="." method="_on_LeftLightSaber_area_entered"]
@@ -161,3 +173,4 @@ visible = false
 [connection signal="continue_button" from="PauseMenu_canvas/Pause_Panel" to="." method="_on_Pause_Panel_continue_button"]
 [connection signal="mainmenu_button" from="PauseMenu_canvas/Pause_Panel" to="." method="_on_EndScore_panel_goto_mainmenu"]
 [connection signal="restart_button" from="PauseMenu_canvas/Pause_Panel" to="." method="_on_EndScore_panel_repeat"]
+[connection signal="difficulty_changed" from="MainMenu_OQ_UI2DCanvas/BeepSaberMainMenu" to="." method="_on_BeepSaberMainMenu_difficulty_changed"]
