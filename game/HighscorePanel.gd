@@ -2,14 +2,18 @@ extends Panel
 
 signal close()
 
+export var show_close_button = true
+
 # keep a copy of the base row for regeneration later
 onready var _base_row = $Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow
 onready var _highscore_list = $Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList
 onready var _title = $Margin/VBox/Title
 onready var _song_info = $Margin/VBox/LeftRight/VBox/SongInfo_Label
+onready var _exit_button = $Margin/VBox/Exit_Button
 
 func _ready():
 	_clear_list()
+	_exit_button.visible = show_close_button
 	
 # clears all rows from the highscore table
 func _clear_list():

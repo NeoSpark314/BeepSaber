@@ -12,7 +12,7 @@ border_width_right = 8
 border_width_bottom = 8
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=3]
+[sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.25098, 0.25098, 0.25098, 1 )
 
 [node name="HighscorePanel" type="Panel"]
@@ -69,7 +69,7 @@ margin_bottom = 400.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 1.5
-custom_styles/bg = SubResource( 3 )
+custom_styles/bg = SubResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
