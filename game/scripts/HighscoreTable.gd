@@ -158,6 +158,8 @@ func _get_hs_key(map_info):
 			mi_val = map_info[mi_key]
 			mi_val.replace("\"",'')
 			mi_val.replace("'",'')
+		else:
+			vr.log_warning("map_info does not contain key '%s'" % mi_key)
 		
 		hs_key += "'%s'" % mi_val
 	hs_key += ']'
