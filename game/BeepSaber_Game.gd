@@ -170,6 +170,7 @@ func show_menu():
 		$Point_Label.visible=false;
 		$Percent.visible=false;
 
+	$EndScore_OQ_UILabel.visible = false;
 	$Track.visible = false;
 	ui_raycast.visible = true;
 	$MainMenu_OQ_UI2DCanvas.visible = true;
@@ -230,6 +231,7 @@ func _on_new_highscore():
 	ui_raycast.visible = true;
 	
 	# show/hide applicable UI elements
+	$Track.visible = false
 	$MainMenu_OQ_UI2DCanvas.visible = false
 	mid_highscore_canvas.visible = true
 	right_highscore_canvas.visible = false

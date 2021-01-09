@@ -17,6 +17,9 @@ func _ready():
 	_exit_button.visible = show_close_button
 
 func load_highscores(map_info,diff_rank):
+	# clear the high score list
+	_clear_list()
+	
 	# populate title text
 	set_title("Highscores (%s)" % _get_difficulty_name(map_info,diff_rank))
 	
