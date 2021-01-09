@@ -62,7 +62,7 @@ func add_highscore(map_info,diff_rank,player_name,score):
 	# store updated records in table
 	if not _hs_table.has(hs_key):
 		_hs_table[hs_key] = {}
-	_hs_table[hs_key][diff_rank] = records
+	_hs_table[hs_key][str(diff_rank)] = records
 		
 # return : the list of records for the given map + difficulty
 func get_records(map_info,diff_rank):
@@ -96,8 +96,8 @@ func _get_records(hs_key,diff_rank):
 	
 	if _hs_table.has(hs_key):
 		var hs_row = _hs_table[hs_key]
-		if hs_row.has(diff_rank):
-			records = hs_row[diff_rank]
+		if hs_row.has(str(diff_rank)):
+			records = hs_row[str(diff_rank)]
 	
 	return records
 
@@ -156,9 +156,10 @@ func _get_hs_key(map_info):
 		var mi_val = ""
 		if map_info.has(mi_key):
 			mi_val = map_info[mi_key]
-			mi_val.replace('"','\"')
+			mi_val.replace("\"",'')
+			mi_val.replace("'",'')
 		
-		hs_key += '"%s"' % mi_val
+		hs_key += "'%s'" % mi_val
 	hs_key += ']'
 		
 	return hs_key

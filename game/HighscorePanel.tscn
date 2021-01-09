@@ -1,0 +1,411 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/oq_ui2d_standard.theme" type="Theme" id=1]
+[ext_resource path="res://game/HighscorePanel.gd" type="Script" id=2]
+[ext_resource path="res://game/data/maps/Songs/TheFatRat_Timelapse/cover.jpg" type="Texture" id=4]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.25098, 0.25098, 0.25098, 1 )
+
+[node name="HighscorePanel" type="Panel"]
+margin_right = 940.0
+margin_bottom = 520.0
+theme = ExtResource( 1 )
+custom_styles/panel = SubResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Margin" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 20
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 20
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 920.0
+margin_bottom = 500.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Title" type="Label" parent="Margin/VBox"]
+margin_right = 900.0
+margin_bottom = 33.0
+text = "Highscores (Hard)"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LeftRight" type="HBoxContainer" parent="Margin/VBox"]
+margin_top = 37.0
+margin_right = 900.0
+margin_bottom = 437.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Margin/VBox/LeftRight"]
+margin_right = 537.0
+margin_bottom = 400.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.5
+custom_styles/bg = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Margin" type="MarginContainer" parent="Margin/VBox/LeftRight/ScrollContainer"]
+margin_right = 537.0
+margin_bottom = 400.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="HighscoresList" type="VBoxContainer" parent="Margin/VBox/LeftRight/ScrollContainer/Margin"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 527.0
+margin_bottom = 390.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BaseRecordRow" type="HBoxContainer" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList"]
+margin_right = 517.0
+margin_bottom = 33.0
+size_flags_horizontal = 3
+
+[node name="RankLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow"]
+margin_right = 50.0
+margin_bottom = 33.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_horizontal = 0
+text = "1."
+
+[node name="NameLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow"]
+margin_left = 54.0
+margin_right = 417.0
+margin_bottom = 33.0
+size_flags_horizontal = 3
+text = "Player 1"
+clip_text = true
+
+[node name="ScoreLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow"]
+margin_left = 421.0
+margin_right = 517.0
+margin_bottom = 33.0
+text = "100000"
+align = 2
+
+[node name="BaseRecordRow2" type="HBoxContainer" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList"]
+margin_top = 37.0
+margin_right = 517.0
+margin_bottom = 70.0
+size_flags_horizontal = 3
+
+[node name="RankLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow2"]
+margin_right = 50.0
+margin_bottom = 33.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_horizontal = 0
+text = "2."
+
+[node name="NameLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow2"]
+margin_left = 54.0
+margin_right = 433.0
+margin_bottom = 33.0
+size_flags_horizontal = 3
+text = "I have a long name"
+clip_text = true
+
+[node name="ScoreLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow2"]
+margin_left = 437.0
+margin_right = 517.0
+margin_bottom = 33.0
+text = "10000"
+align = 2
+
+[node name="BaseRecordRow3" type="HBoxContainer" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList"]
+margin_top = 74.0
+margin_right = 517.0
+margin_bottom = 107.0
+size_flags_horizontal = 3
+
+[node name="RankLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow3"]
+margin_right = 50.0
+margin_bottom = 33.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_horizontal = 0
+text = "3."
+
+[node name="NameLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow3"]
+margin_left = 54.0
+margin_right = 449.0
+margin_bottom = 33.0
+size_flags_horizontal = 3
+text = "I have an extremely long name that goes of the page"
+clip_text = true
+
+[node name="ScoreLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow3"]
+margin_left = 453.0
+margin_right = 517.0
+margin_bottom = 33.0
+text = "1000"
+align = 2
+
+[node name="BaseRecordRow4" type="HBoxContainer" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList"]
+margin_top = 111.0
+margin_right = 517.0
+margin_bottom = 144.0
+size_flags_horizontal = 3
+
+[node name="RankLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow4"]
+margin_right = 50.0
+margin_bottom = 33.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_horizontal = 0
+text = "4."
+
+[node name="NameLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow4"]
+margin_left = 54.0
+margin_right = 449.0
+margin_bottom = 33.0
+size_flags_horizontal = 3
+text = "Player 1"
+clip_text = true
+
+[node name="ScoreLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow4"]
+margin_left = 453.0
+margin_right = 517.0
+margin_bottom = 33.0
+text = "1000"
+align = 2
+
+[node name="BaseRecordRow5" type="HBoxContainer" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList"]
+margin_top = 148.0
+margin_right = 517.0
+margin_bottom = 181.0
+size_flags_horizontal = 3
+
+[node name="RankLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow5"]
+margin_right = 50.0
+margin_bottom = 33.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_horizontal = 0
+text = "5."
+
+[node name="NameLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow5"]
+margin_left = 54.0
+margin_right = 449.0
+margin_bottom = 33.0
+size_flags_horizontal = 3
+text = "Player 1"
+clip_text = true
+
+[node name="ScoreLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow5"]
+margin_left = 453.0
+margin_right = 517.0
+margin_bottom = 33.0
+text = "1000"
+align = 2
+
+[node name="BaseRecordRow6" type="HBoxContainer" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList"]
+margin_top = 185.0
+margin_right = 517.0
+margin_bottom = 218.0
+size_flags_horizontal = 3
+
+[node name="RankLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow6"]
+margin_right = 50.0
+margin_bottom = 33.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_horizontal = 0
+text = "6."
+
+[node name="NameLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow6"]
+margin_left = 54.0
+margin_right = 449.0
+margin_bottom = 33.0
+size_flags_horizontal = 3
+text = "Player 1"
+clip_text = true
+
+[node name="ScoreLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow6"]
+margin_left = 453.0
+margin_right = 517.0
+margin_bottom = 33.0
+text = "1000"
+align = 2
+
+[node name="BaseRecordRow7" type="HBoxContainer" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList"]
+margin_top = 222.0
+margin_right = 517.0
+margin_bottom = 255.0
+size_flags_horizontal = 3
+
+[node name="RankLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow7"]
+margin_right = 50.0
+margin_bottom = 33.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_horizontal = 0
+text = "7."
+
+[node name="NameLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow7"]
+margin_left = 54.0
+margin_right = 449.0
+margin_bottom = 33.0
+size_flags_horizontal = 3
+text = "Player 1"
+clip_text = true
+
+[node name="ScoreLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow7"]
+margin_left = 453.0
+margin_right = 517.0
+margin_bottom = 33.0
+text = "1000"
+align = 2
+
+[node name="BaseRecordRow8" type="HBoxContainer" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList"]
+margin_top = 259.0
+margin_right = 517.0
+margin_bottom = 292.0
+size_flags_horizontal = 3
+
+[node name="RankLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow8"]
+margin_right = 50.0
+margin_bottom = 33.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_horizontal = 0
+text = "8."
+
+[node name="NameLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow8"]
+margin_left = 54.0
+margin_right = 449.0
+margin_bottom = 33.0
+size_flags_horizontal = 3
+text = "Player 1"
+clip_text = true
+
+[node name="ScoreLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow8"]
+margin_left = 453.0
+margin_right = 517.0
+margin_bottom = 33.0
+text = "1000"
+align = 2
+
+[node name="BaseRecordRow9" type="HBoxContainer" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList"]
+margin_top = 296.0
+margin_right = 517.0
+margin_bottom = 329.0
+size_flags_horizontal = 3
+
+[node name="RankLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow9"]
+margin_right = 50.0
+margin_bottom = 33.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_horizontal = 0
+text = "9."
+
+[node name="NameLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow9"]
+margin_left = 54.0
+margin_right = 449.0
+margin_bottom = 33.0
+size_flags_horizontal = 3
+text = "Player 1"
+clip_text = true
+
+[node name="ScoreLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow9"]
+margin_left = 453.0
+margin_right = 517.0
+margin_bottom = 33.0
+text = "1000"
+align = 2
+
+[node name="BaseRecordRow10" type="HBoxContainer" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList"]
+margin_top = 333.0
+margin_right = 517.0
+margin_bottom = 366.0
+size_flags_horizontal = 3
+
+[node name="RankLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow10"]
+margin_right = 50.0
+margin_bottom = 33.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_horizontal = 0
+text = "10."
+
+[node name="NameLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow10"]
+margin_left = 54.0
+margin_right = 449.0
+margin_bottom = 33.0
+size_flags_horizontal = 3
+text = "Player 1"
+clip_text = true
+
+[node name="ScoreLabel" type="Label" parent="Margin/VBox/LeftRight/ScrollContainer/Margin/HighscoresList/BaseRecordRow10"]
+margin_left = 453.0
+margin_right = 517.0
+margin_bottom = 33.0
+text = "1000"
+align = 2
+
+[node name="VBox" type="VBoxContainer" parent="Margin/VBox/LeftRight"]
+margin_left = 541.0
+margin_right = 900.0
+margin_bottom = 400.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SongCover" type="TextureRect" parent="Margin/VBox/LeftRight/VBox"]
+margin_right = 359.0
+margin_bottom = 291.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 6
+
+[node name="SongInfo_Label" type="Label" parent="Margin/VBox/LeftRight/VBox"]
+margin_top = 295.0
+margin_right = 359.0
+margin_bottom = 400.0
+text = "Song Author: TheFatRat
+Song Title: Time Lapse
+Beatmap Author: Timeweaver"
+valign = 1
+clip_text = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Exit_Button" type="Button" parent="Margin/VBox"]
+margin_top = 441.0
+margin_right = 900.0
+margin_bottom = 480.0
+text = "Close"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="Margin/VBox/Exit_Button" to="." method="_on_Exit_Button_pressed"]
