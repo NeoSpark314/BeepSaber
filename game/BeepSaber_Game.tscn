@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://game/BeepCube_Cut.material" type="Material" id=1]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DLabel.tscn" type="PackedScene" id=2]
@@ -15,13 +15,17 @@
 [ext_resource path="res://game/background.tres" type="Texture" id=13]
 [ext_resource path="res://game/background_sky.tres" type="PanoramaSky" id=14]
 [ext_resource path="res://OQ_Toolkit/OQ_ARVROrigin/Feature_MixedRealityCapture.tscn" type="PackedScene" id=15]
+[ext_resource path="res://game/PercentIndicator.tscn" type="PackedScene" id=16]
+[ext_resource path="res://game/EndScore_panel.tscn" type="PackedScene" id=17]
+[ext_resource path="res://game/Pause_Panel.tscn" type="PackedScene" id=18]
+[ext_resource path="res://game/settings_Panel.tscn" type="PackedScene" id=19]
 
 [sub_resource type="Environment" id=1]
 background_mode = 3
 background_sky = ExtResource( 14 )
 glow_enabled = true
-glow_intensity = 0.32
-glow_strength = 1.5
+glow_intensity = 0.22
+glow_strength = 1.41
 glow_blend_mode = 0
 
 [sub_resource type="SphereShape" id=2]
@@ -159,49 +163,58 @@ material/0 = SubResource( 10 )
 
 [node name="MainMenu_OQ_UI2DCanvas" parent="." instance=ExtResource( 3 )]
 transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 1, 0, 1.5, -1 )
-editor_live_update = false
-transparent = false
 
 [node name="BeepSaberMainMenu" parent="MainMenu_OQ_UI2DCanvas" instance=ExtResource( 11 )]
 
-[node name="EndScore_OQ_UILabel" parent="." instance=ExtResource( 2 )]
-transform = Transform( 8, 0, 0, 0, 8, 0, 0, 0, 1, 0, 3, -3 )
-visible = false
-text = "Score"
-margin = 0
-billboard = false
-depth_test = true
-resize_mode = 0
-font_size_multiplier = 1.0
-font_color = Color( 1, 1, 1, 1 )
-background_color = Color( 0, 0, 0, 0 )
-transparent = true
-
 [node name="Multiplier_Label" parent="." instance=ExtResource( 2 )]
-transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, -1, 2, -0.8 )
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, -1.55441, 1.30572, -2.69107 )
 text = "Multiplier"
 margin = 0
-billboard = false
-depth_test = true
-resize_mode = 0
-font_size_multiplier = 1.0
-font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0, 0, 0, 0 )
 transparent = true
 
 [node name="Point_Label" parent="." instance=ExtResource( 2 )]
-transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, 1, 2, -0.8 )
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, 1.47323, 1.30572, -2.69107 )
 text = "Score"
 margin = 0
-billboard = false
-depth_test = true
-resize_mode = 0
-font_size_multiplier = 1.0
-font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0, 0, 0, 0 )
 transparent = true
 
+[node name="Percent" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5455, 0.895287, -2.54167 )
+transparent = true
+
+[node name="percent_indicator" parent="Percent" instance=ExtResource( 16 )]
+
+[node name="EndScore_canvas" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1.91111, 0, 0, 0, 1.91111, 0, 0, 0, 1.91111, 0, 1.431, -0.777581 )
+visible = false
+
+[node name="EndScore_panel" parent="EndScore_canvas" instance=ExtResource( 17 )]
+
+[node name="PauseMenu_canvas" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1.86849, 0, 0, 0, 1.86849, 0, 0, 0, 1.86849, 0, 1.43532, -0.756856 )
+visible = false
+
+[node name="Pause_Panel" parent="PauseMenu_canvas" instance=ExtResource( 18 )]
+
+[node name="Pause_countdown" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.49382, -0.649511 )
+visible = false
+text = "3"
+font_size_multiplier = 4.587
+
+[node name="Settings_canvas" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1.25565, 0, 1.43736, 0, 1.90858, 0, -1.43736, 0, 1.25565, -2.44264, 1.51576, -0.0546236 )
+
+[node name="settings_Panel" parent="Settings_canvas" instance=ExtResource( 19 )]
+game = NodePath("../..")
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_entered"]
 [connection signal="area_exited" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_exited"]
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_LeftController/LeftLightSaber" to="." method="_on_LeftLightSaber_area_entered"]
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_RightController/RightLightSaber" to="." method="_on_RightLightSaber_area_entered"]
+[connection signal="goto_mainmenu" from="EndScore_canvas/EndScore_panel" to="." method="_on_EndScore_panel_goto_mainmenu"]
+[connection signal="repeat" from="EndScore_canvas/EndScore_panel" to="." method="_on_EndScore_panel_repeat"]
+[connection signal="continue_button" from="PauseMenu_canvas/Pause_Panel" to="." method="_on_Pause_Panel_continue_button"]
+[connection signal="mainmenu_button" from="PauseMenu_canvas/Pause_Panel" to="." method="_on_EndScore_panel_goto_mainmenu"]
+[connection signal="restart_button" from="PauseMenu_canvas/Pause_Panel" to="." method="_on_EndScore_panel_repeat"]

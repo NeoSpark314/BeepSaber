@@ -1,0 +1,73 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/RobotoMono-Medium.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://game/settings_Panel.gd" type="Script" id=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 32
+font_data = ExtResource( 1 )
+
+[sub_resource type="Theme" id=3]
+default_font = SubResource( 2 )
+
+[node name="settings_Panel" type="Panel"]
+margin_right = 896.0
+margin_bottom = 576.0
+custom_styles/panel = SubResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="cuttedBlocks" type="CheckButton" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -163.5
+margin_top = -25.5
+margin_right = 163.5
+margin_bottom = 25.5
+theme = SubResource( 3 )
+pressed = true
+text = "Cutted blocks"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="saber_thickness_label" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -142.5
+margin_top = 24.0
+margin_right = 142.5
+margin_bottom = 67.0
+theme = SubResource( 3 )
+text = "Saber thickness"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="saber_thicknes" type="HSlider" parent="."]
+margin_left = 256.0
+margin_top = 344.0
+margin_right = 448.0
+margin_bottom = 360.0
+rect_scale = Vector2( 2, 2 )
+min_value = 10.0
+value = 100.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="toggled" from="cuttedBlocks" to="." method="_on_cuttedBlocks_toggled"]
+[connection signal="value_changed" from="saber_thicknes" to="." method="_on_HSlider_value_changed"]

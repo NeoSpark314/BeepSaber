@@ -26,6 +26,9 @@ func hide():
 	if (is_extended() and _anim.current_animation != "QuickHide"):
 		_anim.play("Hide");
 
+func set_thickness(value):
+	$LightSaber_Mesh.scale.x = value
+	$LightSaber_Mesh.scale.y = value
 
 func _ready():
 	_anim.play("QuickHide");
