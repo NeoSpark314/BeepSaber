@@ -5,7 +5,6 @@ export(NodePath) var game;
 
 func _ready():
 	game = get_node(game);
-	print(game);
 
 
 func _on_HSlider_value_changed(value):

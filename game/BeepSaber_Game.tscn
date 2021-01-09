@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://game/BeepCube_Cut.material" type="Material" id=1]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DLabel.tscn" type="PackedScene" id=2]
@@ -19,6 +19,7 @@
 [ext_resource path="res://game/EndScore_panel.tscn" type="PackedScene" id=17]
 [ext_resource path="res://game/Pause_Panel.tscn" type="PackedScene" id=18]
 [ext_resource path="res://game/settings_Panel.tscn" type="PackedScene" id=19]
+[ext_resource path="res://game/Online_library_Panel.tscn" type="PackedScene" id=20]
 
 [sub_resource type="Environment" id=1]
 background_mode = 3
@@ -92,6 +93,7 @@ autoload_model = false
 
 [node name="Feature_UIRayCast" parent="OQ_ARVROrigin/OQ_RightController" instance=ExtResource( 12 )]
 transform = Transform( 1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0 )
+ui_raycast_length = 5.0
 adjust_left_right = false
 ui_raycast_visible_button = -1
 
@@ -208,6 +210,12 @@ font_size_multiplier = 4.587
 transform = Transform( 1.25565, 0, 1.43736, 0, 1.90858, 0, -1.43736, 0, 1.25565, -2.44264, 1.51576, -0.0546236 )
 
 [node name="settings_Panel" parent="Settings_canvas" instance=ExtResource( 19 )]
+game = NodePath("../..")
+
+[node name="Online_library" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1.45239, 0, -1.29991, 0, 1.94915, 0, 1.29991, 0, 1.45239, 2.46486, 1.51455, -0.128613 )
+
+[node name="Online_library_Panel" parent="Online_library" instance=ExtResource( 20 )]
 game = NodePath("../..")
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_entered"]
 [connection signal="area_exited" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_exited"]

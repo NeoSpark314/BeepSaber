@@ -29,6 +29,7 @@ func set_mode_continue():
 var path = "res://game/data/maps/";
 var dlpath = str(OS.get_system_dir(3))+"/";
 var bspath = "/sdcard/BeepSaber/";
+#var bspath = "user://BeepSaber/";
 
 var _playlists
 

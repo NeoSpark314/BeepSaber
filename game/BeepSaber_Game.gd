@@ -20,6 +20,8 @@ onready var track = $Track;
 
 onready var song_player := $SongPlayer;
 
+onready var menu = $MainMenu_OQ_UI2DCanvas.ui_control
+
 const COLOR_LEFT := Color(1.0, 0.1, 0.1, 1.0);
 const COLOR_RIGHT := Color(0.1, 0.1, 1.0, 1.0);
 
@@ -71,6 +73,7 @@ func restart_map():
 
 	$MainMenu_OQ_UI2DCanvas.visible = false;
 	$Settings_canvas.visible = false;
+	$Online_library.visible = false;
 
 	left_saber.show();
 	right_saber.show();
@@ -85,6 +88,7 @@ func continue_map():
 	song_player.play(song_player.get_playback_position());
 	$MainMenu_OQ_UI2DCanvas.visible = false;
 	$Settings_canvas.visible = false;
+	$Online_library.visible = false;
 
 	left_saber.show();
 	right_saber.show();
@@ -120,6 +124,7 @@ func show_menu():
 	ui_raycast.visible = true;
 	$MainMenu_OQ_UI2DCanvas.visible = true;
 	$Settings_canvas.visible = true;
+	$Online_library.visible = true;
 	
 func show_pause_menu():
 	if ($PauseMenu_canvas.visible): return;
@@ -279,6 +284,7 @@ func _check_and_update_saber(controller : ARVRController, saber: Area):
 				if (!saber._anim.is_playing()):
 					if (saber.is_extended()): saber.hide();
 					else: saber.show();
+					
 	
 	# check for saber rumble (only when extended and not already rumbling)
 	# this check is necessary to not overwrite a rumble set from somewhere else
@@ -389,6 +395,7 @@ func _ready():
 
 	$MainMenu_OQ_UI2DCanvas.visible = false;
 	$Settings_canvas.visible = false;
+	$Online_library.visible = false;
 	show_menu();
 	_setup_level();
 
