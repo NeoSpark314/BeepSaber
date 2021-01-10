@@ -192,6 +192,7 @@ margin_bottom = 320.0
 custom_styles/bg = SubResource( 5 )
 follow_focus = true
 scroll_horizontal_enabled = false
+scroll_vertical_enabled = false
 scroll_deadzone = 140
 __meta__ = {
 "_edit_use_anchors_": false

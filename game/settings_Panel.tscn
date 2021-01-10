@@ -187,7 +187,7 @@ margin_right = 214.0
 margin_bottom = -133.0
 theme = SubResource( 3 )
 pressed = true
-text = "Dinamyc background"
+text = "Dynamic background"
 __meta__ = {
 "_edit_use_anchors_": false
 }

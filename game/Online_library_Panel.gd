@@ -145,6 +145,7 @@ func _on_HTTPRequest_download_completed(result, response_code, headers, body):
 
 func _on_search_button_up():
 	keyboard.visible=true
+	keyboard._text_edit.grab_focus();
 
 func _text_input_enter(text):
 	keyboard.visible=false
