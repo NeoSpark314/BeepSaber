@@ -615,3 +615,4 @@ func _on_Pause_Panel_continue_button():
 	yield(get_tree().create_timer(0.5),"timeout")
 	$Pause_countdown.visible = false
 	continue_map()
+

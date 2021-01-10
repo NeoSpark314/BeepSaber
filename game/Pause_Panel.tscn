@@ -12,12 +12,12 @@ border_width_right = 8
 border_width_bottom = 8
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="DynamicFont" id=7]
+[sub_resource type="DynamicFont" id=2]
 size = 32
 font_data = ExtResource( 1 )
 
-[sub_resource type="Theme" id=8]
-default_font = SubResource( 7 )
+[sub_resource type="Theme" id=3]
+default_font = SubResource( 2 )
 
 [sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
@@ -43,12 +43,12 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="DynamicFont" id=9]
+[sub_resource type="DynamicFont" id=7]
 size = 32
 font_data = ExtResource( 2 )
 
-[sub_resource type="Theme" id=10]
-default_font = SubResource( 9 )
+[sub_resource type="Theme" id=8]
+default_font = SubResource( 7 )
 
 [node name="Pause_Panel" type="Panel"]
 margin_right = 640.0
@@ -64,7 +64,7 @@ margin_left = 216.0
 margin_top = 480.0
 margin_right = 424.0
 margin_bottom = 544.0
-theme = SubResource( 8 )
+theme = SubResource( 3 )
 custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/normal = SubResource( 6 )
@@ -75,7 +75,7 @@ margin_left = 216.0
 margin_top = 400.0
 margin_right = 424.0
 margin_bottom = 464.0
-theme = SubResource( 8 )
+theme = SubResource( 3 )
 custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/normal = SubResource( 6 )
@@ -86,7 +86,7 @@ margin_left = 216.0
 margin_top = 320.0
 margin_right = 424.0
 margin_bottom = 384.0
-theme = SubResource( 8 )
+theme = SubResource( 3 )
 custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/normal = SubResource( 6 )
@@ -100,7 +100,7 @@ margin_left = 16.0
 margin_top = 64.0
 margin_right = 624.0
 margin_bottom = 312.0
-theme = SubResource( 10 )
+theme = SubResource( 8 )
 text = "Current song:
 test"
 align = 1
@@ -114,7 +114,7 @@ margin_left = 16.0
 margin_top = 16.0
 margin_right = 624.0
 margin_bottom = 59.0
-theme = SubResource( 10 )
+theme = SubResource( 8 )
 text = "Paused"
 align = 1
 valign = 1

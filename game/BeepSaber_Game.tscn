@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://game/BeepCube_Cut.material" type="Material" id=1]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DLabel.tscn" type="PackedScene" id=2]
@@ -20,6 +20,7 @@
 [ext_resource path="res://game/Pause_Panel.tscn" type="PackedScene" id=18]
 [ext_resource path="res://game/settings_Panel.tscn" type="PackedScene" id=19]
 [ext_resource path="res://game/Online_library_Panel.tscn" type="PackedScene" id=20]
+[ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DKeyboard.tscn" type="PackedScene" id=21]
 
 [sub_resource type="Environment" id=1]
 background_mode = 3
@@ -217,6 +218,11 @@ transform = Transform( 1.45239, 0, -1.29991, 0, 1.94915, 0, 1.29991, 0, 1.45239,
 
 [node name="Online_library_Panel" parent="Online_library" instance=ExtResource( 20 )]
 game = NodePath("../..")
+keyboard = NodePath("../../OQ_UI2DKeyboard")
+
+[node name="OQ_UI2DKeyboard" parent="." instance=ExtResource( 21 )]
+transform = Transform( 0.537697, 0.527476, -0.657762, 0, 0.780136, 0.62561, 0.843138, -0.336389, 0.419477, 0.747145, 1.52661, 0.606652 )
+visible = false
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_entered"]
 [connection signal="area_exited" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_exited"]
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_LeftController/LeftLightSaber" to="." method="_on_LeftLightSaber_area_entered"]

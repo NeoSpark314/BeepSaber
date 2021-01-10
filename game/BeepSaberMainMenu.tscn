@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/oq_ui2d_standard.theme" type="Theme" id=1]
 [ext_resource path="res://game/data/beepsaber_logo.png" type="Texture" id=2]
@@ -37,14 +37,13 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=5]
-bg_color = Color( 0.25098, 0.25098, 0.25098, 1 )
-
-[sub_resource type="StyleBoxFlat" id=6]
-bg_color = Color( 0.25098, 0.25098, 0.25098, 1 )
-
 [sub_resource type="StyleBoxFlat" id=7]
-bg_color = Color( 0.25098, 0.25098, 0.25098, 1 )
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color( 1, 1, 1, 1 )
 
 [node name="BeepSaberMainMenu" type="Panel"]
 margin_right = 1408.0
@@ -57,7 +56,7 @@ __meta__ = {
 }
 
 [node name="beepsaber_logo" type="Sprite" parent="."]
-position = Vector2( 1280, 512 )
+position = Vector2( 1086.45, 521.344 )
 scale = Vector2( 0.84375, 0.84375 )
 texture = ExtResource( 2 )
 
@@ -153,24 +152,37 @@ margin_left = 448.0
 margin_top = 64.0
 margin_right = 848.0
 margin_bottom = 560.0
-custom_styles/bg = SubResource( 5 )
+custom_styles/bg = SubResource( 7 )
+follow_focus = true
+scroll_deadzone = 140
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Songs" type="VBoxContainer" parent="SongsMenu"]
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 3.0
+margin_bottom = 3.0
 
 [node name="PlaylistMenu" type="ScrollContainer" parent="."]
 margin_left = 16.0
 margin_top = 64.0
 margin_right = 430.0
 margin_bottom = 560.0
-custom_styles/bg = SubResource( 6 )
+custom_styles/bg = SubResource( 7 )
+follow_focus = true
+scroll_horizontal_enabled = false
+scroll_deadzone = 140
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Playlists" type="VBoxContainer" parent="PlaylistMenu"]
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 3.0
+margin_bottom = 3.0
 
 [node name="DifficultyMenu" type="ScrollContainer" parent="."]
 margin_left = 864.0
@@ -178,11 +190,18 @@ margin_top = 64.0
 margin_right = 1040.0
 margin_bottom = 320.0
 custom_styles/bg = SubResource( 7 )
+follow_focus = true
+scroll_horizontal_enabled = false
+scroll_deadzone = 140
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Playlists" type="VBoxContainer" parent="DifficultyMenu"]
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 3.0
+margin_bottom = 3.0
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
 download_chunk_size = 65536
