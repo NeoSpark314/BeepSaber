@@ -205,6 +205,10 @@ text = "Default"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="wipe_check" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
 [connection signal="toggled" from="cuttedBlocks" to="." method="_on_cuttedBlocks_toggled"]
 [connection signal="toggled" from="saber_tail" to="." method="_on_saber_tail_toggled"]
 [connection signal="value_changed" from="saber_thicknes" to="." method="_on_HSlider_value_changed"]
@@ -213,3 +217,4 @@ __meta__ = {
 [connection signal="toggled" from="glare" to="." method="_on_glare_toggled"]
 [connection signal="toggled" from="d_background" to="." method="_on_d_background_toggled"]
 [connection signal="button_up" from="defaults" to="." method="_on_Button_button_up"]
+[connection signal="timeout" from="wipe_check" to="." method="_on_wipe_check_timeout"]

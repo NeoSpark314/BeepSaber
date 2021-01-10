@@ -154,7 +154,7 @@ func _end_song_display():
 #	$EndScore_OQ_UILabel.set_label_text("Congratulations\nYour Score: %d\nHigh Score: %d\nAccuracy: %d%%" %[_current_points, _high_score,current_percent]);
 #	$EndScore_OQ_UILabel.visible = true;
 	$EndScore_canvas.visible = true
-	$EndScore_canvas.ui_control.show_score(_current_points,_high_score,current_percent)
+	$EndScore_canvas.ui_control.show_score(_current_points,_high_score,current_percent,"%s By %s" % [_current_info["_songName"],_current_info["_songAuthorName"]])
 	ui_raycast.visible = true;
 	song_player.stop();
 #	show_menu();

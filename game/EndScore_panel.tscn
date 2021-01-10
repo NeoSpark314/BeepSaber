@@ -5,7 +5,7 @@
 [ext_resource path="res://game/PercentIndicator.tscn" type="PackedScene" id=3]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/RobotoMono-Medium.ttf" type="DynamicFontData" id=4]
 
-[sub_resource type="StyleBoxFlat" id=7]
+[sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 8
 border_width_top = 8
@@ -13,14 +13,14 @@ border_width_right = 8
 border_width_bottom = 8
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="DynamicFont" id=8]
+[sub_resource type="DynamicFont" id=2]
 size = 32
 font_data = ExtResource( 1 )
 
-[sub_resource type="Theme" id=9]
-default_font = SubResource( 8 )
+[sub_resource type="Theme" id=3]
+default_font = SubResource( 2 )
 
-[sub_resource type="StyleBoxFlat" id=6]
+[sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -28,7 +28,7 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=15]
+[sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 0.270588, 0.270588, 0.270588, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -36,7 +36,7 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=10]
+[sub_resource type="StyleBoxFlat" id=6]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -44,24 +44,24 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="DynamicFont" id=11]
+[sub_resource type="DynamicFont" id=7]
 size = 256
 font_data = ExtResource( 4 )
 
-[sub_resource type="Theme" id=12]
-default_font = SubResource( 11 )
+[sub_resource type="Theme" id=8]
+default_font = SubResource( 7 )
 
-[sub_resource type="DynamicFont" id=13]
+[sub_resource type="DynamicFont" id=9]
 size = 32
 font_data = ExtResource( 4 )
 
-[sub_resource type="Theme" id=14]
-default_font = SubResource( 13 )
+[sub_resource type="Theme" id=10]
+default_font = SubResource( 9 )
 
 [node name="EndScore_panel" type="Panel"]
 margin_right = 1088.0
 margin_bottom = 576.0
-custom_styles/panel = SubResource( 7 )
+custom_styles/panel = SubResource( 1 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -76,10 +76,10 @@ margin_left = -208.0
 margin_top = -80.0
 margin_right = -16.0
 margin_bottom = -32.0
-theme = SubResource( 9 )
-custom_styles/hover = SubResource( 6 )
-custom_styles/pressed = SubResource( 15 )
-custom_styles/normal = SubResource( 10 )
+theme = SubResource( 3 )
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 5 )
+custom_styles/normal = SubResource( 6 )
 text = "Repeat"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -94,33 +94,47 @@ margin_left = 16.0
 margin_top = -80.0
 margin_right = 208.0
 margin_bottom = -32.0
-theme = SubResource( 9 )
-custom_styles/hover = SubResource( 6 )
-custom_styles/pressed = SubResource( 15 )
-custom_styles/normal = SubResource( 10 )
+theme = SubResource( 3 )
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 5 )
+custom_styles/normal = SubResource( 6 )
 text = "Main Menu"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="percent_indicator" parent="." instance=ExtResource( 3 )]
+[node name="pi" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 6.10352e-05
+margin_top = 8.00003
+margin_right = 6.10352e-05
+margin_bottom = 8.00003
+rect_scale = Vector2( 0.818598, 0.818598 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="percent_indicator" parent="pi" instance=ExtResource( 3 )]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -256.0
-margin_top = -288.0
+margin_top = -256.0
 margin_right = 256.0
-margin_bottom = 224.0
+margin_bottom = 256.0
 
 [node name="Tween" type="Tween" parent="."]
 
 [node name="char" type="Label" parent="."]
 margin_left = 32.0
-margin_top = 19.0
+margin_top = 118.0
 margin_right = 310.0
-margin_bottom = 496.0
-theme = SubResource( 12 )
+margin_bottom = 467.0
+theme = SubResource( 8 )
 text = "A"
 align = 1
 valign = 1
@@ -130,11 +144,25 @@ __meta__ = {
 
 [node name="details" type="Label" parent="."]
 margin_left = 776.0
-margin_top = 43.0
+margin_top = 118.0
 margin_right = 1054.0
-margin_bottom = 472.0
-theme = SubResource( 14 )
+margin_bottom = 467.0
+theme = SubResource( 10 )
 text = "A"
+align = 1
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="name" type="Label" parent="."]
+margin_left = 32.0
+margin_top = 24.0
+margin_right = 1054.0
+margin_bottom = 112.0
+theme = SubResource( 10 )
+text = "Name"
 align = 1
 valign = 1
 autowrap = true

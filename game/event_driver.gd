@@ -170,8 +170,9 @@ func change_light_color(type,color=-1,transition_mode=0):
 				tween.interpolate_property(m,"albedo_color",color,Color(0,0,0),2,Tween.TRANS_BOUNCE,Tween.EASE_OUT)
 			tween.start()
 			group.visible = true
-			yield(tween,"tween_all_completed")
-			group.visible = false
+			yield(tween,"tween_completed")
+			if material[0].albedo_color == Color(0,0,0):
+				group.visible = false
 			
 
 

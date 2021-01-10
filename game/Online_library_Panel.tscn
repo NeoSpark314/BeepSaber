@@ -221,6 +221,9 @@ margin_top = 8.0
 margin_right = 888.0
 margin_bottom = 952.0
 color = Color( 0.0509804, 0.0509804, 0.0509804, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="enable" type="Button" parent="ColorRect"]
 anchor_left = 0.5

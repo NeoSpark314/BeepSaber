@@ -31,9 +31,9 @@ func _ready():
 	_on_right_sable_col_color_changed(savedata.COLOR_RIGHT,false)
 	_on_saber_tail_toggled(savedata.saber_tail,false)
 	if savedata.has("glare"):
-		_on_saber_tail_toggled(savedata.glare,false)
+		_on_glare_toggled(savedata.glare,false)
 	if savedata.has("events"):
-		_on_saber_tail_toggled(savedata.events,false)
+		_on_d_background_toggled(savedata.events,false)
 
 func save_current_settings():
 	file.open(config_path,File.WRITE)
@@ -127,3 +127,15 @@ func _on_d_background_toggled(button_pressed,overwrite=true):
 		save_current_settings()
 	else:
 		$d_background.pressed = button_pressed
+
+#check if A, B and right thumbstick buttons are pressed at the same time to delete settings
+func _on_wipe_check_timeout():
+	if (game.menu.visible
+		and ((vr.button_pressed(vr.BUTTON.A) 
+		and vr.button_pressed(vr.BUTTON.B)
+		and vr.button_pressed(vr.BUTTON.RIGHT_THUMBSTICK) 
+		or Input.is_action_pressed("ui_page_up") and Input.is_action_pressed("ui_page_down")))
+		):
+			var dir = Directory.new()
+			dir.remove(config_path)
+			get_tree().change_scene("res://GameMain.tscn")
