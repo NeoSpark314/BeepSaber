@@ -161,13 +161,13 @@ func change_light_color(type,color=-1,transition_mode=0):
 		1:
 			tween.stop_all()
 			for m in material:
-				tween.interpolate_property(m,"albedo_color",Color(0,0,0),color,1,Tween.TRANS_BOUNCE,Tween.EASE_IN)
+				tween.interpolate_property(m,"albedo_color",Color(0,0,0),color,1,Tween.TRANS_BOUNCE,Tween.EASE_OUT)
 			tween.start()
 			group.visible = true
 		2:
 			tween.stop_all()
 			for m in material:
-				tween.interpolate_property(m,"albedo_color",color,Color(0,0,0),2,Tween.TRANS_BOUNCE,Tween.EASE_OUT)
+				tween.interpolate_property(m,"albedo_color",color,Color(0,0,0),2,Tween.TRANS_QUAD,Tween.EASE_IN)
 			tween.start()
 			group.visible = true
 			yield(tween,"tween_completed")

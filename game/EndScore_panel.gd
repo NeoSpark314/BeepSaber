@@ -35,7 +35,7 @@ func show_score(score,record,percent,song_string=""):
 
 func _on_Tween_tween_step(object, key, elapsed, value):
 	if key==":animated_percent":
-		$percent_indicator.set_percent(value,false)
+		$pi/percent_indicator.set_percent(value,false)
 		
 func _on_Tween_tween_completed(object, key):
 	if key==":animated_percent":

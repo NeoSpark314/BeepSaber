@@ -9,7 +9,7 @@ var savedata = {
 	COLOR_RIGHT = Color("1a1aff"),
 	saber_tail = true,
 	glare = true,
-	events = false
+	events = true
 }
 var defaults
 const config_path = "user://config.dat"
