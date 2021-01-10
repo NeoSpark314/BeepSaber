@@ -28,4 +28,6 @@ func duplicate_create(color : Color):
 	mi.mesh.surface_set_material(0, _mat);
 	_mesh = mi.mesh;
 
+func update_color_only(color : Color):
+	_mat.albedo_color = color;
 

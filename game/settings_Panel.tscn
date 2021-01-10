@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/RobotoMono-Medium.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://game/settings_Panel.gd" type="Script" id=2]
+[ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/Roboto-Medium.ttf" type="DynamicFontData" id=3]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 1 )
@@ -18,11 +19,58 @@ font_data = ExtResource( 1 )
 [sub_resource type="Theme" id=3]
 default_font = SubResource( 2 )
 
+[sub_resource type="DynamicFont" id=4]
+size = 32
+font_data = ExtResource( 3 )
+
+[sub_resource type="Theme" id=5]
+default_font = SubResource( 4 )
+
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0.270588, 0.270588, 0.270588, 1 )
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color( 1, 1, 1, 1 )
+
 [node name="settings_Panel" type="Panel"]
 margin_right = 896.0
 margin_bottom = 576.0
 custom_styles/panel = SubResource( 1 )
 script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="settings" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -432.0
+margin_top = -272.0
+margin_right = 429.0
+margin_bottom = -229.0
+theme = SubResource( 3 )
+text = "Settings"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -33,12 +81,28 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -163.5
-margin_top = -25.5
+margin_top = -152.0
 margin_right = 163.5
-margin_bottom = 25.5
+margin_bottom = -101.0
 theme = SubResource( 3 )
 pressed = true
 text = "Cutted blocks"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="saber_tail" type="CheckButton" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -135.0
+margin_top = 8.0
+margin_right = 135.0
+margin_bottom = 59.0
+theme = SubResource( 3 )
+pressed = true
+text = "Saber tail"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -49,9 +113,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -142.5
-margin_top = 24.0
+margin_top = -72.0
 margin_right = 142.5
-margin_bottom = 67.0
+margin_bottom = -29.0
 theme = SubResource( 3 )
 text = "Saber thickness"
 __meta__ = {
@@ -60,14 +124,58 @@ __meta__ = {
 
 [node name="saber_thicknes" type="HSlider" parent="."]
 margin_left = 256.0
-margin_top = 344.0
+margin_top = 248.0
 margin_right = 448.0
-margin_bottom = 360.0
+margin_bottom = 264.0
 rect_scale = Vector2( 2, 2 )
 min_value = 10.0
 value = 100.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="left_sable_col" type="ColorPickerButton" parent="."]
+margin_left = 256.0
+margin_top = 384.0
+margin_right = 384.0
+margin_bottom = 448.0
+text = "Left saber"
+flat = true
+color = Color( 1, 0.101961, 0.101961, 1 )
+edit_alpha = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="right_sable_col" type="ColorPickerButton" parent="."]
+margin_left = 512.0
+margin_top = 384.0
+margin_right = 640.0
+margin_bottom = 448.0
+text = "Right saber"
+flat = true
+color = Color( 0.101961, 0.101961, 1, 1 )
+edit_alpha = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="defaults" type="Button" parent="."]
+margin_left = 728.0
+margin_top = 496.0
+margin_right = 874.0
+margin_bottom = 556.0
+theme = SubResource( 5 )
+custom_styles/hover = SubResource( 6 )
+custom_styles/pressed = SubResource( 7 )
+custom_styles/normal = SubResource( 8 )
+text = "Default"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="toggled" from="cuttedBlocks" to="." method="_on_cuttedBlocks_toggled"]
+[connection signal="toggled" from="saber_tail" to="." method="_on_saber_tail_toggled"]
 [connection signal="value_changed" from="saber_thicknes" to="." method="_on_HSlider_value_changed"]
+[connection signal="color_changed" from="left_sable_col" to="." method="_on_left_sable_col_color_changed"]
+[connection signal="color_changed" from="right_sable_col" to="." method="_on_right_sable_col_color_changed"]
+[connection signal="button_up" from="defaults" to="." method="_on_Button_button_up"]

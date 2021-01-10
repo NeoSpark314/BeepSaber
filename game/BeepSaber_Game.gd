@@ -22,8 +22,8 @@ onready var song_player := $SongPlayer;
 
 onready var menu = $MainMenu_OQ_UI2DCanvas.ui_control
 
-const COLOR_LEFT := Color(1.0, 0.1, 0.1, 1.0);
-const COLOR_RIGHT := Color(0.1, 0.1, 1.0, 1.0);
+var COLOR_LEFT := Color(1.0, 0.1, 0.1, 1.0);
+var COLOR_RIGHT := Color(0.1, 0.1, 1.0, 1.0);
 
 const CUBE_HEIGHT_OFFSET = 0.4
 const WALL_HEIGHT = 3.0
@@ -381,11 +381,9 @@ func _ready():
 	cube_right = cube_template.duplicate();
 	cube_left.duplicate_create(COLOR_LEFT);
 	cube_right.duplicate_create(COLOR_RIGHT);
+	update_cube_colors()
 
-	left_saber._mat.set_shader_param("color", COLOR_LEFT);
-	left_saber.type = 0;
-	right_saber._mat.set_shader_param("color", COLOR_RIGHT);
-	right_saber.type = 1;
+	update_saber_colors()
 	
 	# This is a workaround for now to orient correctly for the Vive controllers
 	if (vr.active_arvr_interface_name == "OpenVR"):
@@ -399,6 +397,15 @@ func _ready():
 	show_menu();
 	_setup_level();
 
+func update_cube_colors():
+	cube_left.update_color_only(COLOR_LEFT);
+	cube_right.update_color_only(COLOR_RIGHT);
+
+func update_saber_colors():
+	left_saber.set_color(COLOR_LEFT)
+	left_saber.type = 0;
+	right_saber.set_color(COLOR_RIGHT)
+	right_saber.type = 1;
 
 # cut the cube by creating two rigid bodies and using a CSGBox to create
 # the cut plane

@@ -37,7 +37,7 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=7]
+[sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 3
 border_width_top = 3
@@ -152,7 +152,7 @@ margin_left = 448.0
 margin_top = 64.0
 margin_right = 848.0
 margin_bottom = 560.0
-custom_styles/bg = SubResource( 7 )
+custom_styles/bg = SubResource( 5 )
 follow_focus = true
 scroll_deadzone = 140
 __meta__ = {
@@ -170,7 +170,7 @@ margin_left = 16.0
 margin_top = 64.0
 margin_right = 430.0
 margin_bottom = 560.0
-custom_styles/bg = SubResource( 7 )
+custom_styles/bg = SubResource( 5 )
 follow_focus = true
 scroll_horizontal_enabled = false
 scroll_deadzone = 140
@@ -189,7 +189,7 @@ margin_left = 864.0
 margin_top = 64.0
 margin_right = 1040.0
 margin_bottom = 320.0
-custom_styles/bg = SubResource( 7 )
+custom_styles/bg = SubResource( 5 )
 follow_focus = true
 scroll_horizontal_enabled = false
 scroll_deadzone = 140
