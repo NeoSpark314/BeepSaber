@@ -104,6 +104,7 @@ game = NodePath("..")
 transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 1, 0, 1.5, -1 )
 
 [node name="BeepSaberMainMenu" parent="MainMenu_OQ_UI2DCanvas" instance=ExtResource( 11 )]
+keyboard = NodePath("../../OQ_UI2DKeyboard_main")
 
 [node name="Multiplier_Label" parent="." instance=ExtResource( 2 )]
 transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, -1.55441, 1.30572, -2.69107 )
@@ -157,7 +158,11 @@ game = NodePath("../..")
 keyboard = NodePath("../../OQ_UI2DKeyboard")
 
 [node name="OQ_UI2DKeyboard" parent="." instance=ExtResource( 21 )]
-transform = Transform( 0.537697, 0.527476, -0.657762, 0, 0.780136, 0.62561, 0.843138, -0.336389, 0.419477, 0.747145, 1.52661, 0.606652 )
+transform = Transform( 0.537697, 0.527476, -0.657762, 0, 0.780136, 0.62561, 0.843138, -0.336389, 0.419477, 0.747145, 1.23342, 0.606652 )
+visible = false
+
+[node name="OQ_UI2DKeyboard_main" parent="." instance=ExtResource( 21 )]
+transform = Transform( 1, 0, 0, 0, 0.780136, 0.62561, 0, -0.625611, 0.780136, 0, 1.233, 0.253 )
 visible = false
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_entered"]
 [connection signal="area_exited" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_exited"]

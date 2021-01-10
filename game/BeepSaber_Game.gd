@@ -78,6 +78,8 @@ func restart_map():
 	$MainMenu_OQ_UI2DCanvas.visible = false;
 	$Settings_canvas.visible = false;
 	$Online_library.visible = false;
+	$OQ_UI2DKeyboard.visible = false;
+	$OQ_UI2DKeyboard_main.visible = false;
 
 	left_saber.show();
 	right_saber.show();

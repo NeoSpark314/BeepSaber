@@ -123,46 +123,51 @@ func procces_event(data,beat):
 	
 func change_light_color(type,color=-1,transition_mode=0):
 	var group : Spatial
-	var material : Material
+	var material = []
 	var tween : Tween
 	match int(type):
 		0:
 			group = $Level/t0
-			material = $Level/t0/laser1/Bar7.material_override
+			material = [$Level/t0/laser1/Bar7.material_override]
 			tween = $Level/t0/Tween
 		1:
 			group = $Level/t1
-			material = $Level/t1/Bar7.material_override
+			material = [$Level/t1/Bar7.material_override]
 			tween = $Level/t1/Tween
 		2:
 			group = $Level/t2
-			material = $Level/t2/laser1/Bar7.material_override
+			material = [$Level/t2/laser1/Bar7.material_override]
 			tween = $Level/t2/Tween
 		3:
 			group = $Level/t3
-			material = $Level/t3/laser1/Bar7.material_override
+			material = [$Level/t3/laser1/Bar7.material_override]
 			tween = $Level/t3/Tween
 		4:
 			group = $Level/t4
-			material = $Level/t4/Bar1.material_override
+			material = [$Level/t4/Bar1.material_override,$Level/floor.material_override]
 			tween = $Level/t4/Tween
 	
 	if not color is Color:
+		for m in material:
+			m.albedo_color = Color.black
 		group.visible = false
 		return
 	
 	match transition_mode:
 		0:
-			material.albedo_color = color
+			for m in material:
+				m.albedo_color = color
 			group.visible = true
 		1:
 			tween.stop_all()
-			tween.interpolate_property(material,"albedo_color",Color(0,0,0),color,1,Tween.TRANS_BOUNCE,Tween.EASE_IN)
+			for m in material:
+				tween.interpolate_property(m,"albedo_color",Color(0,0,0),color,1,Tween.TRANS_BOUNCE,Tween.EASE_IN)
 			tween.start()
 			group.visible = true
 		2:
 			tween.stop_all()
-			tween.interpolate_property(material,"albedo_color",color,Color(0,0,0),2,Tween.TRANS_BOUNCE,Tween.EASE_OUT)
+			for m in material:
+				tween.interpolate_property(m,"albedo_color",color,Color(0,0,0),2,Tween.TRANS_BOUNCE,Tween.EASE_OUT)
 			tween.start()
 			group.visible = true
 			yield(tween,"tween_all_completed")

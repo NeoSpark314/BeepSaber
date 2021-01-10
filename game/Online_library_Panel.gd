@@ -4,7 +4,7 @@ var song_codes = []
 var current_page = 0
 var current_list = 0
 var list_modes = ["hot","rating","latest","downloads","plays"]
-var searck_word = ""
+var search_word = ""
 var item_selected = -1
 var downloading = []#[["name","key"]]
 onready var httpreq = HTTPRequest.new()
@@ -12,6 +12,10 @@ onready var httpdownload = HTTPRequest.new()
 
 export(NodePath) var game;
 export(NodePath) var keyboard;
+
+func enable():
+	update_list()
+	$ColorRect.visible = false
 
 func _ready():
 	game = get_node(game);
@@ -29,7 +33,6 @@ func _ready():
 	keyboard.connect("text_input_enter",self,"_text_input_enter")
 	keyboard.connect("text_input_cancel",self,"_text_input_cancel")
 	
-	update_list()
 
 func update_list(page=0,list="hot"):
 	$page.text = "Page: %d"%(page+1)
@@ -42,7 +45,7 @@ func update_list(page=0,list="hot"):
 	if list is String:
 		httpreq.request("https://beatsaver.com/api/maps/%s/%s" % [list,page])
 	else:
-		httpreq.request("https://beatsaver.com/api/search/text/%s?q=%s" % [page,searck_word.percent_encode()])
+		httpreq.request("https://beatsaver.com/api/search/text/%s?q=%s" % [page,search_word.percent_encode()])
 
 
 func _on_HTTPRequest_request_completed(result, response_code, headers, body):
@@ -149,8 +152,8 @@ func _on_search_button_up():
 
 func _text_input_enter(text):
 	keyboard.visible=false
-	searck_word = text
-	$mode.text = searck_word
+	search_word = text
+	$mode.text = search_word
 	current_list = -1
 	update_list(current_page,current_list)
 	

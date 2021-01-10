@@ -14,14 +14,12 @@ func initialize(beepsaber_game):
 
 func set_mode_game_start():
 	$Play_Button.visible = true;
-	$Stop_Button.visible = false;
 	$Continue_Button.visible = false;
 	$Restart_Button.visible = false;
 
 
 func set_mode_continue():
 	$Play_Button.visible = false;
-	$Stop_Button.visible = true;
 	$Continue_Button.visible = true;
 	$Restart_Button.visible = true;
 
@@ -30,6 +28,7 @@ var path = "res://game/data/maps/";
 var dlpath = str(OS.get_system_dir(3))+"/";
 var bspath = "/sdcard/BeepSaber/";
 #var bspath = "user://BeepSaber/";
+export(NodePath) var keyboard;
 
 var _playlists
 
@@ -38,40 +37,38 @@ var PlaylistButton = preload("res://game/PlaylistButton.tscn")
 func _load_playlists():
 	var Playlists = $PlaylistMenu/Playlists
 	
-	_playlists = vr.load_json_file(path + "Playlists.json");
-	if not _playlists:
-		_playlists = [];
+	_playlists = [];
 	
-	var seek_path = bspath + "Playlists/";
-	var dir = Directory.new();
-	var err = dir.open(seek_path);
-	if err == OK:
-		dir.list_dir_begin(true,true);
+	#copy sample songs to main playlist folder on first run
+	var file = File.new()
+	var config_path = "user://config.dat"
+	if not file.file_exists(config_path):
+		var dir = Directory.new()
+		var copy = Directory.new()
+		dir.make_dir_recursive(bspath+"Songs/")
+		dir.open(path+"Songs/")
+		dir.list_dir_begin(true,true)
 		var file_name = dir.get_next()
 		while file_name != "":
-			if (! dir.current_is_dir() and file_name.ends_with(".json")):
-				var play_file = seek_path+file_name;
-				var new_lists = vr.load_json_file(play_file);
-				if new_lists:
-					_playlists+=new_lists;
+			if dir.current_is_dir():
+				var new_dir = path+"Songs/"+file_name;
+				copy.make_dir_recursive(bspath+"Songs/"+file_name)
+				copy.open(new_dir)
+				copy.list_dir_begin(true,true)
+				var copy_file_name = copy.get_next()
+				while copy_file_name != "":
+					var copy_new_dir = new_dir+"/"+copy_file_name;
+					print(copy_new_dir)
+					dir.copy(copy_new_dir,bspath+"Songs/"+file_name+"/"+copy_file_name)
+					copy_file_name = copy.get_next();
 			file_name = dir.get_next();
 	
 	_autogen_playlists(bspath+"Songs/", "BeepSaber/Songs/");
 	
 	if (!_playlists):
-		vr.log_error("No Playlists.json found in " + path + " or " + seek_path);
+		vr.log_error("No songs found in " + bspath);
 		return false;
 	
-	# clear previous playlists
-	for child in Playlists.get_children():
-		Playlists.remove_child(child)
-		
-	# add discovered playlists
-	for pl in _playlists:
-		var newPlaylistButton = PlaylistButton.instance()
-		newPlaylistButton.pl = pl
-		newPlaylistButton.connect("pressed_pl", self, "_set_cur_playlist")
-		Playlists.add_child(newPlaylistButton)
 	
 	if (_playlists.size() == 0):
 		_set_cur_playlist([])
@@ -103,13 +100,6 @@ func _autogen_playlists(seek_path,name):
 var SongButton = preload("res://game/SongButton.tscn")
 
 func _set_cur_playlist(pl):
-	var Playlists = $PlaylistMenu/Playlists
-	
-	for playlist in Playlists.get_children():
-		if playlist.pl == pl:
-			playlist.modulate = Color(1, 0.5, 0.5)
-		else:
-			playlist.modulate = Color(1, 1, 1)
 	
 	var Songs = $SongsMenu/Songs
 	
@@ -256,8 +246,16 @@ func _ready():
 	if OS.get_name() != "Android":
 		bspath = dlpath+"BeepSaber/";
 	vr.log_info("BeepSaber search path is " + bspath);
+	
+	keyboard = get_node(keyboard);
+	keyboard.connect("text_input_enter",self,"_text_input_enter")
+	keyboard.connect("text_input_cancel",self,"_text_input_cancel")
 
 	_load_playlists();
+	
+	yield(get_tree(),"physics_frame")
+	keyboard._text_edit.connect("text_changed",self,"_text_input_changed")
+	keyboard._text_edit.connect("focus_exited",self,"_text_input_enter")
 
 
 func _on_Play_Button_pressed():
@@ -361,3 +359,39 @@ func _on_LoadPlaylists_Button_pressed():
 	#       maybe polling after the button press?
 	if (_check_and_request_permission()):
 		_load_playlists();
+
+
+func _on_Search_Button_button_up():
+	keyboard.visible=true
+	keyboard._text_edit.grab_focus();
+
+func _text_input_enter(text):
+	keyboard.visible=false
+func _text_input_cancel():
+	keyboard.visible=false
+	_clean_search()
+	
+func _text_input_changed():
+	var text = keyboard._text_edit.text
+	$Search_Button/Label.text = text
+	if text == "":
+		_clean_search()
+		return
+	var most_similar = 0.0
+	var results = false
+	for song in $SongsMenu/Songs.get_children():
+		var similarity = song.text.similarity(text)
+		song.visible = similarity != 0
+		if song.visible:
+			if similarity > most_similar:
+				most_similar = similarity
+				$SongsMenu/Songs.move_child(song,0)
+			results = true
+	if not results:
+		_clean_search()
+	
+func _clean_search():
+	for song in $SongsMenu/Songs.get_children():
+		song.visible = true
+	$Search_Button/Label.text = ""
+	

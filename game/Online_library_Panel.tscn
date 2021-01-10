@@ -214,9 +214,35 @@ autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 888.0
+margin_bottom = 952.0
+color = Color( 0.0509804, 0.0509804, 0.0509804, 1 )
+
+[node name="enable" type="Button" parent="ColorRect"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -392.0
+margin_top = -48.0
+margin_right = 392.0
+margin_bottom = 48.0
+theme = SubResource( 5 )
+custom_styles/hover = SubResource( 6 )
+custom_styles/pressed = SubResource( 7 )
+custom_styles/normal = SubResource( 8 )
+text = "Press here to connect and download new songs"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="item_selected" from="ItemList" to="." method="_on_ItemList_item_selected"]
 [connection signal="button_up" from="up" to="." method="_on_up_button_up"]
 [connection signal="button_up" from="mode" to="." method="_on_mode_button_up"]
 [connection signal="button_up" from="down" to="." method="_on_down_button_up"]
 [connection signal="button_up" from="download" to="." method="_on_download_button_up"]
 [connection signal="button_up" from="search" to="." method="_on_search_button_up"]
+[connection signal="button_up" from="ColorRect/enable" to="." method="enable"]

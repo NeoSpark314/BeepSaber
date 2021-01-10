@@ -153,27 +153,26 @@ tracks/3/keys = {
 "values": [ Vector3( 60, -90, -90 ), Vector3( 120, -90, -90 ) ]
 }
 
-[sub_resource type="Gradient" id=19]
-offsets = PoolRealArray( 0, 0.487179, 1 )
-colors = PoolColorArray( 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1 )
+[sub_resource type="Gradient" id=21]
+offsets = PoolRealArray( 0, 0.660256, 1 )
+colors = PoolColorArray( 0, 0, 0, 1, 0.1875, 0.1875, 0.1875, 1, 0, 0, 0, 1 )
 
-[sub_resource type="GradientTexture" id=20]
-gradient = SubResource( 19 )
+[sub_resource type="GradientTexture" id=22]
+gradient = SubResource( 21 )
 
-[sub_resource type="SpatialMaterial" id=14]
+[sub_resource type="SpatialMaterial" id=23]
 flags_unshaded = true
 flags_disable_ambient_light = true
-albedo_color = Color( 0.0313726, 0.0431373, 0.0509804, 1 )
-albedo_texture = SubResource( 20 )
+albedo_color = Color( 0.992157, 0, 1, 1 )
+albedo_texture = SubResource( 22 )
 
-[sub_resource type="PlaneMesh" id=15]
+[sub_resource type="PlaneMesh" id=24]
 
-[sub_resource type="SpatialMaterial" id=16]
+[sub_resource type="SpatialMaterial" id=25]
 flags_unshaded = true
 albedo_color = Color( 0.0470588, 0.0470588, 0.0470588, 1 )
 
-[sub_resource type="Animation" id=17]
-resource_name = "in"
+[sub_resource type="Animation" id=19]
 length = 2.0
 tracks/0/type = "value"
 tracks/0/path = NodePath("ring13:translation")
@@ -332,8 +331,7 @@ tracks/12/keys = {
 "values": [ Vector3( 0, 0, -7 ), Vector3( 0, 0, -6 ) ]
 }
 
-[sub_resource type="Animation" id=18]
-resource_name = "out"
+[sub_resource type="Animation" id=20]
 length = 2.0
 tracks/0/type = "value"
 tracks/0/path = NodePath("ring13:translation")
@@ -816,9 +814,9 @@ anims/laser_anim = SubResource( 13 )
 [node name="Tween" type="Tween" parent="Level/t3"]
 
 [node name="floor" type="MeshInstance" parent="Level"]
-transform = Transform( -3.91107e-06, 0, 3, 0, 1, 0, -24.006, 0, -4.88762e-07, 0, 0, -24 )
-material_override = SubResource( 14 )
-mesh = SubResource( 15 )
+transform = Transform( -3.9101e-06, 0, 3, 0, 1, 0, -24, 0, -4.88762e-07, 0, 0, -24 )
+material_override = SubResource( 23 )
+mesh = SubResource( 24 )
 material/0 = null
 
 [node name="t4" type="Spatial" parent="Level"]
@@ -842,79 +840,79 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -4 )
 
 [node name="ring" type="MeshInstance" parent="Level/rings"]
 transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -7 )
-material_override = SubResource( 16 )
+material_override = SubResource( 25 )
 mesh = ExtResource( 3 )
 material/0 = null
 
 [node name="ring2" type="MeshInstance" parent="Level/rings"]
 transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -11 )
-material_override = SubResource( 16 )
+material_override = SubResource( 25 )
 mesh = ExtResource( 3 )
 material/0 = null
 
 [node name="ring3" type="MeshInstance" parent="Level/rings"]
 transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -15 )
-material_override = SubResource( 16 )
+material_override = SubResource( 25 )
 mesh = ExtResource( 3 )
 material/0 = null
 
 [node name="ring4" type="MeshInstance" parent="Level/rings"]
 transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -19 )
-material_override = SubResource( 16 )
+material_override = SubResource( 25 )
 mesh = ExtResource( 3 )
 material/0 = null
 
 [node name="ring5" type="MeshInstance" parent="Level/rings"]
 transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -23 )
-material_override = SubResource( 16 )
+material_override = SubResource( 25 )
 mesh = ExtResource( 3 )
 material/0 = null
 
 [node name="ring6" type="MeshInstance" parent="Level/rings"]
 transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -27 )
-material_override = SubResource( 16 )
+material_override = SubResource( 25 )
 mesh = ExtResource( 3 )
 material/0 = null
 
 [node name="ring7" type="MeshInstance" parent="Level/rings"]
 transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -31 )
-material_override = SubResource( 16 )
+material_override = SubResource( 25 )
 mesh = ExtResource( 3 )
 material/0 = null
 
 [node name="ring8" type="MeshInstance" parent="Level/rings"]
 transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -35 )
-material_override = SubResource( 16 )
+material_override = SubResource( 25 )
 mesh = ExtResource( 3 )
 material/0 = null
 
 [node name="ring9" type="MeshInstance" parent="Level/rings"]
 transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -39 )
-material_override = SubResource( 16 )
+material_override = SubResource( 25 )
 mesh = ExtResource( 3 )
 material/0 = null
 
 [node name="ring10" type="MeshInstance" parent="Level/rings"]
 transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -43 )
-material_override = SubResource( 16 )
+material_override = SubResource( 25 )
 mesh = ExtResource( 3 )
 material/0 = null
 
 [node name="ring11" type="MeshInstance" parent="Level/rings"]
 transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -47 )
-material_override = SubResource( 16 )
+material_override = SubResource( 25 )
 mesh = ExtResource( 3 )
 material/0 = null
 
 [node name="ring12" type="MeshInstance" parent="Level/rings"]
 transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -51 )
-material_override = SubResource( 16 )
+material_override = SubResource( 25 )
 mesh = ExtResource( 3 )
 material/0 = null
 
 [node name="ring13" type="MeshInstance" parent="Level/rings"]
 transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -55 )
-material_override = SubResource( 16 )
+material_override = SubResource( 25 )
 mesh = ExtResource( 3 )
 material/0 = null
 
@@ -923,5 +921,5 @@ material/0 = null
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Level/rings"]
 playback_default_blend_time = 0.5
 playback_speed = 2.0
-anims/in = SubResource( 17 )
-anims/out = SubResource( 18 )
+anims/in = SubResource( 19 )
+anims/out = SubResource( 20 )

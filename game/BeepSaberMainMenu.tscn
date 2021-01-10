@@ -114,20 +114,25 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Stop_Button" type="Button" parent="."]
-visible = false
-margin_left = 987.727
-margin_top = 462.354
-margin_right = 1099.73
-margin_bottom = 510.354
+[node name="Search_Button" type="Button" parent="."]
+margin_left = 19.0
+margin_top = 13.0
+margin_right = 131.0
+margin_bottom = 56.0
 rect_pivot_offset = Vector2( -937.032, -176 )
 custom_styles/hover = SubResource( 2 )
 custom_styles/pressed = SubResource( 3 )
 custom_styles/normal = SubResource( 4 )
-text = "Stop"
+text = "Search"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Label" type="Label" parent="Search_Button"]
+margin_left = 117.0
+margin_top = 3.0
+margin_right = 167.0
+margin_bottom = 36.0
 
 [node name="cover" type="Sprite" parent="."]
 position = Vector2( 1216, 176 )
@@ -148,7 +153,7 @@ __meta__ = {
 }
 
 [node name="SongsMenu" type="ScrollContainer" parent="."]
-margin_left = 448.0
+margin_left = 16.0
 margin_top = 64.0
 margin_right = 848.0
 margin_bottom = 560.0
@@ -160,25 +165,6 @@ __meta__ = {
 }
 
 [node name="Songs" type="VBoxContainer" parent="SongsMenu"]
-margin_left = 3.0
-margin_top = 3.0
-margin_right = 3.0
-margin_bottom = 3.0
-
-[node name="PlaylistMenu" type="ScrollContainer" parent="."]
-margin_left = 16.0
-margin_top = 64.0
-margin_right = 430.0
-margin_bottom = 560.0
-custom_styles/bg = SubResource( 5 )
-follow_focus = true
-scroll_horizontal_enabled = false
-scroll_deadzone = 140
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Playlists" type="VBoxContainer" parent="PlaylistMenu"]
 margin_left = 3.0
 margin_top = 3.0
 margin_right = 3.0
@@ -209,6 +195,7 @@ download_chunk_size = 65536
 timeout = 4
 
 [node name="Playlists_Label" type="Label" parent="."]
+visible = false
 margin_left = 16.0
 margin_top = 16.0
 margin_right = 432.0
@@ -218,7 +205,7 @@ align = 1
 valign = 1
 
 [node name="Songs_Label" type="Label" parent="."]
-margin_left = 448.0
+margin_left = 131.0
 margin_top = 16.0
 margin_right = 848.0
 margin_bottom = 64.0
@@ -257,6 +244,6 @@ __meta__ = {
 [connection signal="pressed" from="Continue_Button" to="." method="_on_Continue_Button_pressed"]
 [connection signal="pressed" from="Restart_Button" to="." method="_on_Restart_Button_pressed"]
 [connection signal="pressed" from="Exit_Button" to="." method="_on_Exit_Button_pressed"]
-[connection signal="pressed" from="Stop_Button" to="." method="_on_Stop_Button_pressed"]
+[connection signal="button_up" from="Search_Button" to="." method="_on_Search_Button_button_up"]
 [connection signal="request_completed" from="HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]
 [connection signal="pressed" from="LoadPlaylists_Button" to="." method="_on_LoadPlaylists_Button_pressed"]

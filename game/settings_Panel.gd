@@ -22,8 +22,6 @@ func _ready():
 		file.open(config_path,File.READ)
 		savedata = file.get_var(true)
 		file.close()
-	else:
-		save_current_settings()
 	
 	#correct controls
 	yield(get_tree(),"idle_frame")
