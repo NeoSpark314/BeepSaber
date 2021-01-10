@@ -34,6 +34,7 @@ var _current_note_speed = 1.0;
 var _current_info = null;
 var _current_note = 0;
 var _current_obstacle = 0;
+var _current_event = 0;
 
 
 var _high_score = 0;
@@ -56,6 +57,7 @@ func restart_map():
 	_in_wall = false;
 	_current_note = 0;
 	_current_obstacle = 0;
+	_current_event = 0;
 	_current_points = 0;
 	_current_multiplier = 1;
 	_current_combo = 0;
@@ -65,6 +67,8 @@ func restart_map():
 	_wrong_notes = 0.0
 
 	_display_points();
+	$event_driver.update_colors()
+	$event_driver.set_all_off()
 
 	for c in $Track.get_children():
 		c.visible = false;
@@ -261,8 +265,17 @@ func _process_map(dt):
 				_reset_combo();
 			c.queue_free();
 
+	var e = _current_map._events;
+	while (_current_event < e.size() && e[_current_event]._time <= current_beat):#+beats_ahead):
+		_spawn_event(e[_current_event], current_beat);
+		_current_event += 1;
+
 	if (song_player.get_playback_position() >= song_player.stream.get_length()-1):
 		_end_song_display();
+
+func _spawn_event(data,beat):
+	$event_driver.procces_event(data,beat)
+
 
 # with this variable we track the movement volume of the controller
 # since the last cut (used to give a higher score when moved a lot)
@@ -330,48 +343,9 @@ func _physics_process(dt):
 	
 	_update_saber_end_variabless(dt)
 	
-	_update_level(dt);
 
 var _main_menu = null;
-var _spectrum = null;
-var _spectrum_nodes = [];
 var _lpf = null;
-
-# update the level animations; at the moment this is only the basic
-# spectrum analyzer
-func _update_level(dt):
-	var VU_COUNT = _spectrum_nodes.size();
-	var FREQ_MAX = 11050.0
-	var MIN_DB = 60.0
-
-	var prev_hz = 100
-	for i in range(1,VU_COUNT+1):
-		var hz = i * FREQ_MAX / VU_COUNT;
-		var f = _spectrum.get_magnitude_for_frequency_range(prev_hz,hz)
-		var energy = clamp((MIN_DB + linear2db(f.length()))/MIN_DB,0,1)
-		
-		if _spectrum_nodes[i-1].translation.y < energy * 10.0:
-			_spectrum_nodes[i-1].translation.y = min(_spectrum_nodes[i-1].translation.y+0.2,energy * 10.0);
-		else:
-			_spectrum_nodes[i-1].translation.y -= 0.08;
-
-		prev_hz = hz
-
-# create the level data that is displayed
-func _setup_level():
-	
-	# create a specrum analyzer
-	AudioServer.add_bus_effect(0, AudioEffectSpectrumAnalyzer.new());
-	_spectrum = AudioServer.get_bus_effect_instance(0,0);
-	# and create some cubes to display it in the level (updated in _update_level(dt))
-	var s = $Level/SpectrumBar;
-	_spectrum_nodes.push_back(s);
-	for  i in range(0, 7):
-		s = s.duplicate()
-		$Level.add_child(s);
-		s.translation.x += 2.0;
-		_spectrum_nodes.push_back(s);
-
 
 func _ready():
 	_main_menu = $MainMenu_OQ_UI2DCanvas.find_node("BeepSaberMainMenu", true, false);
@@ -395,7 +369,6 @@ func _ready():
 	$Settings_canvas.visible = false;
 	$Online_library.visible = false;
 	show_menu();
-	_setup_level();
 
 func update_cube_colors():
 	cube_left.update_color_only(COLOR_LEFT);
@@ -406,6 +379,16 @@ func update_saber_colors():
 	left_saber.type = 0;
 	right_saber.set_color(COLOR_RIGHT)
 	right_saber.type = 1;
+	#also updates map colors
+	$event_driver.update_colors()
+
+func disable_events(disabled):
+	$event_driver.disabled = disabled
+	if disabled:
+		$event_driver.set_all_off()
+	else:
+		$event_driver.set_all_on()
+
 
 # cut the cube by creating two rigid bodies and using a CSGBox to create
 # the cut plane

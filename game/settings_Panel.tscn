@@ -80,10 +80,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -163.5
-margin_top = -152.0
-margin_right = 163.5
-margin_bottom = -101.0
+margin_left = -51.5
+margin_top = -107.0
+margin_right = 275.5
+margin_bottom = -56.0
 theme = SubResource( 3 )
 pressed = true
 text = "Cutted blocks"
@@ -97,9 +97,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -135.0
-margin_top = 8.0
+margin_top = 53.0
 margin_right = 135.0
-margin_bottom = 59.0
+margin_bottom = 104.0
 theme = SubResource( 3 )
 pressed = true
 text = "Saber tail"
@@ -113,9 +113,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -142.5
-margin_top = -72.0
+margin_top = -27.0
 margin_right = 142.5
-margin_bottom = -29.0
+margin_bottom = 16.0
 theme = SubResource( 3 )
 text = "Saber thickness"
 __meta__ = {
@@ -124,9 +124,9 @@ __meta__ = {
 
 [node name="saber_thicknes" type="HSlider" parent="."]
 margin_left = 256.0
-margin_top = 248.0
+margin_top = 293.0
 margin_right = 448.0
-margin_bottom = 264.0
+margin_bottom = 309.0
 rect_scale = Vector2( 2, 2 )
 min_value = 10.0
 value = 100.0
@@ -136,9 +136,9 @@ __meta__ = {
 
 [node name="left_sable_col" type="ColorPickerButton" parent="."]
 margin_left = 256.0
-margin_top = 384.0
+margin_top = 429.0
 margin_right = 384.0
-margin_bottom = 448.0
+margin_bottom = 493.0
 text = "Left saber"
 flat = true
 color = Color( 1, 0.101961, 0.101961, 1 )
@@ -149,13 +149,45 @@ __meta__ = {
 
 [node name="right_sable_col" type="ColorPickerButton" parent="."]
 margin_left = 512.0
-margin_top = 384.0
+margin_top = 429.0
 margin_right = 640.0
-margin_bottom = 448.0
+margin_bottom = 493.0
 text = "Right saber"
 flat = true
 color = Color( 0.101961, 0.101961, 1, 1 )
 edit_alpha = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="glare" type="CheckButton" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -253.0
+margin_top = -107.0
+margin_right = -97.0
+margin_bottom = -56.0
+theme = SubResource( 3 )
+pressed = true
+text = "Glow"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="d_background" type="CheckButton" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -208.0
+margin_top = -184.0
+margin_right = 214.0
+margin_bottom = -133.0
+theme = SubResource( 3 )
+pressed = true
+text = "Dinamyc background"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -178,4 +210,6 @@ __meta__ = {
 [connection signal="value_changed" from="saber_thicknes" to="." method="_on_HSlider_value_changed"]
 [connection signal="color_changed" from="left_sable_col" to="." method="_on_left_sable_col_color_changed"]
 [connection signal="color_changed" from="right_sable_col" to="." method="_on_right_sable_col_color_changed"]
+[connection signal="toggled" from="glare" to="." method="_on_glare_toggled"]
+[connection signal="toggled" from="d_background" to="." method="_on_d_background_toggled"]
 [connection signal="button_up" from="defaults" to="." method="_on_Button_button_up"]
