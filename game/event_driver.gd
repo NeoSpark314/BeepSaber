@@ -124,6 +124,7 @@ func procces_event(data,beat):
 func change_light_color(type,color=-1,transition_mode=0):
 	var group : Spatial
 	var material = []
+	var shader = []
 	var tween : Tween
 	match int(type):
 		0:
@@ -144,7 +145,8 @@ func change_light_color(type,color=-1,transition_mode=0):
 			tween = $Level/t3/Tween
 		4:
 			group = $Level/t4
-			material = [$Level/t4/Bar1.material_override,$Level/floor.material_override]
+			material = [$Level/t4/Bar1.material_override, $Level/floor.material_override]
+			shader = [$wall_material_holder.material_override]
 			tween = $Level/t4/Tween
 	
 	if not color is Color:
@@ -152,6 +154,9 @@ func change_light_color(type,color=-1,transition_mode=0):
 			m.albedo_color = Color.black
 		group.visible = false
 		return
+	else:
+		for m in shader:
+			m.set_shader_param("albedo_color",color)
 	
 	match transition_mode:
 		0:
