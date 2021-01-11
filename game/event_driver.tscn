@@ -51,11 +51,12 @@ uniform lowp float bg_4_intensity_mult = 1f;
 
 void fragment(){
 	ALBEDO = texture(bg_base,UV).rgb;
-	if (bg_0_intensity>0f){ALBEDO += (texture(bg_0,UV).rgb*(bg_0_intensity*bg_0_intensity_mult))*bg_0_tint.rgb;}
-	if (bg_1_intensity>0f){ALBEDO += (texture(bg_1,UV).rgb*(bg_1_intensity*bg_1_intensity_mult))*bg_1_tint.rgb;}
-	if (bg_2_intensity>0f){ALBEDO += (texture(bg_2,UV).rgb*(bg_2_intensity*bg_2_intensity_mult))*bg_2_tint.rgb;}
-	if (bg_3_intensity>0f){ALBEDO += (texture(bg_3,UV).rgb*(bg_3_intensity*bg_3_intensity_mult))*bg_3_tint.rgb;}
-	if (bg_4_intensity>0f){ALBEDO += (texture(bg_4,UV).rgb*(bg_4_intensity*bg_4_intensity_mult))*bg_4_tint.rgb;}
+	vec2 xinv_uv = vec2(-UV.x,UV.y);
+	if (bg_0_intensity>0f){ALBEDO += (texture(bg_0,xinv_uv).rgb*(bg_0_intensity*bg_0_intensity_mult))*bg_0_tint.rgb;}
+	if (bg_1_intensity>0f){ALBEDO += (texture(bg_1,xinv_uv).rgb*(bg_1_intensity*bg_1_intensity_mult))*bg_1_tint.rgb;}
+	if (bg_2_intensity>0f){ALBEDO += (texture(bg_2,xinv_uv).rgb*(bg_2_intensity*bg_2_intensity_mult))*bg_2_tint.rgb;}
+	if (bg_3_intensity>0f){ALBEDO += (texture(bg_3,xinv_uv).rgb*(bg_3_intensity*bg_3_intensity_mult))*bg_3_tint.rgb;}
+	if (bg_4_intensity>0f){ALBEDO += (texture(bg_4,xinv_uv).rgb*(bg_4_intensity*bg_4_intensity_mult))*bg_4_tint.rgb;}
 }"
 
 [sub_resource type="ShaderMaterial" id=5]

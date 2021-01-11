@@ -8,7 +8,7 @@ var savedata = {
 	COLOR_LEFT = Color("ff1a1a"),
 	COLOR_RIGHT = Color("1a1aff"),
 	saber_tail = true,
-	glare = true,
+	glare = false,
 	events = true
 }
 var defaults
