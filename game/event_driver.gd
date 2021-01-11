@@ -152,16 +152,20 @@ func change_light_color(type,color=-1,transition_mode=0):
 	if not color is Color:
 		for m in material:
 			m.albedo_color = Color.black
+		tween.stop_all()
+		$Level/Sphere.material_override.set_shader_param("bg_%d_intensity"%int(type),0.0)
 		group.visible = false
 		return
 	else:
 		for m in shader:
 			m.set_shader_param("albedo_color",color)
+		$Level/Sphere.material_override.set_shader_param("bg_%d_tint"%int(type),color)
 	
 	match transition_mode:
 		0:
 			for m in material:
 				m.albedo_color = color
+			$Level/Sphere.material_override.set_shader_param("bg_%d_intensity"%int(type),color.v)
 			group.visible = true
 		1:
 			tween.stop_all()
@@ -179,6 +183,13 @@ func change_light_color(type,color=-1,transition_mode=0):
 			if material[0].albedo_color == Color(0,0,0):
 				group.visible = false
 			
+
+func _on_Tween_tween_step(object, key, elapsed, value : Color, id):
+	if id == null: return
+	$Level/Sphere.material_override.set_shader_param("bg_%d_intensity"%id,value.v)
+
+
+
 
 
 
