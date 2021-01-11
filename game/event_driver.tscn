@@ -171,7 +171,7 @@ albedo_texture = SubResource( 15 )
 
 [sub_resource type="SpatialMaterial" id=18]
 flags_unshaded = true
-albedo_color = Color( 0.0470588, 0.0470588, 0.0470588, 1 )
+albedo_color = Color( 0.12549, 0.12549, 0.12549, 1 )
 
 [sub_resource type="Animation" id=19]
 length = 2.0

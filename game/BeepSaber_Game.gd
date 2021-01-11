@@ -133,7 +133,7 @@ func show_menu():
 	$Online_library.visible = true;
 	
 func show_pause_menu():
-	if ($PauseMenu_canvas.visible): return;
+	if ($PauseMenu_canvas.visible or not song_player.playing): return;
 
 	if (song_player.playing):
 		print(_current_info)
@@ -142,6 +142,7 @@ func show_pause_menu():
 
 	ui_raycast.visible = true;
 	$PauseMenu_canvas.visible = true;
+	$Settings_canvas.visible = true;
 
 # when the song ended we want to display the current score and
 # the high score
@@ -598,6 +599,7 @@ func _on_EndScore_panel_goto_mainmenu():
 
 func _on_Pause_Panel_continue_button():
 	$PauseMenu_canvas.visible = false
+	$Settings_canvas.visible = false;
 	$Pause_countdown.visible = true
 	$Pause_countdown.set_label_text("3")
 	yield(get_tree().create_timer(0.5),"timeout")
