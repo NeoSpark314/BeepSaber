@@ -5,7 +5,7 @@
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/Roboto-Medium.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://game/vr_slider.gd" type="Script" id=4]
 
-[sub_resource type="StyleBoxFlat" id=1]
+[sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 8
 border_width_top = 8
@@ -13,21 +13,21 @@ border_width_right = 8
 border_width_bottom = 8
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=8]
 size = 45
 font_data = ExtResource( 1 )
 
-[sub_resource type="Theme" id=3]
-default_font = SubResource( 2 )
+[sub_resource type="Theme" id=9]
+default_font = SubResource( 8 )
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=10]
 size = 32
 font_data = ExtResource( 3 )
 
-[sub_resource type="Theme" id=5]
-default_font = SubResource( 4 )
+[sub_resource type="Theme" id=11]
+default_font = SubResource( 10 )
 
-[sub_resource type="StyleBoxFlat" id=6]
+[sub_resource type="StyleBoxFlat" id=12]
 bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -35,7 +35,7 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=7]
+[sub_resource type="StyleBoxFlat" id=6]
 bg_color = Color( 0.270588, 0.270588, 0.270588, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -43,7 +43,7 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=8]
+[sub_resource type="StyleBoxFlat" id=13]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -51,21 +51,21 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="DynamicFont" id=9]
+[sub_resource type="DynamicFont" id=14]
 size = 20
 font_data = ExtResource( 1 )
 
-[sub_resource type="DynamicFont" id=10]
+[sub_resource type="DynamicFont" id=15]
 size = 32
 font_data = ExtResource( 1 )
 
-[sub_resource type="Theme" id=11]
-default_font = SubResource( 10 )
+[sub_resource type="Theme" id=16]
+default_font = SubResource( 15 )
 
 [node name="Online_library_Panel" type="Panel"]
 margin_right = 896.0
 margin_bottom = 960.0
-custom_styles/panel = SubResource( 1 )
+custom_styles/panel = SubResource( 7 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -78,8 +78,8 @@ margin_left = 16.0
 margin_top = 80.0
 margin_right = -16.0
 margin_bottom = -112.0
-theme = SubResource( 3 )
-custom_styles/bg = SubResource( 1 )
+theme = SubResource( 9 )
+custom_styles/bg = SubResource( 7 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 items = [ "Ítem 0", null, false, "Ítem 1", null, false, "Ítem 2", null, false ]
 script = ExtResource( 4 )
@@ -92,11 +92,11 @@ margin_left = 16.0
 margin_top = 16.0
 margin_right = 192.0
 margin_bottom = 72.0
-theme = SubResource( 5 )
-custom_styles/hover = SubResource( 6 )
-custom_styles/pressed = SubResource( 7 )
-custom_styles/disabled = SubResource( 7 )
-custom_styles/normal = SubResource( 8 )
+theme = SubResource( 11 )
+custom_styles/hover = SubResource( 12 )
+custom_styles/pressed = SubResource( 6 )
+custom_styles/disabled = SubResource( 6 )
+custom_styles/normal = SubResource( 13 )
 text = "Previous"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -107,11 +107,11 @@ margin_left = 256.0
 margin_top = 16.0
 margin_right = 488.0
 margin_bottom = 72.0
-theme = SubResource( 5 )
-custom_styles/hover = SubResource( 6 )
-custom_styles/pressed = SubResource( 7 )
-custom_styles/disabled = SubResource( 7 )
-custom_styles/normal = SubResource( 8 )
+theme = SubResource( 11 )
+custom_styles/hover = SubResource( 12 )
+custom_styles/pressed = SubResource( 6 )
+custom_styles/disabled = SubResource( 6 )
+custom_styles/normal = SubResource( 13 )
 text = "Hot"
 clip_text = true
 __meta__ = {
@@ -123,11 +123,11 @@ margin_left = 704.0
 margin_top = 16.0
 margin_right = 880.0
 margin_bottom = 72.0
-theme = SubResource( 5 )
-custom_styles/hover = SubResource( 6 )
-custom_styles/pressed = SubResource( 7 )
-custom_styles/disabled = SubResource( 7 )
-custom_styles/normal = SubResource( 8 )
+theme = SubResource( 11 )
+custom_styles/hover = SubResource( 12 )
+custom_styles/pressed = SubResource( 6 )
+custom_styles/disabled = SubResource( 6 )
+custom_styles/normal = SubResource( 13 )
 text = "Next"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -142,10 +142,10 @@ margin_left = -104.0
 margin_top = -88.0
 margin_right = 104.0
 margin_bottom = -24.0
-theme = SubResource( 5 )
-custom_styles/hover = SubResource( 6 )
-custom_styles/pressed = SubResource( 7 )
-custom_styles/normal = SubResource( 8 )
+theme = SubResource( 11 )
+custom_styles/hover = SubResource( 12 )
+custom_styles/pressed = SubResource( 6 )
+custom_styles/normal = SubResource( 13 )
 text = "Download"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -160,10 +160,10 @@ margin_left = 176.0
 margin_top = -88.0
 margin_right = 384.0
 margin_bottom = -24.0
-theme = SubResource( 5 )
-custom_styles/hover = SubResource( 6 )
-custom_styles/pressed = SubResource( 7 )
-custom_styles/normal = SubResource( 8 )
+theme = SubResource( 11 )
+custom_styles/hover = SubResource( 12 )
+custom_styles/pressed = SubResource( 6 )
+custom_styles/normal = SubResource( 13 )
 text = "Search"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -178,7 +178,7 @@ margin_left = 16.0
 margin_top = -104.0
 margin_right = -560.0
 margin_bottom = -16.0
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 14 )
 text = "Downloading: "
 autowrap = true
 __meta__ = {
@@ -193,7 +193,7 @@ margin_left = 654.0
 margin_top = -145.0
 margin_right = -23.0
 margin_bottom = -118.0
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 14 )
 text = "From beatsaver.com"
 autowrap = true
 __meta__ = {
@@ -208,7 +208,7 @@ margin_left = 496.0
 margin_top = -944.0
 margin_right = -200.0
 margin_bottom = -888.0
-theme = SubResource( 11 )
+theme = SubResource( 16 )
 text = "Page: 1"
 autowrap = true
 __meta__ = {
@@ -234,10 +234,10 @@ margin_left = -392.0
 margin_top = -48.0
 margin_right = 392.0
 margin_bottom = 48.0
-theme = SubResource( 5 )
-custom_styles/hover = SubResource( 6 )
-custom_styles/pressed = SubResource( 7 )
-custom_styles/normal = SubResource( 8 )
+theme = SubResource( 11 )
+custom_styles/hover = SubResource( 12 )
+custom_styles/pressed = SubResource( 6 )
+custom_styles/normal = SubResource( 13 )
 text = "Press here to connect and download new songs"
 __meta__ = {
 "_edit_use_anchors_": false

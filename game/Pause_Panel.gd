@@ -5,7 +5,7 @@ signal restart_button()
 signal mainmenu_button()
 
 func set_pause_text(song_name,dificulty=""):
-	$Label.text = "Current song:\n%s\n\n%s" % [song_name,dificulty]
+	$Label.text = "Current song:\n%s\n%s" % [song_name,dificulty]
 
 func _on_continue_button_up():
 	emit_signal("continue_button")

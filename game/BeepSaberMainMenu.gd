@@ -14,14 +14,10 @@ func initialize(beepsaber_game):
 
 func set_mode_game_start():
 	$Play_Button.visible = true;
-	$Continue_Button.visible = false;
-	$Restart_Button.visible = false;
 
 
 func set_mode_continue():
 	$Play_Button.visible = false;
-	$Continue_Button.visible = true;
-	$Restart_Button.visible = true;
 
 
 var path = "res://game/data/maps/";
@@ -67,6 +63,8 @@ func _load_playlists():
 	
 	if (!_playlists):
 		vr.log_error("No songs found in " + bspath);
+		for b in $SongsMenu/Songs.get_children():
+			b.queue_free()
 		return false;
 	
 	
@@ -175,13 +173,16 @@ func _load_cover(cover_path, filename):
 # to later extend it to load different maps
 var _map_id = null;
 var _map_info = null;
+var _map_path = null;
 
 var DifficultyButton = preload("res://game/DifficultyButton.tscn")
 
 
 func _select_song(id):
-	_map_id = id
-	_map_info = _load_song_info(_song_path(id));
+	_map_id = id;
+	_map_path = _song_path(id);
+	$Delete_Button.disabled = false;
+	_map_info = _load_song_info(_map_path);
 	$SongInfo_Label.text = """Song Author: %s
 	Song Title: %s
 	Beatmap Author: %s""" %[_map_info._songAuthorName, _map_info._songName, _map_info._levelAuthorName]
@@ -210,7 +211,7 @@ func _select_song(id):
 
 
 var _map_difficulty = 0
-
+var _map_difficulty_name = ""
 
 func _select_difficulty(id):
 	_map_difficulty = id
@@ -218,6 +219,7 @@ func _select_difficulty(id):
 	for difficulty in Difficulties.get_children():
 		difficulty.modulate = Color(1, 1, 1)
 	Difficulties.get_child(id).modulate = Color(1, 0.5, 0.5)
+	_map_difficulty_name = Difficulties.get_child(id).text
 
 
 func _load_map_and_start():
@@ -241,8 +243,34 @@ func _load_map_and_start():
 	
 	return true;
 
+func _on_Delete_Button_button_up():
+	if $Delete_Button.text != "Sure?":
+		$Delete_Button.text = "Sure?";
+		yield(get_tree().create_timer(5),"timeout");
+		$Delete_Button.text = "Delete";
+	else:
+		$Delete_Button.text = "Delete";
+		_delete_map();
+	
+func _delete_map():
+	if _map_path:
+		var dir = Directory.new();
+		if dir.open(_map_path) == 0:
+			dir.list_dir_begin();
+			var current_file = dir.get_next();
+			while current_file != "":
+				dir.remove(_map_path+current_file);
+				current_file = dir.get_next();
+			dir.remove(_map_path);
+			vr.log_info(_map_path+" Removed");
+			_map_path = null;
+			$Delete_Button.disabled = true;
+		else:
+			vr.log_info("Error removing song "+_map_path);
+		_on_LoadPlaylists_Button_pressed()
 
-func _ready():	
+
+func _ready():
 	if OS.get_name() != "Android":
 		bspath = dlpath+"BeepSaber/";
 	vr.log_info("BeepSaber search path is " + bspath);
@@ -395,3 +423,5 @@ func _clean_search():
 		song.visible = true
 	$Search_Button/Label.text = ""
 	
+
+

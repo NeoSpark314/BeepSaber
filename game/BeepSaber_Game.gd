@@ -136,9 +136,9 @@ func show_pause_menu():
 	if ($PauseMenu_canvas.visible or not song_player.playing): return;
 
 	if (song_player.playing):
-		print(_current_info)
+#		print(_current_info)
 		song_player.stop();
-		$PauseMenu_canvas.ui_control.set_pause_text("%s By %s" % [_current_info["_songName"],_current_info["_songAuthorName"]])
+		$PauseMenu_canvas.ui_control.set_pause_text("%s By %s\nMap author: %s" % [_current_info["_songName"],_current_info["_songAuthorName"],_current_info["_levelAuthorName"]],menu._map_difficulty_name)
 
 	ui_raycast.visible = true;
 	$PauseMenu_canvas.visible = true;
@@ -155,7 +155,7 @@ func _end_song_display():
 #	$EndScore_OQ_UILabel.set_label_text("Congratulations\nYour Score: %d\nHigh Score: %d\nAccuracy: %d%%" %[_current_points, _high_score,current_percent]);
 #	$EndScore_OQ_UILabel.visible = true;
 	$EndScore_canvas.visible = true
-	$EndScore_canvas.ui_control.show_score(_current_points,_high_score,current_percent,"%s By %s" % [_current_info["_songName"],_current_info["_songAuthorName"]])
+	$EndScore_canvas.ui_control.show_score(_current_points,_high_score,current_percent,"%s By %s\n%s     Map author: %s" % [_current_info["_songName"],_current_info["_songAuthorName"],menu._map_difficulty_name,_current_info["_levelAuthorName"]])
 	ui_raycast.visible = true;
 	song_player.stop();
 #	show_menu();
@@ -371,6 +371,8 @@ func _ready():
 	$MainMenu_OQ_UI2DCanvas.visible = false;
 	$Settings_canvas.visible = false;
 	$Online_library.visible = false;
+	$OQ_UI2DKeyboard.visible = false;
+	$OQ_UI2DKeyboard_main.visible = false;
 	show_menu();
 
 func update_cube_colors():
@@ -489,7 +491,7 @@ func _update_points_from_cut(saber, cube, beat_accuracy, cut_angle_accuracy, cut
 	
 	# track acurracy percent
 	var normalized_points = clamp(points/100, 0.0, 1.0);
-	print(normalized_points)
+#	print(normalized_points)
 	_right_notes += normalized_points;
 	_wrong_notes += 1.0-normalized_points;
 
