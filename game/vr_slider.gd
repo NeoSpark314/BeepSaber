@@ -1,4 +1,4 @@
-extends Control
+extends ItemList
 
 export(NodePath) var scroll_node
 var is_mouse_in = false
@@ -16,13 +16,12 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	var newpos = -vr.rightController.rotation_degrees.x-(vr.rightController.transform.origin.y*20)
 	if is_mouse_in:
-		if vr.button_just_pressed(vr.BUTTON.RIGHT_INDEX_TRIGGER):
-			relpos = vr.rightController.rotation_degrees.x
-			scrollpos = scroll_node.value
 		if vr.button_pressed(vr.BUTTON.RIGHT_INDEX_TRIGGER):
-			scroll_node.value = scrollpos-((relpos-vr.rightController.rotation_degrees.x)*10)
-
+			scroll_node.value += ((relpos-newpos)*20)
+	relpos = newpos
+	
 func _mouse_entered():
 	is_mouse_in = true
 func _mouse_exited():

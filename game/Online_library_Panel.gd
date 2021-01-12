@@ -50,6 +50,8 @@ func update_list(page=0,list="hot"):
 	$ItemList.clear()
 	song_data = []
 	item_selected = -1
+	httpcoverdownload.cancel_request()
+	httpreq.cancel_request()
 	if list is String:
 		httpreq.request("https://beatsaver.com/api/maps/%s/%s" % [list,page])
 	else:
@@ -66,13 +68,14 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 				$ItemList.add_item(song["name"])
 				var tooltip = "Map author: %s" % song["metadata"]["levelAuthorName"]
 				$ItemList.set_item_tooltip($ItemList.get_item_count()-1,tooltip)
-				
+				$ItemList.set_item_icon($ItemList.get_item_count()-1,placeholder_cover)
 	#		print(song_codes)
 	else:
 		vr.log_info("request error "+str(result))
 	$up.disabled = false
 	$down.disabled = false
 	$mode.disabled = false
+	_update_all_covers()
 
 
 func _on_up_button_up():
@@ -122,8 +125,7 @@ difficulties:%s
 	]
 	$song_data.bbcode_text = text
 	
-	$TextureRect.texture = placeholder_cover
-	httpcoverdownload.request("https://beatsaver.com%s" % selected_data["coverURL"])
+	$TextureRect.texture = $ItemList.get_item_icon(index)
 
 
 func _on_download_button_up():
@@ -195,6 +197,17 @@ func _text_input_cancel():
 	keyboard.visible=false
 
 
+var _current_cover_to_download = 0
+
+func _update_all_covers():
+	_current_cover_to_download = 0
+	httpcoverdownload.cancel_request()
+	update_next_cover()
+
+func update_next_cover():
+	if _current_cover_to_download < song_data.size():
+		httpcoverdownload.request("https://beatsaver.com%s" % song_data[_current_cover_to_download]["coverURL"])
+
 func _update_cover(result, response_code, headers, body):
 	if result == 0:
 		var img = Image.new()
@@ -202,4 +215,6 @@ func _update_cover(result, response_code, headers, body):
 			img.load_png_from_buffer(body)
 		var img_tex = ImageTexture.new()
 		img_tex.create_from_image(img)
-		$TextureRect.texture = img_tex
+		$ItemList.set_item_icon(_current_cover_to_download,img_tex)
+	_current_cover_to_download += 1
+	update_next_cover()

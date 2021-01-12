@@ -88,7 +88,8 @@ margin_bottom = -112.0
 theme = SubResource( 3 )
 custom_styles/bg = SubResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
-items = [ "Ítem 0", null, false, "Ítem 1", null, false, "Ítem 2", null, false ]
+items = [ "Ítem 0", ExtResource( 5 ), false, "Ítem 1", ExtResource( 5 ), false, "Ítem 2", ExtResource( 5 ), false ]
+fixed_icon_size = Vector2( 80, 80 )
 script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
