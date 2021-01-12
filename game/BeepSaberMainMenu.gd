@@ -212,6 +212,7 @@ func _select_song(id):
 
 var _map_difficulty = 0
 var _map_difficulty_name = ""
+var _map_difficulty_noteJumpMovementSpeed = 9.0
 
 func _select_difficulty(id):
 	_map_difficulty = id
@@ -233,6 +234,7 @@ func _load_map_and_start():
 	var map_info = set0._difficultyBeatmaps[_map_difficulty];
 	var map_filename = _map_info._path + map_info._beatmapFilename;
 	var map_data = vr.load_json_file(map_filename);
+	_map_difficulty_noteJumpMovementSpeed = set0._difficultyBeatmaps[_map_difficulty]["_noteJumpMovementSpeed"];
 	
 	if (map_data == null):
 		vr.log_error("Could not read map data from " + map_filename);

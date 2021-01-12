@@ -13,11 +13,13 @@ onready var _mesh_instance : MeshInstance = $CubeMeshOrientation/CubeMeshAnimati
 # reuse it when we create the cut cube pieces
 var _mesh : Mesh = null;
 var _mat : SpatialMaterial = null;
+var speed = 1.0;
 
 func _ready():
 	_mesh = _mesh_instance.mesh;
 	_mat = _mesh_instance.mesh.surface_get_material(0);
 	# play the spawn animation when this cube enters the scene
+	_anim.playback_speed = speed
 	_anim.play("Spawn");
 
 func duplicate_create(color : Color):

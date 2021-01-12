@@ -175,6 +175,7 @@ func _spawn_cube(note, current_beat):
 	else:
 		return;
 
+	cube.speed = float(menu._map_difficulty_noteJumpMovementSpeed)/9
 	track.add_child(cube);
 
 	var line = -(CUBE_DISTANCE * 3.0 / 2.0) + note._lineIndex * CUBE_DISTANCE;

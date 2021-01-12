@@ -37,7 +37,7 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=6]
+[sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 0.270588, 0.270588, 0.270588, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -45,7 +45,7 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=5]
+[sub_resource type="StyleBoxFlat" id=6]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 3
 border_width_top = 3
@@ -88,7 +88,7 @@ margin_right = 1040.0
 margin_bottom = 496.0
 custom_styles/hover = SubResource( 2 )
 custom_styles/pressed = SubResource( 3 )
-custom_styles/disabled = SubResource( 6 )
+custom_styles/disabled = SubResource( 5 )
 custom_styles/normal = SubResource( 4 )
 disabled = true
 text = "Delete"
@@ -129,10 +129,17 @@ margin_top = 3.0
 margin_right = 167.0
 margin_bottom = 36.0
 
-[node name="cover" type="Sprite" parent="."]
-position = Vector2( 1216, 176 )
-scale = Vector2( 0.4375, 0.4375 )
+[node name="cover" type="TextureRect" parent="."]
+margin_left = 1050.0
+margin_top = 67.0
+margin_right = 1390.0
+margin_bottom = 320.0
 texture = ExtResource( 4 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="SongInfo_Label" type="Label" parent="."]
 margin_left = 864.0
@@ -152,7 +159,7 @@ margin_left = 16.0
 margin_top = 64.0
 margin_right = 848.0
 margin_bottom = 560.0
-custom_styles/bg = SubResource( 5 )
+custom_styles/bg = SubResource( 6 )
 follow_focus = true
 scroll_deadzone = 140
 __meta__ = {
@@ -170,7 +177,7 @@ margin_left = 864.0
 margin_top = 64.0
 margin_right = 1040.0
 margin_bottom = 320.0
-custom_styles/bg = SubResource( 5 )
+custom_styles/bg = SubResource( 6 )
 follow_focus = true
 scroll_horizontal_enabled = false
 scroll_vertical_enabled = false
