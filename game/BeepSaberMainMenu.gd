@@ -115,6 +115,7 @@ func _wire_song_dat(dat, to_select):
 	var newSongButton = SongButton.instance();
 	newSongButton.id = dat;
 	newSongButton.info = _load_song_info(_song_path(dat));
+	newSongButton.texture = _load_cover(_song_path(dat), newSongButton.info._coverImageFilename)
 	newSongButton.connect("pressed_id", self, "_select_song");
 	Songs.add_child(newSongButton)
 	if newSongButton.info and to_select:
@@ -208,6 +209,16 @@ func _select_song(id):
 		Difficulties.add_child(newDifficultyButton)
 	
 	_select_difficulty(0)
+	
+	#preview song
+	$song_prev.stop()
+	var snd_file = File.new()
+	snd_file.open(_map_info._path + _map_info._songFilename, File.READ) #works whether it's a resource or a file
+	var stream = AudioStreamOGGVorbis.new()
+	stream.data = snd_file.get_buffer(snd_file.get_len())
+	snd_file.close()
+	$song_prev.stream = stream;
+	$song_prev.play()
 
 
 var _map_difficulty = 0
@@ -289,6 +300,7 @@ func _ready():
 
 
 func _on_Play_Button_pressed():
+	$song_prev.stop()
 	_load_map_and_start();
 
 

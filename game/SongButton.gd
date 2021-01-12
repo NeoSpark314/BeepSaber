@@ -2,10 +2,13 @@ extends Button
 
 var id
 var info
+var texture
 
 signal pressed_id(id)
 
 func _ready():
+	if texture:
+		$TextureRect.texture = texture
 	if info:
 		text = "%s - %s" % [info._songAuthorName, info._songName]
 	else:

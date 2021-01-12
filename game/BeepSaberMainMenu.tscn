@@ -159,10 +159,7 @@ margin_left = 16.0
 margin_top = 64.0
 margin_right = 848.0
 margin_bottom = 560.0
-size_flags_horizontal = 3
 custom_styles/bg = SubResource( 6 )
-follow_focus = true
-scroll_horizontal_enabled = false
 scroll_deadzone = 90
 __meta__ = {
 "_edit_use_anchors_": false
@@ -171,9 +168,9 @@ __meta__ = {
 [node name="Songs" type="VBoxContainer" parent="SongsMenu"]
 margin_left = 3.0
 margin_top = 3.0
-margin_right = 829.0
+margin_right = 3.0
 margin_bottom = 3.0
-size_flags_horizontal = 3
+size_flags_horizontal = 2
 
 [node name="DifficultyMenu" type="ScrollContainer" parent="."]
 margin_left = 864.0
@@ -239,6 +236,8 @@ text = "Refresh Songs/Playlists"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="song_prev" type="AudioStreamPlayer" parent="."]
 [connection signal="pressed" from="Play_Button" to="." method="_on_Play_Button_pressed"]
 [connection signal="button_up" from="Delete_Button" to="." method="_on_Delete_Button_button_up"]
 [connection signal="pressed" from="Exit_Button" to="." method="_on_Exit_Button_pressed"]
