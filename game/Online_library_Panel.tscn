@@ -1,9 +1,10 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/RobotoMono-Medium.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://game/Online_library_Panel.gd" type="Script" id=2]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/Roboto-Medium.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://game/vr_slider.gd" type="Script" id=4]
+[ext_resource path="res://game/data/beepsaber_logo.png" type="Texture" id=5]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 1 )
@@ -215,26 +216,32 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_left = 904.0
+margin_top = 32.0
+margin_right = 1504.0
+margin_bottom = 280.0
+texture = ExtResource( 5 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="song_data" type="RichTextLabel" parent="."]
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 904.0
-margin_top = -880.0
+margin_top = -672.0
 margin_right = -32.0
 margin_bottom = -64.0
 theme = SubResource( 13 )
 bbcode_enabled = true
-bbcode_text = "
-
-
-[center]Select a song to see the details
+bbcode_text = "[center]Select a song to see the details
 
 press Download to add the selected song to your local playlist"
-text = "
-
-
-Select a song to see the details
+text = "Select a song to see the details
 
 press Download to add the selected song to your local playlist"
 __meta__ = {
@@ -242,6 +249,7 @@ __meta__ = {
 }
 
 [node name="ColorRect" type="ColorRect" parent="."]
+visible = false
 margin_left = 8.0
 margin_top = 8.0
 margin_right = 1528.0

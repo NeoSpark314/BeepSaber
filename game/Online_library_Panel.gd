@@ -9,6 +9,8 @@ var item_selected = -1
 var downloading = []#[["name","key"]]
 onready var httpreq = HTTPRequest.new()
 onready var httpdownload = HTTPRequest.new()
+onready var httpcoverdownload = HTTPRequest.new()
+onready var placeholder_cover = preload("res://game/data/beepsaber_logo.png")
 
 export(NodePath) var game;
 export(NodePath) var keyboard;
@@ -30,6 +32,11 @@ func _ready():
 	httpdownload.download_chunk_size = 65536
 	get_tree().get_root().add_child(httpdownload)
 	httpdownload.connect("request_completed",self,"_on_HTTPRequest_download_completed")
+	
+	httpcoverdownload.use_threads = true
+	httpcoverdownload.download_chunk_size = 65536
+	get_tree().get_root().add_child(httpcoverdownload)
+	httpcoverdownload.connect("request_completed",self,"_update_cover")
 	
 	keyboard.connect("text_input_enter",self,"_text_input_enter")
 	keyboard.connect("text_input_cancel",self,"_text_input_cancel")
@@ -114,6 +121,9 @@ difficulties:%s
 		selected_data["description"],
 	]
 	$song_data.bbcode_text = text
+	
+	$TextureRect.texture = placeholder_cover
+	httpcoverdownload.request("https://beatsaver.com%s" % selected_data["coverURL"])
 
 
 func _on_download_button_up():
@@ -170,7 +180,6 @@ func _on_HTTPRequest_download_completed(result, response_code, headers, body):
 		
 
 
-
 func _on_search_button_up():
 	keyboard.visible=true
 	keyboard._text_edit.grab_focus();
@@ -184,3 +193,13 @@ func _text_input_enter(text):
 	
 func _text_input_cancel():
 	keyboard.visible=false
+
+
+func _update_cover(result, response_code, headers, body):
+	if result == 0:
+		var img = Image.new()
+		if not img.load_jpg_from_buffer(body) == 0:
+			img.load_png_from_buffer(body)
+		var img_tex = ImageTexture.new()
+		img_tex.create_from_image(img)
+		$TextureRect.texture = img_tex
