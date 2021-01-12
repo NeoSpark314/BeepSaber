@@ -151,7 +151,7 @@ transform = Transform( 1.52488, 0, 1.74555, 0, 2.3178, 0, -1.74555, 0, 1.52488, 
 game = NodePath("../..")
 
 [node name="Online_library" parent="." instance=ExtResource( 3 )]
-transform = Transform( 1.45239, 0, -1.29991, 0, 1.94915, 0, 1.29991, 0, 1.45239, 2.46486, 1.51455, -0.128613 )
+transform = Transform( 1.06646, 0, -1.63152, 0, 1.94915, 0, 1.63152, 0, 1.06646, 2.49408, 1.49752, 0.642832 )
 
 [node name="Online_library_Panel" parent="Online_library" instance=ExtResource( 20 )]
 game = NodePath("../..")

@@ -1,6 +1,6 @@
 extends Panel
 
-var song_codes = []
+var song_data = []
 var current_page = 0
 var current_list = 0
 var list_modes = ["hot","rating","latest","downloads","plays"]
@@ -20,6 +20,7 @@ func enable():
 func _ready():
 	game = get_node(game);
 	keyboard = get_node(keyboard);
+	$ColorRect.visible = true
 	
 	httpreq.use_threads = true
 	get_tree().get_root().add_child(httpreq)
@@ -40,7 +41,7 @@ func update_list(page=0,list="hot"):
 	$down.disabled = true
 	$mode.disabled = true
 	$ItemList.clear()
-	song_codes = []
+	song_data = []
 	item_selected = -1
 	if list is String:
 		httpreq.request("https://beatsaver.com/api/maps/%s/%s" % [list,page])
@@ -54,8 +55,11 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 		if json_data.has("docs"):
 			json_data = json_data["docs"]
 			for song in json_data:
-				song_codes.insert(song_codes.size(),song["key"])
+				song_data.insert(song_data.size(),song)
 				$ItemList.add_item(song["name"])
+				var tooltip = "Map author: %s" % song["metadata"]["levelAuthorName"]
+				$ItemList.set_item_tooltip($ItemList.get_item_count()-1,tooltip)
+				
 	#		print(song_codes)
 	else:
 		vr.log_info("request error "+str(result))
@@ -89,19 +93,40 @@ func _on_mode_button_up():
 
 func _on_ItemList_item_selected(index):
 	item_selected = index
+	var selected_data = song_data[index]
+	var difficulties = ""
+	for d in selected_data["metadata"]["difficulties"].keys():
+		if selected_data["metadata"]["difficulties"][d] == true:
+			difficulties += " %s"%d
+	var text = """[center]%s By %s[/center]
+
+Map author: %s
+Duration: %s
+difficulties:%s
+
+[center]Description:[/center]
+%s""" % [
+		selected_data["metadata"]["songName"],
+		selected_data["metadata"]["songAuthorName"],
+		selected_data["metadata"]["levelAuthorName"],
+		selected_data["metadata"]["duration"],
+		difficulties,
+		selected_data["description"],
+	]
+	$song_data.bbcode_text = text
 
 
 func _on_download_button_up():
 	OS.request_permissions()
 	if item_selected == -1: return
-	downloading.insert(downloading.size(),[$ItemList.get_item_text(item_selected),song_codes[item_selected]])
+	downloading.insert(downloading.size(),[song_data[item_selected]["name"],song_data[item_selected]["key"]])
 	download_next()
 #	$download.disabled = true
 	
 	
 func download_next():
 	if downloading.size() > 0:
-		httpdownload.request("https://beatsaver.com/api/download/key/%s" % song_codes[item_selected])
+		httpdownload.request("https://beatsaver.com/api/download/key/%s" % downloading[0][1])
 		$Label.text = "Downloading: %s - %d left" % [str(downloading[0][0]),downloading.size()-1]
 		$Label.visible = true
 		
