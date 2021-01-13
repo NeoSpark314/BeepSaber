@@ -1,0 +1,92 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/RobotoMono-Medium.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://game/points_label.gd" type="Script" id=2]
+[ext_resource path="res://game/data/beepcube_cut.ogg" type="AudioStream" id=3]
+
+[sub_resource type="ViewportTexture" id=1]
+viewport_path = NodePath("Viewport")
+
+[sub_resource type="SpatialMaterial" id=2]
+resource_local_to_scene = true
+flags_transparent = true
+flags_unshaded = true
+params_cull_mode = 2
+params_use_alpha_scissor = true
+params_alpha_scissor_threshold = 0.41
+albedo_texture = SubResource( 1 )
+
+[sub_resource type="PlaneMesh" id=3]
+
+[sub_resource type="DynamicFont" id=4]
+size = 32
+font_data = ExtResource( 1 )
+
+[sub_resource type="Theme" id=5]
+default_font = SubResource( 4 )
+
+[sub_resource type="Animation" id=6]
+resource_name = "hit"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("points:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 0.277392, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 0 ), Vector3( 0, 0.194908, -0.869797 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("points:scale")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.5, 1, 1.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 0.420448, 2.73208, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 0 ), Vector3( 0.829, 1.184, 1 ), Vector3( 1.191, 0.873, 1 ), Vector3( 1, 1, 1 ), Vector3( 1, 1, 1 ), Vector3( 1, 1, 1 ), Vector3( 0, 0, 0 ) ]
+}
+
+[node name="points_label" type="Spatial"]
+script = ExtResource( 2 )
+
+[node name="points" type="Spatial" parent="."]
+transform = Transform( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 )
+
+[node name="mesh" type="MeshInstance" parent="points"]
+transform = Transform( 0.139, 0, 0, 0, -6.07588e-09, -0.061, 0, 0.139, -2.66639e-09, 0, 0, 0 )
+material_override = SubResource( 2 )
+mesh = SubResource( 3 )
+material/0 = null
+
+[node name="Viewport" type="Viewport" parent="."]
+size = Vector2( 100, 40 )
+own_world = true
+transparent_bg = true
+disable_3d = true
+usage = 1
+render_target_v_flip = true
+
+[node name="Label" type="Label" parent="Viewport"]
+margin_top = -4.0
+margin_right = 100.0
+margin_bottom = 39.0
+theme = SubResource( 5 )
+text = "100"
+align = 1
+valign = 1
+clip_text = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+playback_speed = 3.0
+anims/hit = SubResource( 6 )
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 3 )
+unit_size = 100.0
