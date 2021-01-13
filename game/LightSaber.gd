@@ -72,3 +72,5 @@ func _process(delta):
 	else:
 		imm_geo.clear()
 	
+func get_tip():
+	return $tip.global_transform.origin

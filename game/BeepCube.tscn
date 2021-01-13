@@ -1,13 +1,13 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://game/data/BeepCube.mesh" type="ArrayMesh" id=1]
 [ext_resource path="res://game/BeepCube.gd" type="Script" id=2]
+[ext_resource path="res://game/BeepCube_new_material.material" type="Material" id=3]
 
 [sub_resource type="BoxShape" id=1]
 extents = Vector3( 0.2, 0.2, 0.2 )
 
 [sub_resource type="Animation" id=2]
-resource_name = "Spawn"
 length = 0.8
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:translation")
@@ -64,6 +64,7 @@ shape = SubResource( 1 )
 
 [node name="BeepCube_Mesh" type="MeshInstance" parent="CubeMeshOrientation/CubeMeshAnimation"]
 transform = Transform( 0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0, 0 )
+material_override = ExtResource( 3 )
 mesh = ExtResource( 1 )
 material/0 = null
 

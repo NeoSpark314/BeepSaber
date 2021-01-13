@@ -12,6 +12,7 @@ onready var ui_raycast := $OQ_ARVROrigin/OQ_RightController/Feature_UIRayCast;
 
 onready var cube_template = preload("res://game/BeepCube.tscn").instance();
 onready var wall_template = preload("res://game/Wall/Wall.tscn").instance();
+onready var cube_material_template = preload("res://game/BeepCube_new_material.material");
 
 var cube_left = null
 var cube_right = null
@@ -398,8 +399,8 @@ func disable_events(disabled):
 
 # cut the cube by creating two rigid bodies and using a CSGBox to create
 # the cut plane
-func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distance, controller_speed):
-	if not cube_cuts_falloff: 
+func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distance, controller_speed, saber_ends):
+	if not cube_cuts_falloff and _sign == 1: 
 		var snd = AudioStreamPlayer.new();
 		snd.stream = preload("res://game/data/beepcube_cut.ogg");
 		add_child(snd);
@@ -410,39 +411,47 @@ func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distanc
 	var rigid_body_half = RigidBody.new();
 	
 	# the original cube mesh
-	var csg_cube = CSGMesh.new();
-	csg_cube.mesh = cube._mesh;
-	csg_cube.transform = cube._cube_mesh_orientation.transform;
+	var cutted_cube = MeshInstance.new();
+	cutted_cube.mesh = cube._mesh;
+	cutted_cube.transform = cube._cube_mesh_orientation.transform;
+	cutted_cube.material_override = cube._mat.duplicate()
 	
-	# using a box to cut away part of the mesh
-	var csg_cut = CSGBox.new();
-	csg_cut.operation = CSGShape.OPERATION_SUBTRACTION;
-	csg_cut.material = load("res://game/BeepCube_Cut.material");
-	csg_cut.width = 1; csg_cut.height = 1;csg_cut.depth = 1;
+	#calculate angle and position of the cut
+	cutted_cube.material_override.set_shader_param("cutted",true)
+	cutted_cube.material_override.set_shader_param("inverted_cut",!bool((_sign+1)/2))
+	var saber_end_mov = saber_ends[0]-saber_ends[1]
+	var saber_end_angle = rad2deg(Vector2(saber_end_mov.x,saber_end_mov.y).angle())
+	var saber_end_angle_rel = (int(((saber_end_angle+90)+(360-cutted_cube.rotation_degrees.z))+180)%360)-180
+	cutted_cube.material_override.set_shader_param("cut_angle",saber_end_angle_rel)
+	if saber_end_angle_rel > 90 or saber_end_angle_rel < -90:
+		cutted_cube.material_override.set_shader_param("cut_pos",-cut_distance*3)
+	else:
+		cutted_cube.material_override.set_shader_param("cut_pos",cut_distance*3)
 
 	# transform the normal into the orientation of the actual cube mesh
-	var normal = csg_cube.transform.basis.inverse() * cutplane.normal;
-	csg_cut.look_at_from_position(-(cut_distance - _sign*0.5) * normal, normal, Vector3(0,1,0));
-	csg_cube.add_child(csg_cut);
+	var normal = cutted_cube.transform.basis.inverse() * cutplane.normal;
 
-	# Next we are adding a simple collision cube to the rigid body. Note that
-	# his is really just a very crude approximation of the actual cut geometry
-	# but for now it's enough to give them some physics behaviour
-	var coll = CollisionShape.new();
-	coll.shape = BoxShape.new();
-	coll.shape.extents = Vector3(0.25, 0.25, 0.125);
-	coll.look_at_from_position(-cutplane.normal*_sign*0.125, cutplane.normal, Vector3(0,1,0));
-	rigid_body_half.add_child(coll);
+#	# Next we are adding a simple collision cube to the rigid body. Note that
+#	# his is really just a very crude approximation of the actual cut geometry
+#	# but for now it's enough to give them some physics behaviour
+#	var coll = CollisionShape.new();
+#	coll.shape = BoxShape.new();
+#	coll.shape.extents = Vector3(0.25, 0.25, 0.125);
+#	coll.look_at_from_position(-cutplane.normal*_sign*0.125, cutplane.normal, Vector3(0,1,0));
+#	rigid_body_half.add_child(coll);
 
 	# set a phyiscs material for some more bouncy behaviour
 	rigid_body_half.physics_material_override = load("res://game/BeepCube_Cut.phymat");
 
-	rigid_body_half.add_child(csg_cube);
+	rigid_body_half.add_child(cutted_cube);
 	add_child(rigid_body_half);
 	rigid_body_half.global_transform = cube.global_transform;
 
 	# some impulse so the cube halfs get some movement
-	rigid_body_half.apply_central_impulse(-_sign * cutplane.normal +  controller_speed);
+#	if saber_end_angle_rel > 90 or saber_end_angle_rel < -90:
+	rigid_body_half.apply_central_impulse((_sign) * cutplane.normal +  controller_speed);
+#	else:
+#		rigid_body_half.apply_central_impulse((_sign) * cutplane.normal +  controller_speed);
 
 	# attach the sound effect only to one of the halfs; I attach them here so
 	# it gets deleted when the body is deleted later
@@ -526,18 +535,18 @@ func _cut_cube(controller : ARVRController, saber : Area, cube : Spatial):
 	var cut_distance = cutplane.distance_to(cube.global_transform.origin);
 	
 	var controller_speed : Vector3 = (saber_end - saber_end_past) / (5*last_dt) + 0.2*(beat_distance *_current_info._beatsPerMinute / 60) * Vector3(0, 0, 1) # Account for inertial track speed
-	
-	_create_cut_rigid_body(-1, cube, cutplane, cut_distance, controller_speed);
-	_create_cut_rigid_body( 1, cube, cutplane, cut_distance, controller_speed);
 
 	# compute the angle between the cube orientation and the cut direction
 	var cut_direction_xy = -Vector3(controller_speed.x, controller_speed.y, 0.0).normalized();
-	var cut_angle_accuracy = cube._cube_mesh_orientation.global_transform.basis.y.dot(cut_direction_xy);
-	cut_angle_accuracy = clamp((cut_angle_accuracy-0.7)/0.3, 0.0, 1.0);
+	var base_cut_angle_accuracy = cube._cube_mesh_orientation.global_transform.basis.y.dot(cut_direction_xy);
+	var cut_angle_accuracy = clamp((base_cut_angle_accuracy-0.7)/0.3, 0.0, 1.0);
 	var cut_distance_accuracy = clamp((0.1 - abs(cut_distance))/0.1, 0.0, 1.0);
 	var travel_distance_factor = _controller_movement_aabb[controller.controller_id].get_longest_axis_size();
 	travel_distance_factor = clamp((travel_distance_factor-0.5)/0.5, 0.0, 1.0);
 
+	_create_cut_rigid_body(-1, cube, cutplane, cut_distance, controller_speed, [saber_end,saber_end_past]);
+	_create_cut_rigid_body( 1, cube, cutplane, cut_distance, controller_speed, [saber_end,saber_end_past]);
+	
 	# allows a bit of save margin where the beat is considered 100% correct
 	var beat_accuracy = clamp((1.0 - abs(cube.global_transform.origin.z)) / 0.5, 0.0, 1.0);
 
