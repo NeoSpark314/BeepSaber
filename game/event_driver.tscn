@@ -1,0 +1,1001 @@
+[gd_scene load_steps=33 format=2]
+
+[ext_resource path="res://game/background.tres" type="Texture" id=1]
+[ext_resource path="res://game/event_driver.gd" type="Script" id=2]
+[ext_resource path="res://game/data/ring.obj" type="ArrayMesh" id=3]
+[ext_resource path="res://game/Wall/wall_new.material" type="Material" id=4]
+[ext_resource path="res://game/data/background/bg_base.png" type="Texture" id=5]
+[ext_resource path="res://game/data/background/bg_2.png" type="Texture" id=6]
+[ext_resource path="res://game/data/background/bg_0.png" type="Texture" id=7]
+[ext_resource path="res://game/data/background/bg_4.png" type="Texture" id=8]
+[ext_resource path="res://game/data/background/bg_3.png" type="Texture" id=9]
+[ext_resource path="res://game/data/background/bg_1.png" type="Texture" id=10]
+
+[sub_resource type="SpatialMaterial" id=1]
+flags_unshaded = true
+albedo_color = Color( 0.992157, 0, 1, 1 )
+
+[sub_resource type="SpatialMaterial" id=2]
+flags_unshaded = true
+albedo_color = Color( 0.262745, 0.388235, 0.964706, 1 )
+
+[sub_resource type="CubeMesh" id=3]
+material = SubResource( 2 )
+size = Vector3( 0.5, 2, 0.5 )
+
+[sub_resource type="Shader" id=4]
+code = "shader_type spatial;
+render_mode unshaded;
+
+uniform sampler2D bg_base;
+uniform sampler2D bg_0;
+uniform sampler2D bg_1;
+uniform sampler2D bg_2;
+uniform sampler2D bg_3;
+uniform sampler2D bg_4;
+uniform lowp float bg_0_intensity = 0f;
+uniform lowp float bg_1_intensity = 0f;
+uniform lowp float bg_2_intensity = 0f;
+uniform lowp float bg_3_intensity = 0f;
+uniform lowp float bg_4_intensity = 0f;
+uniform lowp vec4 bg_0_tint;
+uniform lowp vec4 bg_1_tint;
+uniform lowp vec4 bg_2_tint;
+uniform lowp vec4 bg_3_tint;
+uniform lowp vec4 bg_4_tint;
+uniform lowp float bg_0_intensity_mult = 1f;
+uniform lowp float bg_1_intensity_mult = 1f;
+uniform lowp float bg_2_intensity_mult = 1f;
+uniform lowp float bg_3_intensity_mult = 1f;
+uniform lowp float bg_4_intensity_mult = 1f;
+
+void fragment(){
+	ALBEDO = texture(bg_base,UV).rgb;
+	vec2 xinv_uv = vec2(-UV.x,UV.y);
+	if (bg_0_intensity>0f){ALBEDO += (texture(bg_0,xinv_uv).rgb*(bg_0_intensity*bg_0_intensity_mult))*bg_0_tint.rgb;}
+	if (bg_1_intensity>0f){ALBEDO += (texture(bg_1,xinv_uv).rgb*(bg_1_intensity*bg_1_intensity_mult))*bg_1_tint.rgb;}
+	if (bg_2_intensity>0f){ALBEDO += (texture(bg_2,xinv_uv).rgb*(bg_2_intensity*bg_2_intensity_mult))*bg_2_tint.rgb;}
+	if (bg_3_intensity>0f){ALBEDO += (texture(bg_3,xinv_uv).rgb*(bg_3_intensity*bg_3_intensity_mult))*bg_3_tint.rgb;}
+	if (bg_4_intensity>0f){ALBEDO += (texture(bg_4,xinv_uv).rgb*(bg_4_intensity*bg_4_intensity_mult))*bg_4_tint.rgb;}
+}"
+
+[sub_resource type="ShaderMaterial" id=5]
+shader = SubResource( 4 )
+shader_param/bg_0_intensity = 0.0
+shader_param/bg_1_intensity = 0.0
+shader_param/bg_2_intensity = 0.0
+shader_param/bg_3_intensity = 0.0
+shader_param/bg_4_intensity = 0.0
+shader_param/bg_0_tint = Plane( 1, 0.1, 0.1, 0 )
+shader_param/bg_1_tint = Plane( 1, 0.1, 0.1, 0 )
+shader_param/bg_2_tint = Plane( 1, 0.1, 0.1, 0 )
+shader_param/bg_3_tint = Plane( 1, 0.1, 0.1, 0 )
+shader_param/bg_4_tint = Plane( 1, 0.1, 0.1, 0 )
+shader_param/bg_0_intensity_mult = 0.25
+shader_param/bg_1_intensity_mult = 0.15
+shader_param/bg_2_intensity_mult = 0.25
+shader_param/bg_3_intensity_mult = 0.25
+shader_param/bg_4_intensity_mult = 0.4
+shader_param/bg_base = ExtResource( 5 )
+shader_param/bg_0 = ExtResource( 7 )
+shader_param/bg_1 = ExtResource( 10 )
+shader_param/bg_2 = ExtResource( 6 )
+shader_param/bg_3 = ExtResource( 9 )
+shader_param/bg_4 = ExtResource( 8 )
+
+[sub_resource type="SphereMesh" id=6]
+flip_faces = true
+radius = 512.0
+height = 256.0
+
+[sub_resource type="SpatialMaterial" id=7]
+flags_unshaded = true
+albedo_color = Color( 0, 0.0627451, 0.172549, 1 )
+albedo_texture = ExtResource( 1 )
+
+[sub_resource type="SpatialMaterial" id=8]
+flags_unshaded = true
+albedo_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="SpatialMaterial" id=9]
+flags_unshaded = true
+
+[sub_resource type="CubeMesh" id=10]
+material = SubResource( 9 )
+size = Vector3( 0.1, 0.1, 32 )
+
+[sub_resource type="SpatialMaterial" id=11]
+flags_unshaded = true
+albedo_color = Color( 0.945098, 1, 0, 1 )
+
+[sub_resource type="SpatialMaterial" id=12]
+flags_unshaded = true
+albedo_color = Color( 0.00784314, 1, 0, 1 )
+
+[sub_resource type="Animation" id=13]
+length = 2.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("laser4:rotation_degrees")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 60, -90, -90 ), Vector3( 120, -90, -90 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("laser3:rotation_degrees")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.1, 1.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 60, -90, -90 ), Vector3( 120, -90, -90 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("laser2:rotation_degrees")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.8, 1.8 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 60, -90, -90 ), Vector3( 120, -90, -90 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("laser1:rotation_degrees")
+tracks/3/interp = 2
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.4, 1.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 60, -90, -90 ), Vector3( 120, -90, -90 ) ]
+}
+
+[sub_resource type="SpatialMaterial" id=14]
+flags_unshaded = true
+albedo_color = Color( 0, 0.0627451, 1, 1 )
+
+[sub_resource type="Animation" id=15]
+length = 2.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("laser4:rotation_degrees")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 60, -90, -90 ), Vector3( 120, -90, -90 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("laser3:rotation_degrees")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.1, 1.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 60, -90, -90 ), Vector3( 120, -90, -90 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("laser2:rotation_degrees")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.8, 1.8 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 60, -90, -90 ), Vector3( 120, -90, -90 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("laser1:rotation_degrees")
+tracks/3/interp = 2
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.4, 1.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 60, -90, -90 ), Vector3( 120, -90, -90 ) ]
+}
+
+[sub_resource type="Gradient" id=16]
+offsets = PoolRealArray( 0, 0.660256, 1 )
+colors = PoolColorArray( 0, 0, 0, 1, 0.1875, 0.1875, 0.1875, 1, 0, 0, 0, 1 )
+
+[sub_resource type="GradientTexture" id=17]
+gradient = SubResource( 16 )
+
+[sub_resource type="SpatialMaterial" id=18]
+flags_unshaded = true
+flags_disable_ambient_light = true
+albedo_color = Color( 0.992157, 0, 1, 1 )
+albedo_texture = SubResource( 17 )
+
+[sub_resource type="PlaneMesh" id=19]
+
+[sub_resource type="SpatialMaterial" id=20]
+flags_unshaded = true
+albedo_color = Color( 0.0941176, 0.0941176, 0.0941176, 1 )
+
+[sub_resource type="Animation" id=21]
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("ring13:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 2 ),
+"transitions": PoolRealArray( 0.287175, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -55 ), Vector3( 0, 0, -42 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("ring12:translation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1.9 ),
+"transitions": PoolRealArray( 0.287175, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -51 ), Vector3( 0, 0, -39 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("ring11:translation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1.8 ),
+"transitions": PoolRealArray( 0.287175, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -47 ), Vector3( 0, 0, -36 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("ring10:translation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 1.7 ),
+"transitions": PoolRealArray( 0.287175, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -43 ), Vector3( 0, 0, -33 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("ring9:translation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 1.6 ),
+"transitions": PoolRealArray( 0.287175, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -39 ), Vector3( 0, 0, -30 ) ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("ring8:translation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0, 1.4 ),
+"transitions": PoolRealArray( 0.287175, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -35 ), Vector3( 0, 0, -27 ) ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("ring7:translation")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0, 1.2 ),
+"transitions": PoolRealArray( 0.287175, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -31 ), Vector3( 0, 0, -24 ) ]
+}
+tracks/7/type = "value"
+tracks/7/path = NodePath("ring6:translation")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 0.287175, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -27 ), Vector3( 0, 0, -21 ) ]
+}
+tracks/8/type = "value"
+tracks/8/path = NodePath("ring5:translation")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/keys = {
+"times": PoolRealArray( 0, 0.9 ),
+"transitions": PoolRealArray( 0.287175, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -23 ), Vector3( 0, 0, -18 ) ]
+}
+tracks/9/type = "value"
+tracks/9/path = NodePath("ring4:translation")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/keys = {
+"times": PoolRealArray( 0, 0.8 ),
+"transitions": PoolRealArray( 0.287175, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -19 ), Vector3( 0, 0, -15 ) ]
+}
+tracks/10/type = "value"
+tracks/10/path = NodePath("ring3:translation")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/keys = {
+"times": PoolRealArray( 0, 0.7 ),
+"transitions": PoolRealArray( 0.287175, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -15 ), Vector3( 0, 0, -12 ) ]
+}
+tracks/11/type = "value"
+tracks/11/path = NodePath("ring2:translation")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/keys = {
+"times": PoolRealArray( 0, 0.6 ),
+"transitions": PoolRealArray( 0.287175, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -11 ), Vector3( 0, 0, -9 ) ]
+}
+tracks/12/type = "value"
+tracks/12/path = NodePath("ring:translation")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 0.287175, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -7 ), Vector3( 0, 0, -6 ) ]
+}
+
+[sub_resource type="Animation" id=22]
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("ring13:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 2 ),
+"transitions": PoolRealArray( 0.258816, 0.287175 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -42 ), Vector3( 0, 0, -55 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("ring12:translation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1.9 ),
+"transitions": PoolRealArray( 0.258816, 0.287175 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -39 ), Vector3( 0, 0, -51 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("ring11:translation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1.8 ),
+"transitions": PoolRealArray( 0.258816, 0.287175 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -36 ), Vector3( 0, 0, -47 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("ring10:translation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 1.7 ),
+"transitions": PoolRealArray( 0.258816, 0.287175 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -33 ), Vector3( 0, 0, -43 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("ring9:translation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 1.6 ),
+"transitions": PoolRealArray( 0.258816, 0.287175 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -30 ), Vector3( 0, 0, -39 ) ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("ring8:translation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0, 1.4 ),
+"transitions": PoolRealArray( 0.258816, 0.287175 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -27 ), Vector3( 0, 0, -35 ) ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("ring7:translation")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0, 1.1 ),
+"transitions": PoolRealArray( 0.258816, 0.287175 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -24 ), Vector3( 0, 0, -31 ) ]
+}
+tracks/7/type = "value"
+tracks/7/path = NodePath("ring6:translation")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 0.258816, 0.287175 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -21 ), Vector3( 0, 0, -27 ) ]
+}
+tracks/8/type = "value"
+tracks/8/path = NodePath("ring5:translation")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/keys = {
+"times": PoolRealArray( 0, 0.9 ),
+"transitions": PoolRealArray( 0.258816, 0.287175 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -18 ), Vector3( 0, 0, -23 ) ]
+}
+tracks/9/type = "value"
+tracks/9/path = NodePath("ring4:translation")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/keys = {
+"times": PoolRealArray( 0, 0.8 ),
+"transitions": PoolRealArray( 0.258816, 0.287175 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -15 ), Vector3( 0, 0, -19 ) ]
+}
+tracks/10/type = "value"
+tracks/10/path = NodePath("ring3:translation")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/keys = {
+"times": PoolRealArray( 0, 0.7 ),
+"transitions": PoolRealArray( 0.258816, 0.287175 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -12 ), Vector3( 0, 0, -15 ) ]
+}
+tracks/11/type = "value"
+tracks/11/path = NodePath("ring2:translation")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/keys = {
+"times": PoolRealArray( 0, 0.6 ),
+"transitions": PoolRealArray( 0.258816, 0.287175 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -9 ), Vector3( 0, 0, -11 ) ]
+}
+tracks/12/type = "value"
+tracks/12/path = NodePath("ring:translation")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 0.258816, 0.287175 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -6 ), Vector3( 0, 0, -7 ) ]
+}
+
+[node name="event_driver" type="Spatial"]
+script = ExtResource( 2 )
+
+[node name="Level" type="Spatial" parent="."]
+
+[node name="SpectrumBar" type="Spatial" parent="Level"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8.5, 1, -61 )
+
+[node name="Cube" type="MeshInstance" parent="Level/SpectrumBar"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0 )
+material_override = SubResource( 1 )
+mesh = SubResource( 3 )
+material/0 = null
+
+[node name="Sphere" type="MeshInstance" parent="Level"]
+material_override = SubResource( 5 )
+mesh = SubResource( 6 )
+material/0 = SubResource( 7 )
+
+[node name="t0" type="Spatial" parent="Level"]
+
+[node name="laser1" type="Spatial" parent="Level/t0"]
+transform = Transform( 0.965926, -5.55139e-09, -0.776457, -0.258819, -4.21669e-08, -2.89778, -5.55139e-09, 1, -1.26501e-07, 4.57081, -2.26002, -30 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t0/laser1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -16 )
+material_override = SubResource( 8 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="laser2" type="Spatial" parent="Level/t0"]
+transform = Transform( 0.965926, -5.55139e-09, -0.776457, -0.258819, -4.21669e-08, -2.89778, -5.55139e-09, 1, -1.26501e-07, 4.57081, -2.26002, -35 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t0/laser2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -16 )
+material_override = SubResource( 8 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="laser3" type="Spatial" parent="Level/t0"]
+transform = Transform( 0.965926, -5.55139e-09, -0.776457, -0.258819, -4.21669e-08, -2.89778, -5.55139e-09, 1, -1.26501e-07, 4.57081, -2.26002, -40 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t0/laser3"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -16 )
+material_override = SubResource( 8 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="laser4" type="Spatial" parent="Level/t0"]
+transform = Transform( 0.965926, -5.55139e-09, -0.776457, -0.258819, -4.21669e-08, -2.89778, -5.55139e-09, 1, -1.26501e-07, 4.57081, -2.26002, -45 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t0/laser4"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -16 )
+material_override = SubResource( 8 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="laser5" type="Spatial" parent="Level/t0"]
+transform = Transform( 0.965926, -5.55139e-09, -0.776457, -0.258819, -4.21669e-08, -2.89778, -5.55139e-09, 1, -1.26501e-07, 4.57081, -2.26002, -50 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t0/laser5"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -16 )
+material_override = SubResource( 8 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="laser6" type="Spatial" parent="Level/t0"]
+transform = Transform( 0.965926, 5.55139e-09, 0.776457, 0.258819, -4.21669e-08, -2.89778, 5.55139e-09, 1, -1.26501e-07, -4.42919, -2.26002, -30 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t0/laser6"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -16 )
+material_override = SubResource( 8 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="laser7" type="Spatial" parent="Level/t0"]
+transform = Transform( 0.965926, 5.55139e-09, 0.776457, 0.258819, -4.21669e-08, -2.89778, 5.55139e-09, 1, -1.26501e-07, -4.42919, -2.26002, -35 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t0/laser7"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -16 )
+material_override = SubResource( 8 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="laser8" type="Spatial" parent="Level/t0"]
+transform = Transform( 0.965926, 5.55139e-09, 0.776457, 0.258819, -4.21669e-08, -2.89778, 5.55139e-09, 1, -1.26501e-07, -4.42919, -2.26002, -40 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t0/laser8"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -16 )
+material_override = SubResource( 8 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="laser9" type="Spatial" parent="Level/t0"]
+transform = Transform( 0.965926, 5.55139e-09, 0.776457, 0.258819, -4.21669e-08, -2.89778, 5.55139e-09, 1, -1.26501e-07, -4.42919, -2.26002, -45 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t0/laser9"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -16 )
+material_override = SubResource( 8 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="laser10" type="Spatial" parent="Level/t0"]
+transform = Transform( 0.965926, 5.55139e-09, 0.776457, 0.258819, -4.21669e-08, -2.89778, 5.55139e-09, 1, -1.26501e-07, -4.42919, -2.26002, -50 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t0/laser10"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -16 )
+material_override = SubResource( 8 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Tween" type="Tween" parent="Level/t0"]
+
+[node name="t1" type="Spatial" parent="Level"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t1"]
+transform = Transform( -1.31134e-08, 0, -0.3, 0, 1, 0, 1, 0, -4.37114e-08, 0, 11, 5 )
+material_override = SubResource( 11 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Bar8" type="MeshInstance" parent="Level/t1"]
+transform = Transform( -1.31134e-08, 0, -0.3, 0, 1, 0, 1, 0, -4.37114e-08, 0, 11, -5 )
+material_override = SubResource( 11 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Bar9" type="MeshInstance" parent="Level/t1"]
+transform = Transform( -1.31134e-08, 0, -0.3, 0, 1, 0, 1, 0, -4.37114e-08, 0, 11, -15 )
+material_override = SubResource( 11 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Bar10" type="MeshInstance" parent="Level/t1"]
+transform = Transform( -1.31134e-08, 0, -0.3, 0, 1, 0, 1, 0, -4.37114e-08, 0, 11, -25 )
+material_override = SubResource( 11 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Bar11" type="MeshInstance" parent="Level/t1"]
+transform = Transform( -1.31134e-08, 0, -0.3, 0, 1, 0, 1, 0, -4.37114e-08, 0, 11, -35 )
+material_override = SubResource( 11 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Bar12" type="MeshInstance" parent="Level/t1"]
+transform = Transform( -1.31134e-08, 0, -0.3, 0, 1, 0, 1, 0, -4.37114e-08, 0, 11, -45 )
+material_override = SubResource( 11 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="5" type="Spatial" parent="Level/t1"]
+transform = Transform( -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0, 1, 0, 0, 0 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t1/5"]
+transform = Transform( -1.31134e-08, 0, -0.3, 0, 1, 0, 1, 0, -4.37114e-08, 0, 11, 5 )
+material_override = SubResource( 11 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Bar8" type="MeshInstance" parent="Level/t1/5"]
+transform = Transform( -1.31134e-08, 0, -0.3, 0, 1, 0, 1, 0, -4.37114e-08, 0, 11, -5 )
+material_override = SubResource( 11 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Bar9" type="MeshInstance" parent="Level/t1/5"]
+transform = Transform( -1.31134e-08, 0, -0.3, 0, 1, 0, 1, 0, -4.37114e-08, 0, 11, -15 )
+material_override = SubResource( 11 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Bar10" type="MeshInstance" parent="Level/t1/5"]
+transform = Transform( -1.31134e-08, 0, -0.3, 0, 1, 0, 1, 0, -4.37114e-08, 0, 11, -25 )
+material_override = SubResource( 11 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Bar11" type="MeshInstance" parent="Level/t1/5"]
+transform = Transform( -1.31134e-08, 0, -0.3, 0, 1, 0, 1, 0, -4.37114e-08, 0, 11, -35 )
+material_override = SubResource( 11 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Bar12" type="MeshInstance" parent="Level/t1/5"]
+transform = Transform( -1.31134e-08, 0, -0.3, 0, 1, 0, 1, 0, -4.37114e-08, 0, 11, -45 )
+material_override = SubResource( 11 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="6" type="Spatial" parent="Level/t1"]
+transform = Transform( -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 0, 0, 1, 0, 0, 0 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t1/6"]
+transform = Transform( -1.31134e-08, 0, -0.3, 0, 1, 0, 1, 0, -4.37114e-08, 0, 11, 5 )
+material_override = SubResource( 11 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Bar8" type="MeshInstance" parent="Level/t1/6"]
+transform = Transform( -1.31134e-08, 0, -0.3, 0, 1, 0, 1, 0, -4.37114e-08, 0, 11, -5 )
+material_override = SubResource( 11 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Bar9" type="MeshInstance" parent="Level/t1/6"]
+transform = Transform( -1.31134e-08, 0, -0.3, 0, 1, 0, 1, 0, -4.37114e-08, 0, 11, -15 )
+material_override = SubResource( 11 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Bar10" type="MeshInstance" parent="Level/t1/6"]
+transform = Transform( -1.31134e-08, 0, -0.3, 0, 1, 0, 1, 0, -4.37114e-08, 0, 11, -25 )
+material_override = SubResource( 11 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Bar11" type="MeshInstance" parent="Level/t1/6"]
+transform = Transform( -1.31134e-08, 0, -0.3, 0, 1, 0, 1, 0, -4.37114e-08, 0, 11, -35 )
+material_override = SubResource( 11 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Bar12" type="MeshInstance" parent="Level/t1/6"]
+transform = Transform( -1.31134e-08, 0, -0.3, 0, 1, 0, 1, 0, -4.37114e-08, 0, 11, -45 )
+material_override = SubResource( 11 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Tween" type="Tween" parent="Level/t1"]
+
+[node name="t2" type="Spatial" parent="Level"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10 )
+
+[node name="laser1" type="Spatial" parent="Level/t2"]
+transform = Transform( 0.988014, -5.23933e-10, -0.154366, -0.154366, -6.74753e-09, -0.988014, -5.23933e-10, 1, -6.74753e-09, -12.4292, -1.26002, -11 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t2/laser1"]
+transform = Transform( 1, 0, -7.02255e-16, 0, 1, 0, 2.34085e-16, 0, 3, 0, 9.53674e-07, -9 )
+material_override = SubResource( 12 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="laser2" type="Spatial" parent="Level/t2"]
+transform = Transform( 0.915241, -3.70493e-09, 0.402906, 0.402906, 1.76116e-08, -0.915241, -3.70492e-09, 1, 1.76116e-08, -12.4292, -1.26002, -14 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t2/laser2"]
+transform = Transform( 1, 0, -7.02255e-16, 0, 1, 0, 2.34085e-16, 0, 3, 0, 9.53674e-07, -9 )
+material_override = SubResource( 12 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="laser3" type="Spatial" parent="Level/t2"]
+transform = Transform( 0.880312, -5.23174e-09, -0.474396, -0.474396, -2.07365e-08, -0.880312, -5.23174e-09, 1, -2.07365e-08, -12.4292, -1.26002, -17 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t2/laser3"]
+transform = Transform( 1, 0, -7.02255e-16, 0, 1, 0, 2.34085e-16, 0, 3, 0, 0, -9 )
+material_override = SubResource( 12 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="laser4" type="Spatial" parent="Level/t2"]
+transform = Transform( 0.866025, -5.85622e-09, -0.5, -0.5, -2.18557e-08, -0.866025, -5.85621e-09, 1, -2.18557e-08, -12.4292, -1.26002, -20 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t2/laser4"]
+transform = Transform( 1, 0, -7.02255e-16, 0, 1, 0, 2.34085e-16, 0, 3, 0, 0, -9 )
+material_override = SubResource( 12 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Level/t2"]
+autoplay = "laser_anim"
+playback_speed = 0.5
+anims/laser_anim = SubResource( 13 )
+
+[node name="Tween" type="Tween" parent="Level/t2"]
+
+[node name="t3" type="Spatial" parent="Level"]
+transform = Transform( -1, 0, -3.25841e-07, 0, 1, 0, 3.25841e-07, 0, -1, 0, 0, -41 )
+
+[node name="laser1" type="Spatial" parent="Level/t3"]
+transform = Transform( 0.995326, -7.61503e-10, -0.0965726, -0.0965726, -1.57337e-08, -0.995326, -7.61503e-10, 1, -1.57337e-08, -12.4292, -1.26002, -11 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t3/laser1"]
+transform = Transform( 1, 0, -7.02255e-16, 0, 1, 0, 2.34085e-16, 0, 3, 0, 9.53674e-07, -9 )
+material_override = SubResource( 14 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="laser2" type="Spatial" parent="Level/t3"]
+transform = Transform( 0.873196, -2.06589e-08, -0.487368, -0.487368, -7.94024e-08, -0.873196, -2.06589e-08, 1, -7.94024e-08, -12.4292, -1.26002, -14 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t3/laser2"]
+transform = Transform( 1, 0, -7.02255e-16, 0, 1, 0, 2.34085e-16, 0, 3, 0, 9.53674e-07, -9 )
+material_override = SubResource( 14 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="laser3" type="Spatial" parent="Level/t3"]
+transform = Transform( 0.960084, -1.602e-08, 0.279712, 0.279712, 1.1226e-07, -0.960084, -1.602e-08, 1, 1.1226e-07, -12.4292, -1.26002, -17 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t3/laser3"]
+transform = Transform( 1, 0, -7.02255e-16, 0, 1, 0, 2.34085e-16, 0, 3, 0, 0, -9 )
+material_override = SubResource( 14 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="laser4" type="Spatial" parent="Level/t3"]
+transform = Transform( 0.924818, -3.2863e-09, 0.380409, 0.380409, 1.66282e-08, -0.924818, -3.2863e-09, 1, 1.66282e-08, -12.4292, -1.26002, -20 )
+
+[node name="Bar7" type="MeshInstance" parent="Level/t3/laser4"]
+transform = Transform( 1, 0, -7.02255e-16, 0, 1, 0, 2.34085e-16, 0, 3, 0, 0, -9 )
+material_override = SubResource( 14 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Level/t3"]
+autoplay = "laser_anim"
+playback_speed = 0.5
+anims/laser_anim = SubResource( 15 )
+
+[node name="Tween" type="Tween" parent="Level/t3"]
+
+[node name="floor" type="MeshInstance" parent="Level"]
+transform = Transform( -3.9101e-06, 0, 3, 0, 1, 0, -24, 0, -4.88762e-07, 0, 0, -24 )
+material_override = SubResource( 18 )
+mesh = SubResource( 19 )
+material/0 = null
+
+[node name="t4" type="Spatial" parent="Level"]
+
+[node name="Bar1" type="MeshInstance" parent="Level/t4"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 2, 3, 0, -23 )
+material_override = SubResource( 1 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Bar2" type="MeshInstance" parent="Level/t4"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 2, -3, 0, -23 )
+material_override = SubResource( 1 )
+mesh = SubResource( 10 )
+material/0 = null
+
+[node name="Tween" type="Tween" parent="Level/t4"]
+
+[node name="rings" type="Spatial" parent="Level"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -4 )
+
+[node name="ring" type="MeshInstance" parent="Level/rings"]
+transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -7 )
+material_override = SubResource( 20 )
+mesh = ExtResource( 3 )
+material/0 = null
+
+[node name="ring2" type="MeshInstance" parent="Level/rings"]
+transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -11 )
+material_override = SubResource( 20 )
+mesh = ExtResource( 3 )
+material/0 = null
+
+[node name="ring3" type="MeshInstance" parent="Level/rings"]
+transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -15 )
+material_override = SubResource( 20 )
+mesh = ExtResource( 3 )
+material/0 = null
+
+[node name="ring4" type="MeshInstance" parent="Level/rings"]
+transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -19 )
+material_override = SubResource( 20 )
+mesh = ExtResource( 3 )
+material/0 = null
+
+[node name="ring5" type="MeshInstance" parent="Level/rings"]
+transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -23 )
+material_override = SubResource( 20 )
+mesh = ExtResource( 3 )
+material/0 = null
+
+[node name="ring6" type="MeshInstance" parent="Level/rings"]
+transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -27 )
+material_override = SubResource( 20 )
+mesh = ExtResource( 3 )
+material/0 = null
+
+[node name="ring7" type="MeshInstance" parent="Level/rings"]
+transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -31 )
+material_override = SubResource( 20 )
+mesh = ExtResource( 3 )
+material/0 = null
+
+[node name="ring8" type="MeshInstance" parent="Level/rings"]
+transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -35 )
+material_override = SubResource( 20 )
+mesh = ExtResource( 3 )
+material/0 = null
+
+[node name="ring9" type="MeshInstance" parent="Level/rings"]
+transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -39 )
+material_override = SubResource( 20 )
+mesh = ExtResource( 3 )
+material/0 = null
+
+[node name="ring10" type="MeshInstance" parent="Level/rings"]
+transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -43 )
+material_override = SubResource( 20 )
+mesh = ExtResource( 3 )
+material/0 = null
+
+[node name="ring11" type="MeshInstance" parent="Level/rings"]
+transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -47 )
+material_override = SubResource( 20 )
+mesh = ExtResource( 3 )
+material/0 = null
+
+[node name="ring12" type="MeshInstance" parent="Level/rings"]
+transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -51 )
+material_override = SubResource( 20 )
+mesh = ExtResource( 3 )
+material/0 = null
+
+[node name="ring13" type="MeshInstance" parent="Level/rings"]
+transform = Transform( 1.64568e-13, 1.01011e-06, 6.2, 6.2, -1.01011e-06, 0, 1.01011e-06, 6.2, -1.01011e-06, 0, 0, -55 )
+material_override = SubResource( 20 )
+mesh = ExtResource( 3 )
+material/0 = null
+
+[node name="Tween" type="Tween" parent="Level/rings"]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Level/rings"]
+playback_default_blend_time = 0.5
+playback_speed = 2.0
+anims/in = SubResource( 21 )
+anims/out = SubResource( 22 )
+
+[node name="wall_material_holder" type="MeshInstance" parent="."]
+material_override = ExtResource( 4 )
+[connection signal="tween_step" from="Level/t0/Tween" to="." method="_on_Tween_tween_step" binds= [ 0 ]]
+[connection signal="tween_step" from="Level/t1/Tween" to="." method="_on_Tween_tween_step" binds= [ 1 ]]
+[connection signal="tween_step" from="Level/t2/Tween" to="." method="_on_Tween_tween_step" binds= [ 2 ]]
+[connection signal="tween_step" from="Level/t3/Tween" to="." method="_on_Tween_tween_step" binds= [ 3 ]]
+[connection signal="tween_step" from="Level/t4/Tween" to="." method="_on_Tween_tween_step" binds= [ 4 ]]

@@ -58,5 +58,5 @@ func duplicate_create():
 		yield(self,"ready")
 	
 	_mesh.mesh = _mesh.mesh.duplicate();
-	_mesh.mesh.surface_set_material(0, wall_material.duplicate());
+#	_mesh.mesh.surface_set_material(0, wall_material.duplicate());
 	_coll.shape = _coll.shape.duplicate()

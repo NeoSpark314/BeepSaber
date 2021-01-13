@@ -1,0 +1,59 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://game/data/UI/PercentIndicator.material" type="Material" id=1]
+[ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/Roboto-Medium.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://game/data/UI/ring.png" type="Texture" id=3]
+[ext_resource path="res://game/PercentIndicator.gd" type="Script" id=4]
+
+[sub_resource type="DynamicFont" id=3]
+size = 128
+font_data = ExtResource( 2 )
+
+[sub_resource type="Theme" id=4]
+default_font = SubResource( 3 )
+
+[sub_resource type="Animation" id=5]
+resource_name = "change"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 0.183011, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 0.85, 0.85 ) ]
+}
+
+[node name="percent_indicator" type="TextureRect"]
+material = ExtResource( 1 )
+margin_right = 40.0
+margin_bottom = 40.0
+rect_scale = Vector2( 0.85, 0.85 )
+rect_pivot_offset = Vector2( 256, 256 )
+texture = ExtResource( 3 )
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -247.5
+margin_top = -75.5
+margin_right = 247.5
+margin_bottom = 75.5
+theme = SubResource( 4 )
+text = "100%"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/change = SubResource( 5 )

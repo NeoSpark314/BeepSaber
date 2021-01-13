@@ -14,21 +14,17 @@ func initialize(beepsaber_game):
 
 func set_mode_game_start():
 	$Play_Button.visible = true;
-	$Stop_Button.visible = false;
-	$Continue_Button.visible = false;
-	$Restart_Button.visible = false;
 
 
 func set_mode_continue():
 	$Play_Button.visible = false;
-	$Stop_Button.visible = true;
-	$Continue_Button.visible = true;
-	$Restart_Button.visible = true;
 
 
 var path = "res://game/data/maps/";
 var dlpath = str(OS.get_system_dir(3))+"/";
 var bspath = "/sdcard/BeepSaber/";
+#var bspath = "user://BeepSaber/";
+export(NodePath) var keyboard;
 
 var _playlists
 
@@ -37,40 +33,40 @@ var PlaylistButton = preload("res://game/PlaylistButton.tscn")
 func _load_playlists():
 	var Playlists = $PlaylistMenu/Playlists
 	
-	_playlists = vr.load_json_file(path + "Playlists.json");
-	if not _playlists:
-		_playlists = [];
+	_playlists = [];
 	
-	var seek_path = bspath + "Playlists/";
-	var dir = Directory.new();
-	var err = dir.open(seek_path);
-	if err == OK:
-		dir.list_dir_begin(true,true);
+	#copy sample songs to main playlist folder on first run
+	var file = File.new()
+	var config_path = "user://config.dat"
+	if not file.file_exists(config_path):
+		var dir = Directory.new()
+		var copy = Directory.new()
+		dir.make_dir_recursive(bspath+"Songs/")
+		dir.open(path+"Songs/")
+		dir.list_dir_begin(true,true)
 		var file_name = dir.get_next()
 		while file_name != "":
-			if (! dir.current_is_dir() and file_name.ends_with(".json")):
-				var play_file = seek_path+file_name;
-				var new_lists = vr.load_json_file(play_file);
-				if new_lists:
-					_playlists+=new_lists;
+			if dir.current_is_dir():
+				var new_dir = path+"Songs/"+file_name;
+				copy.make_dir_recursive(bspath+"Songs/"+file_name)
+				copy.open(new_dir)
+				copy.list_dir_begin(true,true)
+				var copy_file_name = copy.get_next()
+				while copy_file_name != "":
+					var copy_new_dir = new_dir+"/"+copy_file_name;
+					print(copy_new_dir)
+					dir.copy(copy_new_dir,bspath+"Songs/"+file_name+"/"+copy_file_name)
+					copy_file_name = copy.get_next();
 			file_name = dir.get_next();
 	
 	_autogen_playlists(bspath+"Songs/", "BeepSaber/Songs/");
 	
 	if (!_playlists):
-		vr.log_error("No Playlists.json found in " + path + " or " + seek_path);
+		vr.log_error("No songs found in " + bspath);
+		for b in $SongsMenu/Songs.get_children():
+			b.queue_free()
 		return false;
 	
-	# clear previous playlists
-	for child in Playlists.get_children():
-		Playlists.remove_child(child)
-		
-	# add discovered playlists
-	for pl in _playlists:
-		var newPlaylistButton = PlaylistButton.instance()
-		newPlaylistButton.pl = pl
-		newPlaylistButton.connect("pressed_pl", self, "_set_cur_playlist")
-		Playlists.add_child(newPlaylistButton)
 	
 	if (_playlists.size() == 0):
 		_set_cur_playlist([])
@@ -102,13 +98,6 @@ func _autogen_playlists(seek_path,name):
 var SongButton = preload("res://game/SongButton.tscn")
 
 func _set_cur_playlist(pl):
-	var Playlists = $PlaylistMenu/Playlists
-	
-	for playlist in Playlists.get_children():
-		if playlist.pl == pl:
-			playlist.modulate = Color(1, 0.5, 0.5)
-		else:
-			playlist.modulate = Color(1, 1, 1)
 	
 	var Songs = $SongsMenu/Songs
 	
@@ -126,6 +115,7 @@ func _wire_song_dat(dat, to_select):
 	var newSongButton = SongButton.instance();
 	newSongButton.id = dat;
 	newSongButton.info = _load_song_info(_song_path(dat));
+	newSongButton.texture = _load_cover(_song_path(dat), newSongButton.info._coverImageFilename)
 	newSongButton.connect("pressed_id", self, "_select_song");
 	Songs.add_child(newSongButton)
 	if newSongButton.info and to_select:
@@ -184,13 +174,16 @@ func _load_cover(cover_path, filename):
 # to later extend it to load different maps
 var _map_id = null;
 var _map_info = null;
+var _map_path = null;
 
 var DifficultyButton = preload("res://game/DifficultyButton.tscn")
 
 
 func _select_song(id):
-	_map_id = id
-	_map_info = _load_song_info(_song_path(id));
+	_map_id = id;
+	_map_path = _song_path(id);
+	$Delete_Button.disabled = false;
+	_map_info = _load_song_info(_map_path);
 	$SongInfo_Label.text = """Song Author: %s
 	Song Title: %s
 	Beatmap Author: %s""" %[_map_info._songAuthorName, _map_info._songName, _map_info._levelAuthorName]
@@ -216,10 +209,21 @@ func _select_song(id):
 		Difficulties.add_child(newDifficultyButton)
 	
 	_select_difficulty(0)
+	
+	#preview song
+	$song_prev.stop()
+	var snd_file = File.new()
+	snd_file.open(_map_info._path + _map_info._songFilename, File.READ) #works whether it's a resource or a file
+	var stream = AudioStreamOGGVorbis.new()
+	stream.data = snd_file.get_buffer(snd_file.get_len())
+	snd_file.close()
+	$song_prev.stream = stream;
+	$song_prev.play()
 
 
 var _map_difficulty = 0
-
+var _map_difficulty_name = ""
+var _map_difficulty_noteJumpMovementSpeed = 9.0
 
 func _select_difficulty(id):
 	_map_difficulty = id
@@ -227,6 +231,7 @@ func _select_difficulty(id):
 	for difficulty in Difficulties.get_children():
 		difficulty.modulate = Color(1, 1, 1)
 	Difficulties.get_child(id).modulate = Color(1, 0.5, 0.5)
+	_map_difficulty_name = Difficulties.get_child(id).text
 
 
 func _load_map_and_start():
@@ -240,6 +245,7 @@ func _load_map_and_start():
 	var map_info = set0._difficultyBeatmaps[_map_difficulty];
 	var map_filename = _map_info._path + map_info._beatmapFilename;
 	var map_data = vr.load_json_file(map_filename);
+	_map_difficulty_noteJumpMovementSpeed = set0._difficultyBeatmaps[_map_difficulty]["_noteJumpMovementSpeed"];
 	
 	if (map_data == null):
 		vr.log_error("Could not read map data from " + map_filename);
@@ -250,16 +256,51 @@ func _load_map_and_start():
 	
 	return true;
 
+func _on_Delete_Button_button_up():
+	if $Delete_Button.text != "Sure?":
+		$Delete_Button.text = "Sure?";
+		yield(get_tree().create_timer(5),"timeout");
+		$Delete_Button.text = "Delete";
+	else:
+		$Delete_Button.text = "Delete";
+		_delete_map();
+	
+func _delete_map():
+	if _map_path:
+		var dir = Directory.new();
+		if dir.open(_map_path) == 0:
+			dir.list_dir_begin();
+			var current_file = dir.get_next();
+			while current_file != "":
+				dir.remove(_map_path+current_file);
+				current_file = dir.get_next();
+			dir.remove(_map_path);
+			vr.log_info(_map_path+" Removed");
+			_map_path = null;
+			$Delete_Button.disabled = true;
+		else:
+			vr.log_info("Error removing song "+_map_path);
+		_on_LoadPlaylists_Button_pressed()
 
-func _ready():	
+
+func _ready():
 	if OS.get_name() != "Android":
 		bspath = dlpath+"BeepSaber/";
 	vr.log_info("BeepSaber search path is " + bspath);
+	
+	keyboard = get_node(keyboard);
+	keyboard.connect("text_input_enter",self,"_text_input_enter")
+	keyboard.connect("text_input_cancel",self,"_text_input_cancel")
 
 	_load_playlists();
+	
+	yield(get_tree(),"physics_frame")
+	keyboard._text_edit.connect("text_changed",self,"_text_input_changed")
+	keyboard._text_edit.connect("focus_exited",self,"_text_input_enter")
 
 
 func _on_Play_Button_pressed():
+	$song_prev.stop()
 	_load_map_and_start();
 
 
@@ -360,3 +401,41 @@ func _on_LoadPlaylists_Button_pressed():
 	#       maybe polling after the button press?
 	if (_check_and_request_permission()):
 		_load_playlists();
+
+
+func _on_Search_Button_button_up():
+	keyboard.visible=true
+	keyboard._text_edit.grab_focus();
+
+func _text_input_enter(text):
+	keyboard.visible=false
+func _text_input_cancel():
+	keyboard.visible=false
+	_clean_search()
+	
+func _text_input_changed():
+	var text = keyboard._text_edit.text
+	$Search_Button/Label.text = text
+	if text == "":
+		_clean_search()
+		return
+	var most_similar = 0.0
+	var results = false
+	for song in $SongsMenu/Songs.get_children():
+		var similarity = song.text.similarity(text)
+		song.visible = similarity != 0
+		if song.visible:
+			if similarity > most_similar:
+				most_similar = similarity
+				$SongsMenu/Songs.move_child(song,0)
+			results = true
+	if not results:
+		_clean_search()
+	
+func _clean_search():
+	for song in $SongsMenu/Songs.get_children():
+		song.visible = true
+	$Search_Button/Label.text = ""
+	
+
+

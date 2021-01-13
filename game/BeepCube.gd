@@ -12,20 +12,24 @@ onready var _mesh_instance : MeshInstance = $CubeMeshOrientation/CubeMeshAnimati
 # we store the mesh here as part of the BeepCube for easier access because we will
 # reuse it when we create the cut cube pieces
 var _mesh : Mesh = null;
-var _mat : SpatialMaterial = null;
+var _mat = null;
+var speed = 1.0;
 
 func _ready():
 	_mesh = _mesh_instance.mesh;
-	_mat = _mesh_instance.mesh.surface_get_material(0);
+	_mat = _mesh_instance.material_override;
 	# play the spawn animation when this cube enters the scene
+	_anim.playback_speed = speed
 	_anim.play("Spawn");
 
 func duplicate_create(color : Color):
 	var mi = $CubeMeshOrientation/CubeMeshAnimation/BeepCube_Mesh;
-	_mat = mi.mesh.surface_get_material(0).duplicate(true);
-	_mat.albedo_color = color;
+	_mat = mi.material_override.duplicate(true);
+	_mat.set_shader_param("albedo",color);
 	mi.mesh = mi.mesh.duplicate();
-	mi.mesh.surface_set_material(0, _mat);
+	mi.material_override = _mat;
 	_mesh = mi.mesh;
 
+func update_color_only(color : Color):
+	_mat.set_shader_param("albedo",color);
 

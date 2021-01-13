@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://game/LightSaber.material" type="Material" id=1]
 [ext_resource path="res://game/LightSaber.gd" type="Script" id=2]
@@ -64,6 +64,18 @@ tracks/3/keys = {
 "update": 1,
 "values": [ true ]
 }
+tracks/4/type = "value"
+tracks/4/path = NodePath("tip:translation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 1.26252, 0 ), Vector3( 0, 0.0503954, 0 ) ]
+}
 
 [sub_resource type="Animation" id=4]
 resource_name = "QuickHide"
@@ -115,6 +127,18 @@ tracks/3/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 1,
 "values": [ true ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("tip:translation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0.0486096, 0 ) ]
 }
 
 [sub_resource type="Animation" id=5]
@@ -181,6 +205,18 @@ tracks/4/keys = {
 "update": 1,
 "values": [ false ]
 }
+tracks/5/type = "value"
+tracks/5/path = NodePath("tip:translation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0.0523572, 0 ), Vector3( 0, 1.26252, 0 ) ]
+}
 
 [sub_resource type="CylinderMesh" id=6]
 top_radius = 0.015
@@ -189,6 +225,27 @@ height = 0.15
 
 [sub_resource type="SpatialMaterial" id=7]
 albedo_color = Color( 0.435294, 0, 0.427451, 1 )
+
+[sub_resource type="Shader" id=8]
+code = "shader_type spatial;
+render_mode cull_disabled, unshaded;
+
+uniform vec4 color;
+uniform int size;
+
+void fragment(){
+	ALPHA_SCISSOR = 0.5;
+	if (int((SCREEN_UV.x*1000f)+(SCREEN_UV.y*1000f))%size==0){
+		ALPHA = 0f;
+	}else{
+		ALBEDO = color.rgb;
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id=9]
+shader = SubResource( 8 )
+shader_param/color = Vector3( 1, 1, 1 )
+shader_param/size = 2
 
 [node name="LightSaber" type="Area"]
 transform = Transform( 1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0 )
@@ -217,3 +274,12 @@ material/0 = SubResource( 7 )
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource( 3 )
+
+[node name="ImmediateGeometry" type="ImmediateGeometry" parent="."]
+material_override = SubResource( 9 )
+
+[node name="base" type="Position3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0508851, 0 )
+
+[node name="tip" type="Position3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.26252, 0 )

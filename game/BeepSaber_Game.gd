@@ -12,6 +12,7 @@ onready var ui_raycast := $OQ_ARVROrigin/OQ_RightController/Feature_UIRayCast;
 
 onready var cube_template = preload("res://game/BeepCube.tscn").instance();
 onready var wall_template = preload("res://game/Wall/Wall.tscn").instance();
+onready var cube_material_template = preload("res://game/BeepCube_new_material.material");
 
 var cube_left = null
 var cube_right = null
@@ -20,8 +21,10 @@ onready var track = $Track;
 
 onready var song_player := $SongPlayer;
 
-const COLOR_LEFT := Color(1.0, 0.1, 0.1, 1.0);
-const COLOR_RIGHT := Color(0.1, 0.1, 1.0, 1.0);
+onready var menu = $MainMenu_OQ_UI2DCanvas.ui_control
+
+var COLOR_LEFT := Color(1.0, 0.1, 0.1, 1.0);
+var COLOR_RIGHT := Color(0.1, 0.1, 1.0, 1.0);
 
 const CUBE_HEIGHT_OFFSET = 0.4
 const WALL_HEIGHT = 3.0
@@ -32,6 +35,7 @@ var _current_note_speed = 1.0;
 var _current_info = null;
 var _current_note = 0;
 var _current_obstacle = 0;
+var _current_event = 0;
 
 
 var _high_score = 0;
@@ -42,17 +46,30 @@ var _current_combo = 0;
 
 var _in_wall = false;
 
+var _right_notes = 0;
+var _wrong_notes = 0;
+
+#settings
+var cube_cuts_falloff = true
+
 func restart_map():
 	song_player.play(0.0);
 	song_player.volume_db = 0.0;
 	_in_wall = false;
 	_current_note = 0;
 	_current_obstacle = 0;
+	_current_event = 0;
 	_current_points = 0;
 	_current_multiplier = 1;
 	_current_combo = 0;
 
+	#set_percent_to_null
+	_right_notes = 0.0
+	_wrong_notes = 0.0
+
 	_display_points();
+	$event_driver.update_colors()
+	$event_driver.set_all_off()
 
 	for c in $Track.get_children():
 		c.visible = false;
@@ -60,18 +77,25 @@ func restart_map():
 		c.queue_free();
 
 	$MainMenu_OQ_UI2DCanvas.visible = false;
+	$Settings_canvas.visible = false;
+	$Online_library.visible = false;
+	$OQ_UI2DKeyboard.visible = false;
+	$OQ_UI2DKeyboard_main.visible = false;
 
 	left_saber.show();
 	right_saber.show();
 	ui_raycast.visible = false;
-	$EndScore_OQ_UILabel.visible = false;
+#	$EndScore_OQ_UILabel.visible = false;
 	$Multiplier_Label.visible=true;
 	$Point_Label.visible=true;
+	$Percent.visible=true;
 
 
 func continue_map():
 	song_player.play(song_player.get_playback_position());
 	$MainMenu_OQ_UI2DCanvas.visible = false;
+	$Settings_canvas.visible = false;
+	$Online_library.visible = false;
 
 	left_saber.show();
 	right_saber.show();
@@ -102,9 +126,24 @@ func show_menu():
 		right_saber.hide();
 		$Multiplier_Label.visible=false;
 		$Point_Label.visible=false;
+		$Percent.visible=false;
 
 	ui_raycast.visible = true;
 	$MainMenu_OQ_UI2DCanvas.visible = true;
+	$Settings_canvas.visible = true;
+	$Online_library.visible = true;
+	
+func show_pause_menu():
+	if ($PauseMenu_canvas.visible or not song_player.playing): return;
+
+	if (song_player.playing):
+#		print(_current_info)
+		song_player.stop();
+		$PauseMenu_canvas.ui_control.set_pause_text("%s By %s\nMap author: %s" % [_current_info["_songName"],_current_info["_songAuthorName"],_current_info["_levelAuthorName"]],menu._map_difficulty_name)
+
+	ui_raycast.visible = true;
+	$PauseMenu_canvas.visible = true;
+	$Settings_canvas.visible = true;
 
 # when the song ended we want to display the current score and
 # the high score
@@ -112,10 +151,15 @@ func _end_song_display():
 	if (_current_points > _high_score):
 		_high_score = _current_points;
 
-	$EndScore_OQ_UILabel.set_label_text("Congratulations\nYour Score: %d\nHigh Score: %d" %[_current_points, _high_score]);
-	$EndScore_OQ_UILabel.visible = true;
+	var current_percent = int((_right_notes/(_right_notes+_wrong_notes))*100)
+	
+#	$EndScore_OQ_UILabel.set_label_text("Congratulations\nYour Score: %d\nHigh Score: %d\nAccuracy: %d%%" %[_current_points, _high_score,current_percent]);
+#	$EndScore_OQ_UILabel.visible = true;
+	$EndScore_canvas.visible = true
+	$EndScore_canvas.ui_control.show_score(_current_points,_high_score,current_percent,"%s By %s\n%s     Map author: %s" % [_current_info["_songName"],_current_info["_songAuthorName"],menu._map_difficulty_name,_current_info["_levelAuthorName"]])
+	ui_raycast.visible = true;
 	song_player.stop();
-	show_menu();
+#	show_menu();
 
 
 const beat_distance = 4.0;
@@ -132,6 +176,7 @@ func _spawn_cube(note, current_beat):
 	else:
 		return;
 
+	cube.speed = float(menu._map_difficulty_noteJumpMovementSpeed)/9
 	track.add_child(cube);
 
 	var line = -(CUBE_DISTANCE * 3.0 / 2.0) + note._lineIndex * CUBE_DISTANCE;
@@ -221,11 +266,21 @@ func _process_map(dt):
 
 		# remove children that go to far
 		if ((c.global_transform.origin.z - depth) > 2.0):
+			if not c is Wall:
+				_reset_combo();
 			c.queue_free();
-			_reset_combo();
+
+	var e = _current_map._events;
+	while (_current_event < e.size() && e[_current_event]._time <= current_beat):#+beats_ahead):
+		_spawn_event(e[_current_event], current_beat);
+		_current_event += 1;
 
 	if (song_player.get_playback_position() >= song_player.stream.get_length()-1):
 		_end_song_display();
+
+func _spawn_event(data,beat):
+	$event_driver.procces_event(data,beat)
+
 
 # with this variable we track the movement volume of the controller
 # since the last cut (used to give a higher score when moved a lot)
@@ -247,6 +302,7 @@ func _check_and_update_saber(controller : ARVRController, saber: Area):
 				if (!saber._anim.is_playing()):
 					if (saber.is_extended()): saber.hide();
 					else: saber.show();
+					
 	
 	# check for saber rumble (only when extended and not already rumbling)
 	# this check is necessary to not overwrite a rumble set from somewhere else
@@ -279,7 +335,8 @@ func _update_saber_end_variabless(dt):
 
 func _physics_process(dt):
 	if (vr.button_just_released(vr.BUTTON.ENTER)):
-		show_menu();
+		show_pause_menu();
+#		show_menu();
 
 	if (song_player.playing):
 		_process_map(dt);
@@ -291,44 +348,9 @@ func _physics_process(dt):
 	
 	_update_saber_end_variabless(dt)
 	
-	_update_level(dt);
 
 var _main_menu = null;
-var _spectrum = null;
-var _spectrum_nodes = [];
-
-# update the level animations; at the moment this is only the basic
-# spectrum analyzer
-func _update_level(dt):
-	var VU_COUNT = _spectrum_nodes.size();
-	var FREQ_MAX = 11050.0
-	var MIN_DB = 60.0
-
-	var prev_hz = 100
-	for i in range(1,VU_COUNT+1):
-		var hz = i * FREQ_MAX / VU_COUNT;
-		var f = _spectrum.get_magnitude_for_frequency_range(prev_hz,hz)
-		var energy = clamp((MIN_DB + linear2db(f.length()))/MIN_DB,0,1)
-
-		_spectrum_nodes[i-1].translation.y = energy * 10.0;
-
-		prev_hz = hz
-
-# create the level data that is displayed
-func _setup_level():
-	
-	# create a specrum analyzer
-	AudioServer.add_bus_effect(0, AudioEffectSpectrumAnalyzer.new());
-	_spectrum = AudioServer.get_bus_effect_instance(0,0);
-	# and create some cubes to display it in the level (updated in _update_level(dt))
-	var s = $Level/SpectrumBar;
-	_spectrum_nodes.push_back(s);
-	for  i in range(0, 7):
-		s = s.duplicate()
-		$Level.add_child(s);
-		s.translation.x += 2.0;
-		_spectrum_nodes.push_back(s);
-
+var _lpf = null;
 
 func _ready():
 	_main_menu = $MainMenu_OQ_UI2DCanvas.find_node("BeepSaberMainMenu", true, false);
@@ -338,11 +360,9 @@ func _ready():
 	cube_right = cube_template.duplicate();
 	cube_left.duplicate_create(COLOR_LEFT);
 	cube_right.duplicate_create(COLOR_RIGHT);
+	update_cube_colors()
 
-	left_saber._mat.set_shader_param("color", COLOR_LEFT);
-	left_saber.type = 0;
-	right_saber._mat.set_shader_param("color", COLOR_RIGHT);
-	right_saber.type = 1;
+	update_saber_colors()
 	
 	# This is a workaround for now to orient correctly for the Vive controllers
 	if (vr.active_arvr_interface_name == "OpenVR"):
@@ -351,49 +371,87 @@ func _ready():
 		ui_raycast.rotation_degrees.x = 0;
 
 	$MainMenu_OQ_UI2DCanvas.visible = false;
+	$Settings_canvas.visible = false;
+	$Online_library.visible = false;
+	$OQ_UI2DKeyboard.visible = false;
+	$OQ_UI2DKeyboard_main.visible = false;
 	show_menu();
-	_setup_level();
+
+func update_cube_colors():
+	cube_left.update_color_only(COLOR_LEFT);
+	cube_right.update_color_only(COLOR_RIGHT);
+
+func update_saber_colors():
+	left_saber.set_color(COLOR_LEFT)
+	left_saber.type = 0;
+	right_saber.set_color(COLOR_RIGHT)
+	right_saber.type = 1;
+	#also updates map colors
+	$event_driver.update_colors()
+
+func disable_events(disabled):
+	$event_driver.disabled = disabled
+	if disabled:
+		$event_driver.set_all_off()
+	else:
+		$event_driver.set_all_on()
 
 
 # cut the cube by creating two rigid bodies and using a CSGBox to create
 # the cut plane
-func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distance, controller_speed):
+func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distance, controller_speed, saber_ends):
+	if not cube_cuts_falloff and _sign == 1: 
+		var snd = AudioStreamPlayer.new();
+		snd.stream = preload("res://game/data/beepcube_cut.ogg");
+		add_child(snd);
+		snd.play();
+		yield(snd,"finished")
+		snd.queue_free()
+		return
 	var rigid_body_half = RigidBody.new();
 	
 	# the original cube mesh
-	var csg_cube = CSGMesh.new();
-	csg_cube.mesh = cube._mesh;
-	csg_cube.transform = cube._cube_mesh_orientation.transform;
+	var cutted_cube = MeshInstance.new();
+	cutted_cube.mesh = cube._mesh;
+	cutted_cube.transform = cube._cube_mesh_orientation.transform;
+	cutted_cube.material_override = cube._mat.duplicate()
 	
-	# using a box to cut away part of the mesh
-	var csg_cut = CSGBox.new();
-	csg_cut.operation = CSGShape.OPERATION_SUBTRACTION;
-	csg_cut.material = load("res://game/BeepCube_Cut.material");
-	csg_cut.width = 1; csg_cut.height = 1;csg_cut.depth = 1;
+	#calculate angle and position of the cut
+	cutted_cube.material_override.set_shader_param("cutted",true)
+	cutted_cube.material_override.set_shader_param("inverted_cut",!bool((_sign+1)/2))
+	var saber_end_mov = saber_ends[0]-saber_ends[1]
+	var saber_end_angle = rad2deg(Vector2(saber_end_mov.x,saber_end_mov.y).angle())
+	var saber_end_angle_rel = (int(((saber_end_angle+90)+(360-cutted_cube.rotation_degrees.z))+180)%360)-180
+	cutted_cube.material_override.set_shader_param("cut_angle",saber_end_angle_rel)
+	if saber_end_angle_rel > 90 or saber_end_angle_rel < -90:
+		cutted_cube.material_override.set_shader_param("cut_pos",-cut_distance*3)
+	else:
+		cutted_cube.material_override.set_shader_param("cut_pos",cut_distance*3)
 
 	# transform the normal into the orientation of the actual cube mesh
-	var normal = csg_cube.transform.basis.inverse() * cutplane.normal;
-	csg_cut.look_at_from_position(-(cut_distance - _sign*0.5) * normal, normal, Vector3(0,1,0));
-	csg_cube.add_child(csg_cut);
+	var normal = cutted_cube.transform.basis.inverse() * cutplane.normal;
 
-	# Next we are adding a simple collision cube to the rigid body. Note that
-	# his is really just a very crude approximation of the actual cut geometry
-	# but for now it's enough to give them some physics behaviour
-	var coll = CollisionShape.new();
-	coll.shape = BoxShape.new();
-	coll.shape.extents = Vector3(0.25, 0.25, 0.125);
-	coll.look_at_from_position(-cutplane.normal*_sign*0.125, cutplane.normal, Vector3(0,1,0));
-	rigid_body_half.add_child(coll);
+#	# Next we are adding a simple collision cube to the rigid body. Note that
+#	# his is really just a very crude approximation of the actual cut geometry
+#	# but for now it's enough to give them some physics behaviour
+#	var coll = CollisionShape.new();
+#	coll.shape = BoxShape.new();
+#	coll.shape.extents = Vector3(0.25, 0.25, 0.125);
+#	coll.look_at_from_position(-cutplane.normal*_sign*0.125, cutplane.normal, Vector3(0,1,0));
+#	rigid_body_half.add_child(coll);
 
 	# set a phyiscs material for some more bouncy behaviour
 	rigid_body_half.physics_material_override = load("res://game/BeepCube_Cut.phymat");
 
-	rigid_body_half.add_child(csg_cube);
+	rigid_body_half.add_child(cutted_cube);
 	add_child(rigid_body_half);
 	rigid_body_half.global_transform = cube.global_transform;
 
 	# some impulse so the cube halfs get some movement
-	rigid_body_half.apply_central_impulse(-_sign * cutplane.normal +  controller_speed);
+#	if saber_end_angle_rel > 90 or saber_end_angle_rel < -90:
+	rigid_body_half.apply_central_impulse((_sign) * cutplane.normal +  controller_speed);
+#	else:
+#		rigid_body_half.apply_central_impulse((_sign) * cutplane.normal +  controller_speed);
 
 	# attach the sound effect only to one of the halfs; I attach them here so
 	# it gets deleted when the body is deleted later
@@ -413,6 +471,7 @@ func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distanc
 func _reset_combo():
 	_current_multiplier = 1;
 	_current_combo = 0;
+	_wrong_notes += 1.0
 	_display_points();
 
 
@@ -424,6 +483,7 @@ func _update_points_from_cut(saber, cube, beat_accuracy, cut_angle_accuracy, cut
 	# check if we hit the cube with the correctly colored saber
 	if (saber.type != cube._note._type):
 		_reset_combo();
+		_wrong_notes += 1.0
 		return;
 
 	_current_combo += 1;
@@ -438,12 +498,23 @@ func _update_points_from_cut(saber, cube, beat_accuracy, cut_angle_accuracy, cut
 
 	points = round(points);
 	_current_points += points * _current_multiplier;
+	
+	# track acurracy percent
+	var normalized_points = clamp(points/100, 0.0, 1.0);
+#	print(normalized_points)
+	_right_notes += normalized_points;
+	_wrong_notes += 1.0-normalized_points;
 
 	_display_points();
 
 
 func _display_points():
+	var current_percent = 100
+	if _right_notes+_wrong_notes > 0:
+		current_percent = int((_right_notes/(_right_notes+_wrong_notes))*100)
+	
 	$Point_Label.set_label_text("Score: %6d" % _current_points);
+	$Percent.ui_control.set_percent(current_percent)
 	$Multiplier_Label.set_label_text("x %d\nCombo %d" %[_current_multiplier, _current_combo])
 
 # perform the necessay computations to cut a cube with the saber
@@ -464,18 +535,18 @@ func _cut_cube(controller : ARVRController, saber : Area, cube : Spatial):
 	var cut_distance = cutplane.distance_to(cube.global_transform.origin);
 	
 	var controller_speed : Vector3 = (saber_end - saber_end_past) / (5*last_dt) + 0.2*(beat_distance *_current_info._beatsPerMinute / 60) * Vector3(0, 0, 1) # Account for inertial track speed
-	
-	_create_cut_rigid_body(-1, cube, cutplane, cut_distance, controller_speed);
-	_create_cut_rigid_body( 1, cube, cutplane, cut_distance, controller_speed);
 
 	# compute the angle between the cube orientation and the cut direction
 	var cut_direction_xy = -Vector3(controller_speed.x, controller_speed.y, 0.0).normalized();
-	var cut_angle_accuracy = cube._cube_mesh_orientation.global_transform.basis.y.dot(cut_direction_xy);
-	cut_angle_accuracy = clamp((cut_angle_accuracy-0.7)/0.3, 0.0, 1.0);
+	var base_cut_angle_accuracy = cube._cube_mesh_orientation.global_transform.basis.y.dot(cut_direction_xy);
+	var cut_angle_accuracy = clamp((base_cut_angle_accuracy-0.7)/0.3, 0.0, 1.0);
 	var cut_distance_accuracy = clamp((0.1 - abs(cut_distance))/0.1, 0.0, 1.0);
 	var travel_distance_factor = _controller_movement_aabb[controller.controller_id].get_longest_axis_size();
 	travel_distance_factor = clamp((travel_distance_factor-0.5)/0.5, 0.0, 1.0);
 
+	_create_cut_rigid_body(-1, cube, cutplane, cut_distance, controller_speed, [saber_end,saber_end_past]);
+	_create_cut_rigid_body( 1, cube, cutplane, cut_distance, controller_speed, [saber_end,saber_end_past]);
+	
 	# allows a bit of save margin where the beat is considered 100% correct
 	var beat_accuracy = clamp((1.0 - abs(cube.global_transform.origin.z)) / 0.5, 0.0, 1.0);
 
@@ -497,12 +568,12 @@ func _louden_song():
 	song_player.volume_db = 0.0;
 
 func _on_LeftLightSaber_area_entered(area : Area):
-	if (area.is_in_group("beepcube")):
+	if song_player.playing and (area.is_in_group("beepcube")):
 		_cut_cube(left_controller, left_saber, area.get_parent().get_parent());
 
 
 func _on_RightLightSaber_area_entered(area : Area):
-	if (area.is_in_group("beepcube")):
+	if song_player.playing and (area.is_in_group("beepcube")):
 		_cut_cube(right_controller, right_saber, area.get_parent().get_parent());
 
 func _on_PlayerHead_area_entered(area):
@@ -518,3 +589,36 @@ func _on_PlayerHead_area_exited(area):
 			_louden_song();
 		
 		_in_wall = false;
+
+
+func _on_EndScore_panel_repeat():
+	$MainMenu_OQ_UI2DCanvas.ui_control.set_mode_game_start()
+	restart_map()
+	$EndScore_canvas.visible = false
+	$PauseMenu_canvas.visible = false
+
+
+func _on_EndScore_panel_goto_mainmenu():
+	$MainMenu_OQ_UI2DCanvas.ui_control.set_mode_game_start()
+	for c in $Track.get_children():
+		c.visible = false;
+		$Track.remove_child(c);
+		c.queue_free();
+	show_menu()
+	$EndScore_canvas.visible = false
+	$PauseMenu_canvas.visible = false
+
+
+func _on_Pause_Panel_continue_button():
+	$PauseMenu_canvas.visible = false
+	$Settings_canvas.visible = false;
+	$Pause_countdown.visible = true
+	$Pause_countdown.set_label_text("3")
+	yield(get_tree().create_timer(0.5),"timeout")
+	$Pause_countdown.set_label_text("2")
+	yield(get_tree().create_timer(0.5),"timeout")
+	$Pause_countdown.set_label_text("1")
+	yield(get_tree().create_timer(0.5),"timeout")
+	$Pause_countdown.visible = false
+	continue_map()
+
