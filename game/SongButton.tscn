@@ -3,7 +3,7 @@
 [ext_resource path="res://game/data/beepsaber_logo.png" type="Texture" id=1]
 [ext_resource path="res://game/SongButton.gd" type="Script" id=3]
 
-[sub_resource type="StyleBoxFlat" id=4]
+[sub_resource type="StyleBoxFlat" id=1]
 content_margin_left = 130.0
 bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
 border_width_left = 5
@@ -12,7 +12,7 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=5]
+[sub_resource type="StyleBoxFlat" id=2]
 content_margin_left = 130.0
 bg_color = Color( 0.270588, 0.270588, 0.270588, 1 )
 border_width_left = 5
@@ -37,8 +37,8 @@ margin_right = -528.0
 margin_bottom = -412.0
 rect_min_size = Vector2( 400, 64 )
 mouse_filter = 1
-custom_styles/hover = SubResource( 4 )
-custom_styles/pressed = SubResource( 5 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 2 )
 custom_styles/normal = SubResource( 3 )
 text = "Song Button"
 align = 0

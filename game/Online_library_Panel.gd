@@ -170,9 +170,8 @@ func _on_HTTPRequest_download_completed(result, response_code, headers, body):
 		
 		downloading.remove(0)
 		
-		game.menu._on_LoadPlaylists_Button_pressed()
-		
 		if not downloading.size() > 0:
+			game.menu._on_LoadPlaylists_Button_pressed()
 			$Label.text = "All downloaded"
 	else:
 		$Label.text = "Download error"

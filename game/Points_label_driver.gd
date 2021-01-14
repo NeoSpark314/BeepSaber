@@ -19,10 +19,6 @@ func show_points(position=Vector3(),value=0):
 	if value == 0:
 		value = "x"
 		color = Color(1,0,0)
-#	else:
-#		color = Color(1-clamp(value/150,0.4,1),clamp(value/150,0.4,1),0)
-	else:  #keeping points color white makes it more neutral
-		color.v = clamp(value/150,0.7,1)
 	points_label[current_point_label].show_points(position,value,color)
 	current_point_label += 1
 	current_point_label %= points_label.size()

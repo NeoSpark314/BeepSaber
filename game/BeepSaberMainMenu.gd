@@ -28,10 +28,7 @@ export(NodePath) var keyboard;
 
 var _playlists
 
-var PlaylistButton = preload("res://game/PlaylistButton.tscn")
-
 func _load_playlists():
-	var Playlists = $PlaylistMenu/Playlists
 	
 	_playlists = [];
 	
@@ -66,8 +63,7 @@ func _load_playlists():
 		for b in $SongsMenu/Songs.get_children():
 			b.queue_free()
 		return false;
-	
-	
+		
 	if (_playlists.size() == 0):
 		_set_cur_playlist([])
 	else:
@@ -98,6 +94,7 @@ func _autogen_playlists(seek_path,name):
 var SongButton = preload("res://game/SongButton.tscn")
 
 func _set_cur_playlist(pl):
+	var current_id = _map_id
 	
 	var Songs = $SongsMenu/Songs
 	
@@ -105,17 +102,27 @@ func _set_cur_playlist(pl):
 		song.queue_free()
 	
 	var info
-	var to_select = true
+	var to_select = (current_id==null)
 	if pl.has("Songs"):
 		for dat in pl["Songs"]:
 			to_select = _wire_song_dat(dat,to_select);
+			
+	#whait a frame between every cover load to prevent frezzing
+	yield(get_tree(),"idle_frame")
+	for b in $SongsMenu/Songs.get_children():
+		if b:
+			b.set_texture(_load_cover(_song_path(b.id), b.info._coverImageFilename))
+			yield(get_tree(),"idle_frame")
+	
+	if current_id:
+		_select_song(current_id)
 
 func _wire_song_dat(dat, to_select):
 	var Songs = $SongsMenu/Songs
 	var newSongButton = SongButton.instance();
 	newSongButton.id = dat;
 	newSongButton.info = _load_song_info(_song_path(dat));
-	newSongButton.texture = _load_cover(_song_path(dat), newSongButton.info._coverImageFilename)
+#	newSongButton.set_texture(_load_cover(_song_path(b.id), b.info._coverImageFilename))
 	newSongButton.connect("pressed_id", self, "_select_song");
 	Songs.add_child(newSongButton)
 	if newSongButton.info and to_select:
@@ -153,21 +160,12 @@ func _load_cover(cover_path, filename):
 	if not (filename.ends_with(".jpg") or filename.ends_with(".png")):
 		print("wrong format");
 		return;
-	if (cover_path.begins_with("res://")):
-		return load(cover_path+filename)
-	else:
-		var tex = ImageTexture.new();
-		var img = Image.new();
-		#var uncompressed = vr.try_zipdata(cover_path, filename);
-		#if uncompressed: #in case it's in an archive (too slow on Quest though)
-		#	if filename.ends_with(".jpg"):
-		#		img.load_jpg_from_buffer(uncompressed);
-		#	elif filename.ends_with(".png"):
-		#		img.load_png_from_buffer(uncompressed);
-		#else:
-		img.load(cover_path+filename);
-		tex.create_from_image(img); #instead of loading from resources, load form file
-		return tex;	
+	var tex = ImageTexture.new();
+	var img = Image.new();
+	
+	img.load(cover_path+filename);
+	tex.create_from_image(img); #instead of loading from resources, load form file
+	return tex;
 
 
 # a loaded beat map will have an info dictionary; this is a global variable here
@@ -348,51 +346,6 @@ func _check_and_request_permission():
 		return false;
 	else:
 		return true;
-
-
-
-# Note (19.10.2020): downloading of unknown songs is currently disabled
-#                    as this will need special handling also on the quest
-#
-#var download_id = ""
-#func _download_song_id(id):
-#	download_id = id
-#	$HTTPRequest.request("https://beatsaver.com/api/download/key/"+id)
-#	return null
-
-#func extract_file(zip_file, fileName, destination):
-#	var gdunzip = load('res://addons/gdunzip/gdunzip.gd').new()
-#	var loaded = gdunzip.load(zip_file)
-#	var file = File.new()
-#	var uncompressed = gdunzip.uncompress(fileName)
-#	file.open(destination+"/"+fileName, File.WRITE)
-#	file.store_buffer(uncompressed)
-#	file.close()
-#	print("DECOMPRESSED: "+fileName)
-#
-#
-#func unzip(zip_file, destination):
-#	var gdunzip = load('res://addons/gdunzip/gdunzip.gd').new()
-#	var loaded = gdunzip.load(zip_file)
-#	if !loaded:
-#		return false
-#	for f in gdunzip.files:
-#		# extract_file(zip_file, f, destination) # NOT WORKING PROPERLY
-#		print(f)
-#
-#
-#func _on_HTTPRequest_request_completed(result, response_code, headers, body):
-#	var directory = Directory.new()
-#	if response_code == 200:
-#		print("Downloaded song: "+download_id)
-#		directory.make_dir("res://game/data/maps/Songs/"+download_id)
-#		var file = File.new()
-#		file.open("res://game/data/maps/Songs/"+download_id+"/temp.zip", File.WRITE)
-#		file.store_buffer(body)
-#		file.close()
-#		unzip("res://game/data/maps/Songs/"+download_id+"/temp.zip", "res://game/data/maps/Songs/"+download_id)
-#	else:
-#		print("Failed to download song: "+download_id)
 
 
 func _on_LoadPlaylists_Button_pressed():
