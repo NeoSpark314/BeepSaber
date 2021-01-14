@@ -9,8 +9,7 @@ var scrollpos = 0.0
 func _ready():
 	scroll_node = get_node(scroll_node)
 	if scroll_node == null: scroll_node = self
-	scroll_node.connect("mouse_entered",self,"_mouse_entered")
-	scroll_node.connect("mouse_exited",self,"_mouse_exited")
+	scroll_node.connect("item_selected",self,"_mouse_entered")
 	scroll_node = scroll_node.get_v_scroll()
 
 
@@ -20,9 +19,11 @@ func _process(delta):
 	if is_mouse_in:
 		if vr.button_pressed(vr.BUTTON.RIGHT_INDEX_TRIGGER):
 			scroll_node.value += ((relpos-newpos)*20)
+		else:
+			_mouse_exited()
 	relpos = newpos
 	
-func _mouse_entered():
+func _mouse_entered(id):
 	is_mouse_in = true
 func _mouse_exited():
 	is_mouse_in = false

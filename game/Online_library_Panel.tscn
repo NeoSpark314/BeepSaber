@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/RobotoMono-Medium.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://game/Online_library_Panel.gd" type="Script" id=2]
@@ -14,12 +14,20 @@ border_width_right = 8
 border_width_bottom = 8
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=15]
 size = 45
 font_data = ExtResource( 1 )
 
-[sub_resource type="Theme" id=3]
-default_font = SubResource( 2 )
+[sub_resource type="Theme" id=16]
+default_font = SubResource( 15 )
+
+[sub_resource type="StyleBoxFlat" id=14]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color( 1, 1, 1, 1 )
 
 [sub_resource type="DynamicFont" id=4]
 size = 32
@@ -85,8 +93,8 @@ margin_left = 16.0
 margin_top = 80.0
 margin_right = 880.0
 margin_bottom = -112.0
-theme = SubResource( 3 )
-custom_styles/bg = SubResource( 1 )
+theme = SubResource( 16 )
+custom_styles/bg = SubResource( 14 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 items = [ "Ítem 0", ExtResource( 5 ), false, "Ítem 1", ExtResource( 5 ), false, "Ítem 2", ExtResource( 5 ), false ]
 fixed_icon_size = Vector2( 80, 80 )

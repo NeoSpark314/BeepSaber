@@ -159,11 +159,11 @@ game = NodePath("../..")
 keyboard = NodePath("../../OQ_UI2DKeyboard")
 
 [node name="OQ_UI2DKeyboard" parent="." instance=ExtResource( 21 )]
-transform = Transform( 0.537697, 0.527476, -0.657762, 0, 0.780136, 0.62561, 0.843138, -0.336389, 0.419477, 0.747145, 1.23342, 0.606652 )
+transform = Transform( 0.838233, 0.349429, -2.22632, 0, 2.37535, 0.372819, 2.25358, -0.129972, 0.828095, 2.09772, 0.833935, 0.302276 )
 visible = false
 
 [node name="OQ_UI2DKeyboard_main" parent="." instance=ExtResource( 21 )]
-transform = Transform( 1, 0, 0, 0, 0.780136, 0.62561, 0, -0.625611, 0.780136, 0, 1.233, 0.253 )
+transform = Transform( 2.40442, 0, 0, 0, 2.37659, 0.364816, 0, -0.364816, 2.37659, -0.1298, 0.867922, -0.626283 )
 visible = false
 
 [node name="Points_label_driver" parent="." instance=ExtResource( 22 )]
