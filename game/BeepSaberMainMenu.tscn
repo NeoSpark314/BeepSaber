@@ -47,14 +47,14 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="DynamicFont" id=19]
+[sub_resource type="DynamicFont" id=6]
 size = 35
 font_data = ExtResource( 5 )
 
-[sub_resource type="Theme" id=20]
-default_font = SubResource( 19 )
+[sub_resource type="Theme" id=7]
+default_font = SubResource( 6 )
 
-[sub_resource type="StyleBoxFlat" id=14]
+[sub_resource type="StyleBoxFlat" id=8]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 4
 border_width_top = 4
@@ -62,12 +62,12 @@ border_width_right = 4
 border_width_bottom = 4
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="DynamicFont" id=17]
+[sub_resource type="DynamicFont" id=9]
 size = 28
 font_data = ExtResource( 5 )
 
-[sub_resource type="Theme" id=18]
-default_font = SubResource( 17 )
+[sub_resource type="Theme" id=10]
+default_font = SubResource( 9 )
 
 [node name="BeepSaberMainMenu" type="Panel"]
 margin_right = 1408.0
@@ -175,8 +175,8 @@ margin_left = 16.0
 margin_top = 64.0
 margin_right = 848.0
 margin_bottom = 560.0
-theme = SubResource( 20 )
-custom_styles/bg = SubResource( 14 )
+theme = SubResource( 7 )
+custom_styles/bg = SubResource( 8 )
 custom_colors/font_color_selected = Color( 1, 0.494118, 0.494118, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 fixed_icon_size = Vector2( 60, 60 )
@@ -190,8 +190,8 @@ margin_left = 864.0
 margin_top = 64.0
 margin_right = 1040.0
 margin_bottom = 320.0
-theme = SubResource( 18 )
-custom_styles/bg = SubResource( 14 )
+theme = SubResource( 10 )
+custom_styles/bg = SubResource( 8 )
 custom_colors/font_color_selected = Color( 1, 0.494118, 0.494118, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 script = ExtResource( 6 )

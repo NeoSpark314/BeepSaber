@@ -70,12 +70,18 @@ func restart_map():
 
 	_display_points();
 	$event_driver.update_colors()
-	$event_driver.set_all_off()
+	if _current_map._events.size() > 0:
+		$event_driver.set_all_off()
+	else:
+		$event_driver.set_all_on()
 
 	for c in $Track.get_children():
 		c.visible = false;
 		$Track.remove_child(c);
 		c.queue_free();
+	
+	for w in get_tree().get_nodes_in_group("wall"):
+		w.queue_free()
 
 	$MainMenu_OQ_UI2DCanvas.visible = false;
 	$Settings_canvas.visible = false;

@@ -23,7 +23,9 @@ tracks/0/keys = {
 "values": [ Vector3( 1, 0.1, 1 ), Vector3( 1, 1, 1 ) ]
 }
 
-[node name="Wall" type="Spatial"]
+[node name="Wall" type="Spatial" groups=[
+"wall",
+]]
 script = ExtResource( 2 )
 height = 3
 depth = 16

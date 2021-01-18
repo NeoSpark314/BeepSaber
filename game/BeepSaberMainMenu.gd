@@ -190,13 +190,14 @@ func _select_song(id):
 	
 	#preview song
 	$song_prev.stop()
-	var snd_file = File.new()
-	snd_file.open(_map_info._path + _map_info._songFilename, File.READ) #works whether it's a resource or a file
-	var stream = AudioStreamOGGVorbis.new()
-	stream.data = snd_file.get_buffer(snd_file.get_len())
-	snd_file.close()
-	$song_prev.stream = stream;
-	$song_prev.play()
+	if not _beepsaber.song_player.playing:
+		var snd_file = File.new()
+		snd_file.open(_map_info._path + _map_info._songFilename, File.READ) #works whether it's a resource or a file
+		var stream = AudioStreamOGGVorbis.new()
+		stream.data = snd_file.get_buffer(snd_file.get_len())
+		snd_file.close()
+		$song_prev.stream = stream;
+		$song_prev.play()
 
 
 var _map_difficulty = 0
