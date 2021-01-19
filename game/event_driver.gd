@@ -109,7 +109,7 @@ func procces_event(data,beat):
 				$Level/rings/Tween.start()
 			9:
 				$Level/rings/AnimationPlayer.stop(false)
-				if $Level/rings/ring.translation.z > -6.5:
+				if $Level/rings/AnimationPlayer.current_animation == "out":
 					$Level/rings/AnimationPlayer.play("in")
 				else:
 					$Level/rings/AnimationPlayer.play("out")
@@ -117,9 +117,11 @@ func procces_event(data,beat):
 			12:
 				var val = float(data._value)/8
 				$Level/t2/AnimationPlayer.playback_speed = val
+				$Level/t2/AnimationPlayer.seek(rand_range(0,$Level/t2/AnimationPlayer.current_animation_length),true)
 			13:
 				var val = float(data._value)/8
 				$Level/t3/AnimationPlayer.playback_speed = val
+				$Level/t3/AnimationPlayer.seek(rand_range(0,$Level/t3/AnimationPlayer.current_animation_length),true)
 	
 func change_light_color(type,color=-1,transition_mode=0):
 	var group : Spatial
@@ -170,13 +172,13 @@ func change_light_color(type,color=-1,transition_mode=0):
 		1:
 			tween.stop_all()
 			for m in material:
-				tween.interpolate_property(m,"albedo_color",Color(0,0,0),color,1,Tween.TRANS_BOUNCE,Tween.EASE_OUT)
+				tween.interpolate_property(m,"albedo_color",color*3,color,0.3,Tween.TRANS_LINEAR,Tween.EASE_OUT)
 			tween.start()
 			group.visible = true
 		2:
 			tween.stop_all()
 			for m in material:
-				tween.interpolate_property(m,"albedo_color",color,Color(0,0,0),2,Tween.TRANS_QUAD,Tween.EASE_IN)
+				tween.interpolate_property(m,"albedo_color",color*3,Color(0,0,0),1,Tween.TRANS_QUAD,Tween.EASE_IN)
 			tween.start()
 			group.visible = true
 			yield(tween,"tween_completed")
