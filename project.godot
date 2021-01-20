@@ -81,7 +81,7 @@ config/icon="res://icon.png"
 [autoload]
 
 vr="*res://OQ_Toolkit/vr_autoload.gd"
-Highscores="*res://game/scripts/HighscoreTable.gd"
+Highscores="*res://game/scripts/HighscoreTable/HighscoreTable.gd"
 
 [display]
 
