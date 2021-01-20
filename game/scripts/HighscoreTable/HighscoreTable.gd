@@ -69,6 +69,18 @@ func get_records(map_info,diff_rank):
 	var hs_key = _get_hs_key(map_info)
 	return _get_records(hs_key,diff_rank)
 	
+# return : list of all unique players names in highscore table
+func get_all_player_names():
+	var unique_names = []
+	for song_records in _hs_table.values():
+		for diff_record in song_records.values():
+			for hs_entry in diff_record:
+				var player_name = hs_entry['player_name']
+				# add name to list if we haven't seen it before
+				if ! unique_names.has(player_name):
+					unique_names.append(player_name)
+	return unique_names
+	
 # restores highscore table from filesystem
 func load_hs_table():
 	var file = File.new()

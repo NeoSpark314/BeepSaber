@@ -91,6 +91,17 @@ func testcase_tied_record():
 	_assert_equal(records[1].score,1000)
 	_assert_equal(records[1].player_name,"i_was_second")
 	
+func testcase_get_names():
+	var DIFF_RANK = 1
+	
+	_test_hs.add_highscore(TEST_MAP_INFO_0,DIFF_RANK,"Alice",1000)
+	_test_hs.add_highscore(TEST_MAP_INFO_0,DIFF_RANK,"Bob",1000)
+	
+	var names = _test_hs.get_all_player_names()
+	_assert_equal(names.size(),2)
+	_assert_equal(names.has('Alice'),true)
+	_assert_equal(names.has('Bob'),true)
+	
 func testcase_multiple_maps():
 	var DIFF_RANK = 1
 	
