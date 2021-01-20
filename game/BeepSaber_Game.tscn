@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://game/floor.tscn" type="PackedScene" id=1]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DLabel.tscn" type="PackedScene" id=2]
@@ -24,6 +24,7 @@
 [ext_resource path="res://game/Points_label_driver.tscn" type="PackedScene" id=22]
 [ext_resource path="res://game/HighscorePanel.tscn" type="PackedScene" id=23]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DLogWindow.tscn" type="PackedScene" id=24]
+[ext_resource path="res://game/ui/NameSelector/NameSelector.tscn" type="PackedScene" id=25]
 
 [sub_resource type="Environment" id=1]
 background_mode = 3
@@ -171,11 +172,16 @@ margin_right = 752.0
 show_close_button = false
 
 [node name="MidHighscores_Canvas" parent="." instance=ExtResource( 3 )]
-transform = Transform( 2, 0, -4.17233e-07, 0, 2, 0, 4.17233e-07, 0, 2, 0, 1.7, -0.99 )
+transform = Transform( 2, 0, -4.17233e-07, 0, 2, 0, 4.17233e-07, 0, 2, 0, 1.84653, -0.99 )
 
 [node name="HighscorePanel" parent="MidHighscores_Canvas" instance=ExtResource( 23 )]
 margin_right = 752.0
 show_close_button = false
+
+[node name="NameSelector_Canvas" parent="." instance=ExtResource( 3 )]
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 1.23481, -0.99 )
+
+[node name="NameSelector" parent="NameSelector_Canvas" instance=ExtResource( 25 )]
 
 [node name="OQ_UI2DKeyboard" parent="." instance=ExtResource( 21 )]
 transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.7, -0.99 )

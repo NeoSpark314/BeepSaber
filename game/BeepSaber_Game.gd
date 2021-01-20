@@ -21,6 +21,7 @@ onready var ui_raycast := $OQ_ARVROrigin/OQ_RightController/Feature_UIRayCast;
 
 onready var right_highscore_canvas := $RightHighscores_Canvas
 onready var mid_highscore_canvas := $MidHighscores_Canvas
+onready var name_selector_canvas := $NameSelector_Canvas
 onready var keyboard := $OQ_UI2DKeyboard
 
 onready var cube_template = preload("res://game/BeepCube.tscn").instance();
@@ -119,6 +120,7 @@ func restart_map():
 	$OQ_UI2DKeyboard_main.visible = false;
 	right_highscore_canvas.visible = false;
 	mid_highscore_canvas.visible = false;
+	name_selector_canvas.visible = false;
 
 	left_saber.show();
 	right_saber.show();
@@ -138,6 +140,7 @@ func continue_map():
 	$Online_library.visible = false;
 	right_highscore_canvas.visible = false;
 	mid_highscore_canvas.visible = false;
+	name_selector_canvas.visible = false;
 
 	left_saber.show();
 	right_saber.show();
@@ -189,6 +192,7 @@ func show_pause_menu():
 	$PauseMenu_canvas.visible = true;
 	$Settings_canvas.visible = true;
 	mid_highscore_canvas.visible = false;
+	name_selector_canvas.visible = false;
 	keyboard.visible = false;
 	
 # This function will transitioning the game from it's current state into
@@ -234,8 +238,13 @@ func _on_new_highscore():
 	$Track.visible = false
 	$MainMenu_OQ_UI2DCanvas.visible = false
 	mid_highscore_canvas.visible = true
+	name_selector_canvas.visible = true;
 	right_highscore_canvas.visible = false
 	keyboard.visible = true
+	
+	# fill name selector with most recent player names
+	_name_selector().clear_names()
+	# TODO populate name_selector with most recent names
 	
 # call this method to submit a new highscore to the database
 func _submit_highscore(player_name):
@@ -675,7 +684,11 @@ func _right_highscore_panel() -> HighscorePanel:
 # accessor method for the main highscore panel (in middle of screen)
 func _mid_highscore_panel() -> HighscorePanel:
 	return mid_highscore_canvas.ui_control
-
+	
+# accessor method for the player name selector UI element
+func _name_selector() -> NameSelector:
+	return name_selector_canvas.ui_control
+	
 func _on_LeftLightSaber_area_entered(area : Area):
 	if song_player.playing and (area.is_in_group("beepcube")):
 		_cut_cube(left_controller, left_saber, area.get_parent().get_parent());

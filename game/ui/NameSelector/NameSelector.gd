@@ -1,4 +1,5 @@
 extends Control
+class_name NameSelector
 
 onready var _base_button = $NameRow/BaseButton.duplicate()
 onready var _name_row = $NameRow
