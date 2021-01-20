@@ -27,7 +27,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "HighscoreTable",
 "language": "GDScript",
-"path": "res://game/scripts/HighscoreTable.gd"
+"path": "res://game/scripts/HighscoreTable/HighscoreTable.gd"
 }, {
 "base": "RigidBody",
 "class": "OQClass_GrabbableRigidBody",

@@ -1,5 +1,7 @@
 extends Node2D
 
+# Run HighscoreTableTest scene and inspect console output for error
+
 const TEST_MAP_INFO_0 = {
 	  "_songName": "TestSongName0",
 	  "_songSubName": "TestSubName",
