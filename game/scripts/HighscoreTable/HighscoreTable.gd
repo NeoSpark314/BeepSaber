@@ -115,7 +115,7 @@ func _get_records(hs_key,diff_rank):
 
 # internal function used too check if a score is a new highscore
 func _is_new_highscore(hs_key,diff_rank,score):
-	var records = get_records(hs_key,diff_rank)
+	var records = _get_records(hs_key,diff_rank)
 	# make a temporary record just for lookup purposes
 	var temp_record = _make_record(score,"**TEMP_PLAYER**")
 	return _get_insert_index(records,temp_record) < MAX_RECORDS_PER_KEY

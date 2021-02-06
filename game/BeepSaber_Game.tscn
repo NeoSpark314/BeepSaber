@@ -138,7 +138,7 @@ transform = Transform( 1.14193, 0, 2.01698, 0, 2.3178, 0, -2.01698, 0, 1.14193, 
 game = NodePath("../..")
 
 [node name="Sphere" type="MeshInstance" parent="Level"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00114584, -0.0069254, 0.000287771 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00118524, -0.00912624, 0.00066942 )
 mesh = SubResource( 9 )
 material/0 = SubResource( 10 )
 
@@ -200,4 +200,5 @@ visible = false
 [connection signal="mainmenu_button" from="PauseMenu_canvas/Pause_Panel" to="." method="_on_EndScore_panel_goto_mainmenu"]
 [connection signal="restart_button" from="PauseMenu_canvas/Pause_Panel" to="." method="_on_EndScore_panel_repeat"]
 [connection signal="difficulty_changed" from="MainMenu_OQ_UI2DCanvas/BeepSaberMainMenu" to="." method="_on_BeepSaberMainMenu_difficulty_changed"]
+[connection signal="name_selected" from="NameSelector_Canvas/NameSelector" to="." method="_on_NameSelector_name_selected"]
 [connection signal="text_input_enter" from="OQ_UI2DKeyboard" to="." method="_on_OQ_UI2DKeyboard_text_input_enter"]

@@ -228,8 +228,8 @@ func _on_new_highscore():
 	_transition_game_state(GameState.NewHighscore)
 	
 	# populate middle highscore panel with records
-	_mid_highscore_panel().load_highscores(
-		_current_info,_current_diff_rank)
+#	_mid_highscore_panel().load_highscores(
+#		_current_info,_current_diff_rank)
 	
 	# allows player to click on UI elements
 	ui_raycast.visible = true;
@@ -244,7 +244,13 @@ func _on_new_highscore():
 	
 	# fill name selector with most recent player names
 	_name_selector().clear_names()
-	# TODO populate name_selector with most recent names
+	# WARNING: The get_all_player_names() method could become
+	# costly for a very large highscore database (ie. many
+	# songs and many difficulties). If that ever becomes a
+	# concern, we may want to consider caching a list of the
+	# N most recent players instead.
+	for player_name in Highscores.get_all_player_names():
+		_name_selector().add_name(player_name)
 	
 # call this method to submit a new highscore to the database
 func _submit_highscore(player_name):
@@ -764,3 +770,7 @@ func _on_BeepSaberMainMenu_difficulty_changed(map_info, diff_name, diff_rank):
 func _on_OQ_UI2DKeyboard_text_input_enter(text):
 	if _current_game_state == GameState.NewHighscore:
 		_submit_highscore(text)
+
+func _on_NameSelector_name_selected(name):
+	if _current_game_state == GameState.NewHighscore:
+		_submit_highscore(name)

@@ -1,6 +1,8 @@
 extends Control
 class_name NameSelector
 
+signal name_selected(name)
+
 onready var _base_button = $NameRow/BaseButton.duplicate()
 onready var _name_row = $NameRow
 
@@ -20,4 +22,4 @@ func clear_names():
 		child.queue_free()
 
 func _on_NameButton_pressed(name):
-	print(name)
+	emit_signal("name_selected",name)
