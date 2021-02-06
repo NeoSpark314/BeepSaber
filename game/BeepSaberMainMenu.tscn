@@ -1,9 +1,11 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/oq_ui2d_standard.theme" type="Theme" id=1]
 [ext_resource path="res://game/data/beepsaber_logo.png" type="Texture" id=2]
 [ext_resource path="res://game/BeepSaberMainMenu.gd" type="Script" id=3]
 [ext_resource path="res://game/data/maps/Songs/TheFatRat_Timelapse/cover.jpg" type="Texture" id=4]
+[ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/RobotoMono-Medium.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://game/vr_slider.gd" type="Script" id=6]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 1 )
@@ -45,13 +47,27 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=6]
+[sub_resource type="DynamicFont" id=6]
+size = 35
+font_data = ExtResource( 5 )
+
+[sub_resource type="Theme" id=7]
+default_font = SubResource( 6 )
+
+[sub_resource type="StyleBoxFlat" id=8]
 bg_color = Color( 0, 0, 0, 1 )
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
 border_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="DynamicFont" id=9]
+size = 28
+font_data = ExtResource( 5 )
+
+[sub_resource type="Theme" id=10]
+default_font = SubResource( 9 )
 
 [node name="BeepSaberMainMenu" type="Panel"]
 margin_right = 1408.0
@@ -154,47 +170,34 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SongsMenu" type="ScrollContainer" parent="."]
+[node name="SongsMenu" type="ItemList" parent="."]
 margin_left = 16.0
 margin_top = 64.0
 margin_right = 848.0
 margin_bottom = 560.0
-custom_styles/bg = SubResource( 6 )
-scroll_deadzone = 90
+theme = SubResource( 7 )
+custom_styles/bg = SubResource( 8 )
+custom_colors/font_color_selected = Color( 1, 0.494118, 0.494118, 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+fixed_icon_size = Vector2( 60, 60 )
+script = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Songs" type="VBoxContainer" parent="SongsMenu"]
-margin_left = 3.0
-margin_top = 3.0
-margin_right = 3.0
-margin_bottom = 3.0
-size_flags_horizontal = 2
-
-[node name="DifficultyMenu" type="ScrollContainer" parent="."]
+[node name="DifficultyMenu" type="ItemList" parent="."]
 margin_left = 864.0
 margin_top = 64.0
 margin_right = 1040.0
 margin_bottom = 320.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_styles/bg = SubResource( 6 )
-follow_focus = true
-scroll_horizontal_enabled = false
-scroll_vertical_enabled = false
-scroll_deadzone = 140
+theme = SubResource( 10 )
+custom_styles/bg = SubResource( 8 )
+custom_colors/font_color_selected = Color( 1, 0.494118, 0.494118, 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+script = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="Playlists" type="VBoxContainer" parent="DifficultyMenu"]
-margin_left = 3.0
-margin_top = 3.0
-margin_right = 173.0
-margin_bottom = 253.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
 download_chunk_size = 65536
@@ -242,5 +245,7 @@ __meta__ = {
 [connection signal="button_up" from="Delete_Button" to="." method="_on_Delete_Button_button_up"]
 [connection signal="pressed" from="Exit_Button" to="." method="_on_Exit_Button_pressed"]
 [connection signal="button_up" from="Search_Button" to="." method="_on_Search_Button_button_up"]
+[connection signal="item_selected" from="SongsMenu" to="." method="_select_song"]
+[connection signal="item_selected" from="DifficultyMenu" to="." method="_select_difficulty"]
 [connection signal="request_completed" from="HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]
 [connection signal="pressed" from="LoadPlaylists_Button" to="." method="_on_LoadPlaylists_Button_pressed"]

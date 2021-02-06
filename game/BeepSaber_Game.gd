@@ -51,6 +51,7 @@ var _wrong_notes = 0;
 
 #settings
 var cube_cuts_falloff = true
+var max_cutted_cubes = 32
 
 func restart_map():
 	song_player.play(0.0);
@@ -69,12 +70,18 @@ func restart_map():
 
 	_display_points();
 	$event_driver.update_colors()
-	$event_driver.set_all_off()
+	if _current_map._events.size() > 0:
+		$event_driver.set_all_off()
+	else:
+		$event_driver.set_all_on()
 
 	for c in $Track.get_children():
 		c.visible = false;
 		$Track.remove_child(c);
 		c.queue_free();
+	
+	for w in get_tree().get_nodes_in_group("wall"):
+		w.queue_free()
 
 	$MainMenu_OQ_UI2DCanvas.visible = false;
 	$Settings_canvas.visible = false;
@@ -401,14 +408,18 @@ func disable_events(disabled):
 # the cut plane
 func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distance, controller_speed, saber_ends):
 	if not cube_cuts_falloff and _sign == 1: 
-		var snd = AudioStreamPlayer.new();
-		snd.stream = preload("res://game/data/beepcube_cut.ogg");
-		add_child(snd);
-		snd.play();
-		yield(snd,"finished")
-		snd.queue_free()
 		return
+	#remove cutted cubes when there are more than max_cutted_cubes
+	var cutted_cubes_group = get_tree().get_nodes_in_group("cutted_cube")
+	if cutted_cubes_group.size() >= max_cutted_cubes:
+		cutted_cubes_group[0].remove_from_group("cutted_cube")
+		cutted_cubes_group[0].queue_free()
+		
 	var rigid_body_half = RigidBody.new();
+	rigid_body_half.add_to_group("cutted_cube")
+	rigid_body_half.collision_layer = 8
+	rigid_body_half.collision_mask = 0
+	rigid_body_half.gravity_scale = 2
 	
 	# the original cube mesh
 	var cutted_cube = MeshInstance.new();
@@ -431,14 +442,14 @@ func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distanc
 	# transform the normal into the orientation of the actual cube mesh
 	var normal = cutted_cube.transform.basis.inverse() * cutplane.normal;
 
-#	# Next we are adding a simple collision cube to the rigid body. Note that
-#	# his is really just a very crude approximation of the actual cut geometry
-#	# but for now it's enough to give them some physics behaviour
-#	var coll = CollisionShape.new();
-#	coll.shape = BoxShape.new();
-#	coll.shape.extents = Vector3(0.25, 0.25, 0.125);
-#	coll.look_at_from_position(-cutplane.normal*_sign*0.125, cutplane.normal, Vector3(0,1,0));
-#	rigid_body_half.add_child(coll);
+	# Next we are adding a simple collision cube to the rigid body. Note that
+	# his is really just a very crude approximation of the actual cut geometry
+	# but for now it's enough to give them some physics behaviour
+	var coll = CollisionShape.new();
+	coll.shape = BoxShape.new();
+	coll.shape.extents = Vector3(0.25, 0.25, 0.125);
+	coll.look_at_from_position(-cutplane.normal*_sign*0.125, cutplane.normal, Vector3(0,1,0));
+	rigid_body_half.add_child(coll);
 
 	# set a phyiscs material for some more bouncy behaviour
 	rigid_body_half.physics_material_override = load("res://game/BeepCube_Cut.phymat");
@@ -453,18 +464,11 @@ func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distanc
 #	else:
 #		rigid_body_half.apply_central_impulse((_sign) * cutplane.normal +  controller_speed);
 
-	# attach the sound effect only to one of the halfs; I attach them here so
-	# it gets deleted when the body is deleted later
-	if (_sign == 1):
-		var snd = AudioStreamPlayer.new();
-		snd.stream = preload("res://game/data/beepcube_cut.ogg");
-		rigid_body_half.add_child(snd);
-		snd.play();
-
 	# delete the rigid body after 2 seconds; this only works here because we are
 	# at the end of this function and do not need the rigid body for anything else
 	yield(get_tree().create_timer(2.0), "timeout")
-	rigid_body_half.queue_free()
+	if rigid_body_half:
+		rigid_body_half.queue_free()
 
 
 
@@ -484,6 +488,7 @@ func _update_points_from_cut(saber, cube, beat_accuracy, cut_angle_accuracy, cut
 	if (saber.type != cube._note._type):
 		_reset_combo();
 		_wrong_notes += 1.0
+		$Points_label_driver.show_points(cube.transform.origin,0)
 		return;
 
 	_current_combo += 1;
@@ -498,7 +503,8 @@ func _update_points_from_cut(saber, cube, beat_accuracy, cut_angle_accuracy, cut
 
 	points = round(points);
 	_current_points += points * _current_multiplier;
-	
+#	print(points)
+	$Points_label_driver.show_points(cube.transform.origin,points)
 	# track acurracy percent
 	var normalized_points = clamp(points/100, 0.0, 1.0);
 #	print(normalized_points)
@@ -540,6 +546,8 @@ func _cut_cube(controller : ARVRController, saber : Area, cube : Spatial):
 	var cut_direction_xy = -Vector3(controller_speed.x, controller_speed.y, 0.0).normalized();
 	var base_cut_angle_accuracy = cube._cube_mesh_orientation.global_transform.basis.y.dot(cut_direction_xy);
 	var cut_angle_accuracy = clamp((base_cut_angle_accuracy-0.7)/0.3, 0.0, 1.0);
+	if cube._note._cutDirection==8: #ignore angle if is a dot
+		cut_angle_accuracy = 1.0;
 	var cut_distance_accuracy = clamp((0.1 - abs(cut_distance))/0.1, 0.0, 1.0);
 	var travel_distance_factor = _controller_movement_aabb[controller.controller_id].get_longest_axis_size();
 	travel_distance_factor = clamp((travel_distance_factor-0.5)/0.5, 0.0, 1.0);

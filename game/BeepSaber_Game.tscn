@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://game/BeepCube_Cut.material" type="Material" id=1]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DLabel.tscn" type="PackedScene" id=2]
@@ -21,6 +21,7 @@
 [ext_resource path="res://game/settings_Panel.tscn" type="PackedScene" id=19]
 [ext_resource path="res://game/Online_library_Panel.tscn" type="PackedScene" id=20]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DKeyboard.tscn" type="PackedScene" id=21]
+[ext_resource path="res://game/Points_label_driver.tscn" type="PackedScene" id=22]
 
 [sub_resource type="Environment" id=1]
 background_mode = 3
@@ -84,7 +85,7 @@ ui_raycast_visible_button = -1
 [node name="StandingGround" type="StaticBody" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1 )
 collision_layer = 8
-collision_mask = 0
+collision_mask = 8
 
 [node name="CollisionShape" type="CollisionShape" parent="StandingGround"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0 )
@@ -158,12 +159,16 @@ game = NodePath("../..")
 keyboard = NodePath("../../OQ_UI2DKeyboard")
 
 [node name="OQ_UI2DKeyboard" parent="." instance=ExtResource( 21 )]
-transform = Transform( 0.537697, 0.527476, -0.657762, 0, 0.780136, 0.62561, 0.843138, -0.336389, 0.419477, 0.747145, 1.23342, 0.606652 )
+transform = Transform( 0.838233, 0.349429, -2.22632, 0, 2.37535, 0.372819, 2.25358, -0.129972, 0.828095, 2.09772, 0.833935, 0.302276 )
 visible = false
 
 [node name="OQ_UI2DKeyboard_main" parent="." instance=ExtResource( 21 )]
-transform = Transform( 1, 0, 0, 0, 0.780136, 0.62561, 0, -0.625611, 0.780136, 0, 1.233, 0.253 )
+transform = Transform( 2.40442, 0, 0, 0, 2.37659, 0.364816, 0, -0.364816, 2.37659, -0.1298, 0.867922, -0.626283 )
 visible = false
+
+[node name="Points_label_driver" parent="." instance=ExtResource( 22 )]
+
+[node name="RigidBody" type="RigidBody" parent="."]
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_entered"]
 [connection signal="area_exited" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_exited"]
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_LeftController/LeftLightSaber" to="." method="_on_LeftLightSaber_area_entered"]
