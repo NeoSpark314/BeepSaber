@@ -283,3 +283,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0508851, 0 )
 
 [node name="tip" type="Position3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.26252, 0 )
+
+[node name="RayCast" type="RayCast" parent="."]
+cast_to = Vector3( 0, 1.26, 0 )
+collision_mask = 8

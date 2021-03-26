@@ -31,7 +31,7 @@ height = 3
 depth = 16
 
 [node name="WallMeshOrientation" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -8 )
+transform = Transform( 1, 0, 0, 0, 0.999999, 0, 0, 0, 1, 0, 1.5, -8 )
 
 [node name="WallMesh" type="MeshInstance" parent="WallMeshOrientation"]
 material_override = ExtResource( 3 )

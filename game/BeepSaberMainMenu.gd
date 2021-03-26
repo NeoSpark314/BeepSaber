@@ -60,8 +60,8 @@ func _load_playlists():
 	
 	if (!_playlists):
 		vr.log_error("No songs found in " + bspath);
-		for b in $SongsMenu/Songs.get_children():
-			b.queue_free()
+#		for b in $SongsMenu/Songs.get_children():
+#			b.queue_free()
 		return false;
 		
 	if (_playlists.size() == 0):
