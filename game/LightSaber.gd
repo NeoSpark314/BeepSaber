@@ -75,7 +75,8 @@ func _process(delta):
 		if $RayCast.is_colliding():
 			var raycoli = $RayCast.get_collider()
 			if raycoli in get_tree().get_nodes_in_group("floor"):
-				raycoli.burn_mark($RayCast.get_collision_point(),type)
+				var colipoint = $RayCast.get_collision_point()
+				raycoli.burn_mark(colipoint,type)
 		
 	else:
 		imm_geo.clear()

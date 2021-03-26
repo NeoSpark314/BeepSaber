@@ -1,7 +1,6 @@
 [gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://game/BeepCube_Cut.material" type="Material" id=1]
-[ext_resource path="res://game/data/gradient.png" type="Texture" id=2]
 [ext_resource path="res://game/floor.gd" type="Script" id=3]
 
 [sub_resource type="BoxShape" id=1]
@@ -17,8 +16,22 @@ resource_local_to_scene = true
 flags_unshaded = true
 albedo_texture = SubResource( 3 )
 
-[sub_resource type="CanvasItemMaterial" id=5]
+[sub_resource type="CanvasItemMaterial" id=6]
 blend_mode = 1
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 1, 1, 1, 1 )
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color( 0, 0, 0, 1 )
+border_blend = true
+corner_radius_top_left = 11
+corner_radius_top_right = 11
+corner_radius_bottom_right = 11
+corner_radius_bottom_left = 11
+corner_detail = 6
 
 [node name="StandingGround" type="StaticBody" groups=[
 "floor",
@@ -52,43 +65,35 @@ render_target_clear_mode = 1
 [node name="ColorRect" type="ColorRect" parent="Viewport"]
 margin_right = 512.0
 margin_bottom = 512.0
-color = Color( 0, 0, 0, 0.0196078 )
+color = Color( 0, 0, 0, 0.027451 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="burn_l" type="Sprite" parent="Viewport/ColorRect"]
-material = SubResource( 5 )
+[node name="burn_l" type="Node2D" parent="Viewport/ColorRect"]
 position = Vector2( -64, -64 )
-scale = Vector2( 0.3, 0.3 )
-texture = ExtResource( 2 )
 
-[node name="burn2" type="TextureRect" parent="Viewport/ColorRect/burn_l"]
-visible = false
-material = SubResource( 5 )
-margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
-texture = ExtResource( 2 )
-expand = true
+[node name="sprite" type="Panel" parent="Viewport/ColorRect/burn_l"]
+material = SubResource( 6 )
+margin_left = -12.0
+margin_top = -12.0
+margin_right = 12.0
+margin_bottom = 12.0
+custom_styles/panel = SubResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="burn_r" type="Sprite" parent="Viewport/ColorRect"]
-material = SubResource( 5 )
+[node name="burn_r" type="Node2D" parent="Viewport/ColorRect"]
 position = Vector2( -64, -64 )
-scale = Vector2( 0.3, 0.3 )
-texture = ExtResource( 2 )
 
-[node name="burn2" type="TextureRect" parent="Viewport/ColorRect/burn_r"]
-visible = false
-material = SubResource( 5 )
-margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
-texture = ExtResource( 2 )
-expand = true
+[node name="sprite" type="Panel" parent="Viewport/ColorRect/burn_r"]
+material = SubResource( 6 )
+margin_left = -12.0
+margin_top = -12.0
+margin_right = 12.0
+margin_bottom = 12.0
+custom_styles/panel = SubResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
