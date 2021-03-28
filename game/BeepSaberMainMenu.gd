@@ -60,8 +60,7 @@ func _load_playlists():
 	
 	if (!_playlists):
 		vr.log_error("No songs found in " + bspath);
-		for b in $SongsMenu/Songs.get_children():
-			b.queue_free()
+		$SongsMenu.clear()
 		return false;
 		
 	if (_playlists.size() == 0):
@@ -109,12 +108,13 @@ func _set_cur_playlist(pl):
 	if current_id.size() > 0:
 		_select_song(current_id[0])
 
+var default_song_icon = preload("res://game/data/beepsaber_logo.png")
 func _wire_song_dat(dat):
 	var current_song_data = {
 		id=dat,
 		info=_load_song_info(_song_path(dat))
 		}
-	$SongsMenu.add_item("%s - %s" % [current_song_data.info._songAuthorName, current_song_data.info._songName])
+	$SongsMenu.add_item("%s - %s" % [current_song_data.info._songAuthorName, current_song_data.info._songName],default_song_icon)
 	$SongsMenu.set_item_metadata($SongsMenu.get_item_count()-1,current_song_data)
 	
 func _song_path(dat):

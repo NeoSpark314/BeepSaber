@@ -395,6 +395,7 @@ func update_saber_colors():
 	right_saber.type = 1;
 	#also updates map colors
 	$event_driver.update_colors()
+	$StandingGround.update_colors(COLOR_LEFT,COLOR_RIGHT)
 
 func disable_events(disabled):
 	$event_driver.disabled = disabled

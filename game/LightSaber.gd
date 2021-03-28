@@ -69,6 +69,15 @@ func _process(delta):
 		last_pos.insert(0,pos)
 		while last_pos.size() > max_pos:
 			last_pos.remove(last_pos.size()-1)
+		
+		#check floor collision for burn mark
+		$RayCast.force_raycast_update()
+		if $RayCast.is_colliding():
+			var raycoli = $RayCast.get_collider()
+			if raycoli in get_tree().get_nodes_in_group("floor"):
+				var colipoint = $RayCast.get_collision_point()
+				raycoli.burn_mark(colipoint,type)
+		
 	else:
 		imm_geo.clear()
 	
