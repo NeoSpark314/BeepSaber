@@ -37,6 +37,17 @@ var _current_note = 0;
 var _current_obstacle = 0;
 var _current_event = 0;
 
+# There's an interesting issue where the AudioStreamPlayer's playback_position
+# doesn't immediately return to 0.0 after restarting the song_player. This
+# causes issues with restarting a map because the process_physics routine will
+# execute for a times and attempt to process the map up to the playback_position
+# prior to the AudioStreamPlayer restart. This bug can presents itself as notes
+# persisting between map restarts.
+# To remidy this issue, this flag is set to true when the map is restarted. The
+# process_physics routine won't begin processing the map until after the
+# AudioStreamPlayer has reset it's playback_position to zero. This flag is set
+# to false once the AudioStreamPlayer reset is detected.
+var _audio_synced_after_restart = false
 
 var _high_score = 0;
 
@@ -54,6 +65,7 @@ var cube_cuts_falloff = true
 var max_cutted_cubes = 32
 
 func restart_map():
+	_audio_synced_after_restart = false
 	song_player.play(0.0);
 	song_player.volume_db = 0.0;
 	_in_wall = false;
@@ -343,9 +355,14 @@ func _update_saber_end_variabless(dt):
 func _physics_process(dt):
 	if (vr.button_just_released(vr.BUTTON.ENTER)):
 		show_pause_menu();
-#		show_menu();
 
-	if (song_player.playing):
+	if song_player.playing and not _audio_synced_after_restart:
+		# 0.5 seconds is a pretty concervative number to use for the audio
+		# resync check. Having this duration be this long might only be an
+		# issue for maps that spawn notes extremely early into the song.
+		if song_player.get_playback_position() < 0.5:
+			_audio_synced_after_restart = true;
+	elif song_player.playing:
 		_process_map(dt);
 		_update_controller_movement_aabb(left_controller);
 		_update_controller_movement_aabb(right_controller);
