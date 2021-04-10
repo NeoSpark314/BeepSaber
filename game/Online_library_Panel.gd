@@ -148,28 +148,43 @@ func _on_HTTPRequest_download_completed(result, response_code, headers, body):
 	if result == 0:
 		var has_error = false
 		var dir = Directory.new()
-		var error = dir.make_dir_recursive(game.menu.bspath+"temp")
-		if error != 0: 
-			vr.log_info(str(error))
+		var tempdir = game.menu.bspath+"temp"
+		var error = dir.make_dir_recursive(tempdir)
+		if error != OK: 
+			vr.log_error(
+				"_on_HTTPRequest_download_completed - " +
+				"Failed to create temp directory '%s'" % tempdir)
 			has_error = true
 		
 		# sanitize path separators from song directory name
 		var song_dir_name = downloading[0][0].replace('/','')
 		
+		var zippath = game.menu.bspath+"temp/%s.zip"%song_dir_name
 		var file = File.new()
-		file.open(game.menu.bspath+"temp/%s.zip"%song_dir_name,File.WRITE)
-		file.store_buffer(body)
-		file.close()
+		if not has_error:
+			if file.open(zippath,File.WRITE) == OK:
+				file.store_buffer(body)
+				file.close()
+			else:
+				vr.log_error(
+					"_on_HTTPRequest_download_completed - " +
+					"Failed to save song zip to '%s'" % zippath)
+				has_error = true
 		
-		error = dir.make_dir_recursive(game.menu.bspath+("Songs/%s"%song_dir_name))
-		if error != 0: 
-			vr.log_info(str(error))
-			has_error = true
+		var song_out_dir = game.menu.bspath+("Songs/%s/"%song_dir_name)
+		if not has_error:
+			error = dir.make_dir_recursive(song_out_dir)
+			if error != OK: 
+				vr.log_error(
+					"_on_HTTPRequest_download_completed - " +
+					"Failed to create song output dir '%s'" % song_out_dir)
+				has_error = true
 		
 		var Unzip = load('res://addons/gdunzip/unzip.gd').new()
-		error = Unzip.unzip(game.menu.bspath+"temp/%s.zip"%song_dir_name,game.menu.bspath+("Songs/%s/"%song_dir_name))
-		
-		dir.remove(game.menu.bspath+"temp/%s.zip"%song_dir_name)
+		if not has_error:
+			error = Unzip.unzip(zippath,song_out_dir)
+			
+		dir.remove(zippath)
 		
 		downloading.remove(0)
 		
