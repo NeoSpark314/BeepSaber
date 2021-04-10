@@ -9,6 +9,16 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Reference",
+"class": "BaseAppender",
+"language": "GDScript",
+"path": "res://addons/logging/classes/appenders/BaseAppender.gd"
+}, {
+"base": "BaseAppender",
+"class": "ConsoleAppender",
+"language": "GDScript",
+"path": "res://addons/logging/classes/appenders/ConsoleAppender.gd"
+}, {
 "base": "Spatial",
 "class": "Feature_RigidBodyGrab",
 "language": "GDScript",
@@ -18,6 +28,16 @@ _global_script_classes=[ {
 "class": "Feature_ToolGrab",
 "language": "GDScript",
 "path": "res://OQ_Toolkit/OQ_ARVRController/scripts/Feature_ToolGrab.gd"
+}, {
+"base": "Reference",
+"class": "LinkedList",
+"language": "GDScript",
+"path": "res://addons/logging/classes/LinkedList.gd"
+}, {
+"base": "Reference",
+"class": "Logger",
+"language": "GDScript",
+"path": "res://addons/logging/classes/Logger.gd"
 }, {
 "base": "RigidBody",
 "class": "OQClass_GrabbableRigidBody",
@@ -48,16 +68,26 @@ _global_script_classes=[ {
 "class": "Wall",
 "language": "GDScript",
 "path": "res://game/Wall/Wall.gd"
+}, {
+"base": "BaseAppender",
+"class": "XML_SocketAppender",
+"language": "GDScript",
+"path": "res://addons/logging/classes/appenders/XML_SocketAppender.gd"
 } ]
 _global_script_class_icons={
+"BaseAppender": "",
+"ConsoleAppender": "",
 "Feature_RigidBodyGrab": "",
 "Feature_ToolGrab": "",
+"LinkedList": "",
+"Logger": "",
 "OQClass_GrabbableRigidBody": "",
 "OQClass_GrabbableToolPart": "",
 "OQClass_Tool": "",
 "OQClass_ToolGrabController": "",
 "OQClass_ToolGrabLinearController": "",
-"Wall": ""
+"Wall": "",
+"XML_SocketAppender": ""
 }
 
 [application]
@@ -69,6 +99,7 @@ config/icon="res://icon.png"
 [autoload]
 
 vr="*res://OQ_Toolkit/vr_autoload.gd"
+Logging="*res://addons/logging/Logging.gd"
 
 [display]
 
