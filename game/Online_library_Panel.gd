@@ -153,20 +153,23 @@ func _on_HTTPRequest_download_completed(result, response_code, headers, body):
 			vr.log_info(str(error))
 			has_error = true
 		
+		# sanitize path separators from song directory name
+		var song_dir_name = downloading[0][0].replace('/','')
+		
 		var file = File.new()
-		file.open(game.menu.bspath+"temp/%s.zip"%downloading[0][0],File.WRITE)
+		file.open(game.menu.bspath+"temp/%s.zip"%song_dir_name,File.WRITE)
 		file.store_buffer(body)
 		file.close()
 		
-		error = dir.make_dir_recursive(game.menu.bspath+("Songs/%s"%downloading[0][0]))
+		error = dir.make_dir_recursive(game.menu.bspath+("Songs/%s"%song_dir_name))
 		if error != 0: 
 			vr.log_info(str(error))
 			has_error = true
 		
 		var Unzip = load('res://addons/gdunzip/unzip.gd').new()
-		error = Unzip.unzip(game.menu.bspath+"temp/%s.zip"%downloading[0][0],game.menu.bspath+("Songs/%s/"%downloading[0][0]))
+		error = Unzip.unzip(game.menu.bspath+"temp/%s.zip"%song_dir_name,game.menu.bspath+("Songs/%s/"%song_dir_name))
 		
-		dir.remove(game.menu.bspath+"temp/%s.zip"%downloading[0][0])
+		dir.remove(game.menu.bspath+"temp/%s.zip"%song_dir_name)
 		
 		downloading.remove(0)
 		
