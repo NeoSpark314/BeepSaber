@@ -92,9 +92,6 @@ func restart_map():
 		$Track.remove_child(c);
 		c.queue_free();
 	
-	for w in get_tree().get_nodes_in_group("wall"):
-		w.queue_free()
-
 	$MainMenu_OQ_UI2DCanvas.visible = false;
 	$Settings_canvas.visible = false;
 	$Online_library.visible = false;
