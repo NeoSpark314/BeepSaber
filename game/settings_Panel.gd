@@ -9,10 +9,16 @@ var savedata = {
 	COLOR_RIGHT = Color("1a1aff"),
 	saber_tail = true,
 	glare = false,
-	events = true
+	events = true,
+	saber = 0
 }
 var defaults
 const config_path = "user://config.dat"
+
+var sabers = [
+	["Default saber","res://game/sabers/default/default_saber.tscn"],
+	["Particles saber","res://game/sabers/particles/particles_saber.tscn"]
+]
 
 func _ready():
 	if game is NodePath:
@@ -22,6 +28,10 @@ func _ready():
 		file.open(config_path,File.READ)
 		savedata = file.get_var(true)
 		file.close()
+	
+	$saber.clear()
+	for s in sabers:
+		$saber.add_item(s[0])
 	
 	#correct controls
 	yield(get_tree(),"idle_frame")
@@ -34,6 +44,8 @@ func _ready():
 		_on_glare_toggled(savedata.glare,false)
 	if savedata.has("events"):
 		_on_d_background_toggled(savedata.events,false)
+	if savedata.has("saber"):
+		_on_saber_item_selected(savedata.saber,false)
 
 func save_current_settings():
 	file.open(config_path,File.WRITE)
@@ -94,13 +106,6 @@ func _on_right_sable_col_color_changed(color,overwrite=true):
 
 
 func _on_saber_tail_toggled(button_pressed,overwrite=true):
-	if button_pressed:
-		game.left_saber.set_tail_size(3)
-		game.right_saber.set_tail_size(3)
-	else:
-		game.left_saber.set_tail_size(0)
-		game.right_saber.set_tail_size(0)
-		
 	if overwrite:
 		savedata.saber_tail = button_pressed
 		save_current_settings()
@@ -128,6 +133,19 @@ func _on_d_background_toggled(button_pressed,overwrite=true):
 	else:
 		$d_background.pressed = button_pressed
 
+func _on_saber_item_selected(index,overwrite=true):
+	for ls in get_tree().get_nodes_in_group("lightsaber"):
+		ls.set_saber(sabers[index][1])
+	yield(get_tree(),"idle_frame")
+	game.update_saber_colors()
+		
+	if overwrite:
+		savedata.saber = index
+		save_current_settings()
+	else:
+		$saber.select(index)
+	
+	
 #check if A, B and right thumbstick buttons are pressed at the same time to delete settings
 func _on_wipe_check_timeout():
 	if (game.menu.visible
@@ -139,3 +157,5 @@ func _on_wipe_check_timeout():
 			var dir = Directory.new()
 			dir.remove(config_path)
 			get_tree().change_scene("res://GameMain.tscn")
+
+
