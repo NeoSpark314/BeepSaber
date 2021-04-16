@@ -17,7 +17,7 @@ const config_path = "user://config.dat"
 
 var sabers = [
 	["Default saber","res://game/sabers/default/default_saber.tscn"],
-	["Particles saber","res://game/sabers/particles/particles_saber.tscn"]
+	["Particle sword","res://game/sabers/particles/particles_saber.tscn"]
 ]
 
 func _ready():
@@ -106,6 +106,9 @@ func _on_right_sable_col_color_changed(color,overwrite=true):
 
 
 func _on_saber_tail_toggled(button_pressed,overwrite=true):
+	for ls in get_tree().get_nodes_in_group("lightsaber"):
+		ls.set_trail(button_pressed)
+	
 	if overwrite:
 		savedata.saber_tail = button_pressed
 		save_current_settings()
@@ -138,6 +141,7 @@ func _on_saber_item_selected(index,overwrite=true):
 		ls.set_saber(sabers[index][1])
 	yield(get_tree(),"idle_frame")
 	game.update_saber_colors()
+	_on_saber_tail_toggled(savedata.saber_tail,false)
 		
 	if overwrite:
 		savedata.saber = index

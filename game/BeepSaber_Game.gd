@@ -499,6 +499,7 @@ func _update_points_from_cut(saber, cube, beat_accuracy, cut_angle_accuracy, cut
 	#	_reset_combo();
 	#	return;
 	
+	#send data to saber for esthetics effects
 	saber.hit() 
 	
 	# check if we hit the cube with the correctly colored saber
@@ -529,6 +530,7 @@ func _update_points_from_cut(saber, cube, beat_accuracy, cut_angle_accuracy, cut
 	_wrong_notes += 1.0-normalized_points;
 
 	_display_points();
+	
 
 
 func _display_points():

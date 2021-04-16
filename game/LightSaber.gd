@@ -36,6 +36,8 @@ func set_thickness(value):
 func set_color(color):
 	get_saber().set_color(color)
 	
+func set_trail(enabled=true):
+	get_saber().set_trail(enabled)
 
 func _ready():
 #	set_saber("res://game/sabers/particles/particles_saber.tscn")

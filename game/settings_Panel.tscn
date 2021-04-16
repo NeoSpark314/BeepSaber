@@ -51,7 +51,7 @@ border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
 [sub_resource type="DynamicFont" id=9]
-size = 20
+size = 30
 font_data = ExtResource( 3 )
 
 [node name="settings_Panel" type="Panel"]
@@ -100,9 +100,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -47.0
+margin_left = -15.0
 margin_top = 53.0
-margin_right = 223.0
+margin_right = 255.0
 margin_bottom = 104.0
 theme = SubResource( 3 )
 pressed = true
@@ -211,13 +211,12 @@ __meta__ = {
 }
 
 [node name="saber" type="OptionButton" parent="."]
-margin_left = 224.0
+margin_left = 208.0
 margin_top = 352.0
-margin_right = 384.0
-margin_bottom = 384.0
+margin_right = 419.0
+margin_bottom = 394.0
 custom_fonts/font = SubResource( 9 )
 text = "Default saber"
-selected = 0
 __meta__ = {
 "_edit_use_anchors_": false
 }

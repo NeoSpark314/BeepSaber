@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://game/sabers/particles/particles_saber.gd" type="Script" id=1]
 [ext_resource path="res://game/sabers/particles/sword.obj" type="ArrayMesh" id=2]
@@ -17,6 +17,7 @@ albedo_color = Color( 0.435294, 0, 0.427451, 1 )
 
 [sub_resource type="Animation" id=3]
 resource_name = "Hide"
+length = 0.3
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:visible")
 tracks/0/interp = 1
@@ -24,7 +25,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 1 ),
+"times": PoolRealArray( 0, 0.3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ true, true ]
@@ -60,7 +61,7 @@ tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
-"times": PoolRealArray( 0, 1 ),
+"times": PoolRealArray( 0.2, 0.3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ Vector3( 0.079, 0.082, 0.082 ), Vector3( 0, 0, 0 ) ]
@@ -72,10 +73,10 @@ tracks/4/loop_wrap = true
 tracks/4/imported = false
 tracks/4/enabled = true
 tracks/4/keys = {
-"times": PoolRealArray( 0, 1 ),
+"times": PoolRealArray( 0, 0.3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector3( 0, -90, -90 ), Vector3( 0, 0, 170 ) ]
+"values": [ Vector3( 0, -90, -90 ), Vector3( 0, 0, 850 ) ]
 }
 tracks/5/type = "value"
 tracks/5/path = NodePath("LightSaber_Mesh:translation")
@@ -84,7 +85,7 @@ tracks/5/loop_wrap = true
 tracks/5/imported = false
 tracks/5/enabled = true
 tracks/5/keys = {
-"times": PoolRealArray( 0, 1 ),
+"times": PoolRealArray( 0, 0.3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ Vector3( 0, 0.043, 0 ), Vector3( 2.33906e-06, 14.357, 0 ) ]
@@ -143,7 +144,7 @@ tracks/3/keys = {
 }
 
 [sub_resource type="Animation" id=5]
-length = 1.5
+length = 1.2
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:visible")
 tracks/0/interp = 1
@@ -151,7 +152,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 1 ),
+"times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ true, true ]
@@ -163,7 +164,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0.9, 1 ),
+"times": PoolRealArray( 0.4, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ Vector3( 0, 0.051752, 0 ), Vector3( 0, 1.2554, 0 ) ]
@@ -175,7 +176,7 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 1 ),
+"times": PoolRealArray( 0.5 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
 "values": [ true ]
@@ -187,10 +188,10 @@ tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
-"times": PoolRealArray( 0, 0.5, 1 ),
-"transitions": PoolRealArray( 0.366021, 2.54912, 1 ),
+"times": PoolRealArray( 0, 0.2, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ Vector3( -11.5912, 60.9067, 0 ), Vector3( 6.00637, 29.8211, 0 ), Vector3( -1.15453e-15, 0.0434965, 7.08648e-09 ) ]
+"values": [ Vector3( -1.15453e-15, 62.7816, -28.4656 ), Vector3( -1.15453e-15, 36.0923, -7.05946 ), Vector3( -1.15453e-15, 0.0434965, 7.08648e-09 ) ]
 }
 tracks/4/type = "value"
 tracks/4/path = NodePath("LightSaber_Mesh:rotation_degrees")
@@ -199,10 +200,10 @@ tracks/4/loop_wrap = true
 tracks/4/imported = false
 tracks/4/enabled = true
 tracks/4/keys = {
-"times": PoolRealArray( 0, 1 ),
+"times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector3( 0, 0, 170 ), Vector3( 0, -90, -90 ) ]
+"values": [ Vector3( 0, 0, 850 ), Vector3( 0, -90, -90 ) ]
 }
 tracks/5/type = "value"
 tracks/5/path = NodePath("LightSaber_Mesh:scale")
@@ -211,7 +212,7 @@ tracks/5/loop_wrap = true
 tracks/5/imported = false
 tracks/5/enabled = true
 tracks/5/keys = {
-"times": PoolRealArray( 0, 0.5, 1 ),
+"times": PoolRealArray( 0, 0.2, 0.5 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
 "values": [ Vector3( 0, 0, 0 ), Vector3( 0.082, 0.082, 0.082 ), Vector3( 0.078669, 0.082, 0.082 ) ]
@@ -228,7 +229,7 @@ tracks/6/keys = {
 "start_offset": 0.0,
 "stream": ExtResource( 6 )
 } ],
-"times": PoolRealArray( 0.8 )
+"times": PoolRealArray( 0.3 )
 }
 
 [sub_resource type="Shader" id=6]
@@ -262,7 +263,7 @@ params_billboard_mode = 3
 particles_anim_h_frames = 1
 particles_anim_v_frames = 1
 particles_anim_loop = false
-albedo_color = Color( 8.02745, 7.7451, 1.73725, 1 )
+albedo_color = Color( 8, 8, 8, 1 )
 albedo_texture = ExtResource( 4 )
 
 [sub_resource type="QuadMesh" id=9]
@@ -270,6 +271,19 @@ material = SubResource( 8 )
 
 [sub_resource type="Curve" id=10]
 _data = [ Vector2( 0, 0 ), 0.0, 0.0, 0, 0, Vector2( 0.00923077, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.409231, 0.989773 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="SpatialMaterial" id=12]
+flags_unshaded = true
+params_blend_mode = 1
+params_billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+albedo_color = Color( 10, 10, 10, 1 )
+albedo_texture = ExtResource( 4 )
+
+[sub_resource type="QuadMesh" id=13]
+material = SubResource( 12 )
 
 [sub_resource type="ShaderMaterial" id=11]
 resource_local_to_scene = true
@@ -307,6 +321,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2554, 0 )
 [node name="CPUParticles" type="CPUParticles" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6281, 0 )
 cast_shadow = 0
+emitting = false
 amount = 65
 lifetime = 2.0
 speed_scale = 2.14
@@ -327,6 +342,35 @@ radial_accel_random = 1.0
 angle = 720.0
 angle_random = 1.0
 scale_amount = 0.0
+scale_amount_random = 0.01
+scale_amount_curve = SubResource( 10 )
+
+[node name="CPUParticlescut" type="CPUParticles" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6281, 0 )
+cast_shadow = 0
+emitting = false
+amount = 120
+lifetime = 1.5
+one_shot = true
+speed_scale = 2.14
+explosiveness = 1.0
+randomness = 0.26
+lifetime_randomness = 0.18
+local_coords = false
+mesh = SubResource( 13 )
+emission_shape = 2
+emission_box_extents = Vector3( 0, 0.6, 0 )
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 0.98
+initial_velocity_random = 1.0
+linear_accel = 0.27
+linear_accel_random = 0.66
+radial_accel = -1.47
+radial_accel_random = 1.0
+angle = 720.0
+angle_random = 1.0
+scale_amount = 0.01
 scale_amount_random = 0.01
 scale_amount_curve = SubResource( 10 )
 

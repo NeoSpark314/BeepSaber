@@ -1,6 +1,7 @@
 extends Spatial
 
 var is_extended = false
+var trail = true
 
 onready var _mat : ShaderMaterial = $LightSaber_Mesh.material_override;
 
@@ -22,6 +23,8 @@ func set_color(color):
 func set_thickness(value):
 	$LightSaber_Mesh.scale.x = value
 	$LightSaber_Mesh.scale.y = value
+func set_trail(enabled=true):
+	trail = enabled
 
 func show():
 	_anim.play("Show");
@@ -44,7 +47,7 @@ func set_tail_size(size=3):
 var last_pos = []
 var max_pos = 3
 func _process(delta):
-	if is_extended:
+	if is_extended and trail:
 		var pos = [$base.global_transform.origin,$tip.global_transform.origin]
 		imm_geo.clear()
 		imm_geo.begin(Mesh.PRIMITIVE_TRIANGLES)

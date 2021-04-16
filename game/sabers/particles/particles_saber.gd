@@ -13,3 +13,7 @@ func _process(delta):
 func hit():
 	$hitsound.pitch_scale = rand_range(0.9,1.1)
 	$hitsound.play()
+	$CPUParticlescut.restart()
+
+func set_thickness(value):
+	pass
