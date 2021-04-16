@@ -35,6 +35,8 @@ func quickhide():
 	_anim.play("QuickHide");
 	is_extended = false;
 
+func hit():
+	$hitsound.play()
 
 func set_tail_size(size=3):
 	max_pos = size

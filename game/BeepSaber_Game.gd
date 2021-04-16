@@ -498,7 +498,9 @@ func _update_points_from_cut(saber, cube, beat_accuracy, cut_angle_accuracy, cut
 	#if (beat_accuracy == 0.0 || cut_angle_accuracy == 0.0 || cut_distance_accuracy == 0.0):
 	#	_reset_combo();
 	#	return;
-
+	
+	saber.hit() 
+	
 	# check if we hit the cube with the correctly colored saber
 	if (saber.type != cube._note._type):
 		_reset_combo();

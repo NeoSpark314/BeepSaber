@@ -58,3 +58,6 @@ func set_saber(saber_path):
 	for i in $saber_holder.get_children():
 		i.queue_free()
 	$saber_holder.add_child(newsaber)
+
+func hit():
+	get_saber().hit()

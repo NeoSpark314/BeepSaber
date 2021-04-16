@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://game/LightSaber.material" type="Material" id=1]
 [ext_resource path="res://game/data/lightsaber.ogg" type="AudioStream" id=2]
 [ext_resource path="res://game/sabers/default/default_saber.gd" type="Script" id=3]
+[ext_resource path="res://game/data/beepcube_cut.ogg" type="AudioStream" id=4]
 
 [sub_resource type="CapsuleMesh" id=1]
 resource_local_to_scene = true
@@ -185,7 +186,7 @@ tracks/4/keys = {
 "values": [ Vector3( 0, 0.051752, 0 ), Vector3( 0, 1.2554, 0 ) ]
 }
 
-[sub_resource type="Shader" id=8]
+[sub_resource type="Shader" id=7]
 code = "shader_type spatial;
 render_mode cull_disabled, unshaded;
 
@@ -201,8 +202,8 @@ void fragment(){
 	}
 }"
 
-[sub_resource type="ShaderMaterial" id=9]
-shader = SubResource( 8 )
+[sub_resource type="ShaderMaterial" id=8]
+shader = SubResource( 7 )
 shader_param/color = Vector3( 1, 1, 1 )
 shader_param/size = 2
 
@@ -230,10 +231,14 @@ anims/QuickHide = SubResource( 5 )
 anims/Show = SubResource( 6 )
 
 [node name="ImmediateGeometry" type="ImmediateGeometry" parent="."]
-material_override = SubResource( 9 )
+material_override = SubResource( 8 )
 
 [node name="base" type="Position3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0492174, 0 )
 
 [node name="tip" type="Position3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2554, 0 )
+
+[node name="hitsound" type="AudioStreamPlayer3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.759516, 0 )
+stream = ExtResource( 4 )

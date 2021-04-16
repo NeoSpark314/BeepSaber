@@ -9,3 +9,7 @@ func _process(delta):
 	$CPUParticles.speed_scale = 0.5+(20*(current_tip_pos-last_tip_pos).length())
 	$CPUParticles.lifetime = 4+(8*(current_tip_pos-last_tip_pos).length())
 	last_tip_pos = current_tip_pos
+
+func hit():
+	$hitsound.pitch_scale = rand_range(0.9,1.1)
+	$hitsound.play()
