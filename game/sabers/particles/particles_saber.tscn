@@ -272,7 +272,7 @@ material = SubResource( 8 )
 [sub_resource type="Curve" id=10]
 _data = [ Vector2( 0, 0 ), 0.0, 0.0, 0, 0, Vector2( 0.00923077, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.409231, 0.989773 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
 
-[sub_resource type="SpatialMaterial" id=12]
+[sub_resource type="SpatialMaterial" id=11]
 flags_unshaded = true
 params_blend_mode = 1
 params_billboard_mode = 3
@@ -282,10 +282,10 @@ particles_anim_loop = false
 albedo_color = Color( 10, 10, 10, 1 )
 albedo_texture = ExtResource( 4 )
 
-[sub_resource type="QuadMesh" id=13]
-material = SubResource( 12 )
+[sub_resource type="QuadMesh" id=12]
+material = SubResource( 11 )
 
-[sub_resource type="ShaderMaterial" id=11]
+[sub_resource type="ShaderMaterial" id=13]
 resource_local_to_scene = true
 shader = ExtResource( 5 )
 shader_param/color = Plane( 1, 0, 0, 1 )
@@ -357,7 +357,7 @@ explosiveness = 1.0
 randomness = 0.26
 lifetime_randomness = 0.18
 local_coords = false
-mesh = SubResource( 13 )
+mesh = SubResource( 12 )
 emission_shape = 2
 emission_box_extents = Vector3( 0, 0.6, 0 )
 spread = 180.0
@@ -376,7 +376,7 @@ scale_amount_curve = SubResource( 10 )
 
 [node name="LightSaber_Mesh" type="MeshInstance" parent="."]
 transform = Transform( 1.50312e-16, -3.58433e-09, -0.082, -0.078669, -3.58433e-09, 0, -3.43873e-09, 0.082, -3.58433e-09, -1.15453e-15, 0.0434965, 7.08648e-09 )
-material_override = SubResource( 11 )
+material_override = SubResource( 13 )
 mesh = ExtResource( 2 )
 material/0 = null
 

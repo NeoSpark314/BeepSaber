@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/RobotoMono-Medium.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://game/settings_Panel.gd" type="Script" id=2]
@@ -53,6 +53,9 @@ border_color = Color( 1, 1, 1, 1 )
 [sub_resource type="DynamicFont" id=9]
 size = 30
 font_data = ExtResource( 3 )
+
+[sub_resource type="Theme" id=10]
+default_font = SubResource( 9 )
 
 [node name="settings_Panel" type="Panel"]
 margin_right = 896.0
@@ -212,11 +215,13 @@ __meta__ = {
 
 [node name="saber" type="OptionButton" parent="."]
 margin_left = 208.0
-margin_top = 352.0
+margin_top = 348.0
 margin_right = 419.0
-margin_bottom = 394.0
+margin_bottom = 390.0
+theme = SubResource( 10 )
 custom_fonts/font = SubResource( 9 )
 text = "Default saber"
+flat = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
