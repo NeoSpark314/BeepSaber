@@ -9,16 +9,28 @@ onready var _anim := $AnimationPlayer;
 # the type of note this saber can cut (set in the game main)
 var type = 0;
 
+
+signal saber_show()
+signal saber_hide()
+signal saber_quickhide()
+signal saber_set_thickness(value)
+signal saber_set_color(value)
+signal saber_set_trail(value)
+signal saber_hit()
+
 func show():
 	if (!is_extended()):
 		_anim.play("Show");
-		get_saber().show()
+		emit_signal("saber_show")
 
 func get_saber():
 	return $saber_holder.get_child(0);
 
 func is_extended():
-	return get_saber().is_extended;
+	var val = get_saber().get("is_extended")
+	if val != null:
+		return val
+	return false
 
 
 func hide():
@@ -27,22 +39,22 @@ func hide():
 	# again from the fully extended light saber position
 	if (is_extended() and _anim.current_animation != "QuickHide"):
 		_anim.play("Hide");
-		get_saber().hide()
+		emit_signal("saber_hide")
 
 func set_thickness(value):
-	get_saber().set_thickness(value)
+	emit_signal("saber_set_thickness",value)
 	
 
 func set_color(color):
-	get_saber().set_color(color)
+	emit_signal("saber_set_color",color)
 	
 func set_trail(enabled=true):
-	get_saber().set_trail(enabled)
+	emit_signal("saber_set_trail",enabled)
 
 func _ready():
 #	set_saber("res://game/sabers/particles/particles_saber.tscn")
 	_anim.play("QuickHide");
-	get_saber().quickhide()
+	emit_signal("saber_quickhide")
 
 func _process(delta):
 	if is_extended():
@@ -62,4 +74,4 @@ func set_saber(saber_path):
 	$saber_holder.add_child(newsaber)
 
 func hit():
-	get_saber().hit()
+	emit_signal("saber_hit")

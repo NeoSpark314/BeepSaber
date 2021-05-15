@@ -7,8 +7,17 @@ onready var _mat : ShaderMaterial = $LightSaber_Mesh.material_override;
 
 onready var _anim = $AnimationPlayer
 onready var imm_geo = $ImmediateGeometry
+var saber_holder
 
 func _ready():
+	saber_holder = get_parent().get_parent()
+	saber_holder.connect("saber_show",self,"show")
+	saber_holder.connect("saber_hide",self,"hide")
+	saber_holder.connect("saber_quickhide",self,"quickhide")
+	saber_holder.connect("saber_set_thickness",self,"set_thickness")
+	saber_holder.connect("saber_set_color",self,"set_color")
+	saber_holder.connect("saber_set_trail",self,"set_trail")
+	saber_holder.connect("saber_hit",self,"hit")
 	imm_geo.material_override = imm_geo.material_override.duplicate()
 	remove_child(imm_geo)
 	get_tree().get_root().add_child(imm_geo)
