@@ -422,7 +422,7 @@ func disable_events(disabled):
 # cut the cube by creating two rigid bodies and using a CSGBox to create
 # the cut plane
 func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distance, controller_speed, saber_ends):
-	if not cube_cuts_falloff and _sign == 1: 
+	if not cube_cuts_falloff: 
 		return
 	#remove cutted cubes when there are more than max_cutted_cubes
 	var cutted_cubes_group = get_tree().get_nodes_in_group("cutted_cube")
