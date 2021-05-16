@@ -593,7 +593,7 @@ func _quiet_song():
 # restores song volume when player leaves wall
 func _louden_song():
 	song_player.volume_db = 0.0;
-
+	
 func _on_LeftLightSaber_area_entered(area : Area):
 	if song_player.playing and (area.is_in_group("beepcube")):
 		_cut_cube(left_controller, left_saber, area.get_parent().get_parent());
@@ -648,4 +648,6 @@ func _on_Pause_Panel_continue_button():
 	yield(get_tree().create_timer(0.5),"timeout")
 	$Pause_countdown.visible = false
 	continue_map()
+
+
 

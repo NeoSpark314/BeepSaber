@@ -56,6 +56,11 @@ func _ready():
 #	set_saber("res://game/sabers/particles/particles_saber.tscn")
 	_anim.play("QuickHide");
 	emit_signal("saber_quickhide")
+	
+	#separates cube collision layers to allow a diferent collider on right/wrong cuts
+	yield(get_tree(),"physics_frame")
+	set_collision_layer_bit(4,!bool(type))
+	set_collision_layer_bit(14,bool(type))
 
 func _process(delta):
 	if is_extended():
