@@ -1,6 +1,7 @@
 extends "res://game/sabers/default/default_saber.gd"
 
 func _ready():
+	saber_holder.connect("saber_hit",self,"hit_particles")
 	set_tail_size(5)
 
 var last_tip_pos = Vector3()
@@ -13,14 +14,6 @@ func _process(delta):
 func hit_particles(cube,time_offset):
 	$CPUParticlescut.restart()
 	$hitsound.pitch_scale = rand_range(0.9,1.1)
-	if time_offset>0.2 or time_offset<-0.05:
-		$hitsound.play()
-	else:
-		if time_offset <= 0:
-			$hitsound.play(-time_offset)
-		else:
-			yield(get_tree().create_timer(time_offset),"timeout")
-			$hitsound.play()
 
-func set_thickness(value):
+func set_thickness(value): #ignore set thinkness on this saber
 	pass
