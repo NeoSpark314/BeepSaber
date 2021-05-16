@@ -242,3 +242,4 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2554, 0 )
 [node name="hitsound" type="AudioStreamPlayer3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.759516, 0 )
 stream = ExtResource( 4 )
+attenuation_model = 3

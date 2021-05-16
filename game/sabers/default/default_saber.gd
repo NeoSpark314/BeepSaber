@@ -47,8 +47,15 @@ func quickhide():
 	_anim.play("QuickHide");
 	is_extended = false;
 
-func hit():
-	$hitsound.play()
+func hit(cube,time_offset):
+	if time_offset>0.2 or time_offset<-0.05:
+		$hitsound.play()
+	else:
+		if time_offset <= 0:
+			$hitsound.play(-time_offset)
+		else:
+			yield(get_tree().create_timer(time_offset),"timeout")
+			$hitsound.play()
 
 func set_tail_size(size=3):
 	max_pos = size

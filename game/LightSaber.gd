@@ -5,6 +5,7 @@ extends Area
 
 # store the saber material in a variable so the main game can set the color on initialize
 onready var _anim := $AnimationPlayer;
+onready var _main_game = get_tree().get_nodes_in_group("main_game")[0];
 
 # the type of note this saber can cut (set in the game main)
 var type = 0;
@@ -16,7 +17,7 @@ signal saber_quickhide()
 signal saber_set_thickness(value)
 signal saber_set_color(value)
 signal saber_set_trail(value)
-signal saber_hit()
+signal saber_hit(cube,time_offset)
 
 func show():
 	if (!is_extended()):
@@ -73,5 +74,9 @@ func set_saber(saber_path):
 		i.queue_free()
 	$saber_holder.add_child(newsaber)
 
-func hit():
-	emit_signal("saber_hit")
+func hit(cube):
+	var time_offset = (
+		(cube._note._time/_main_game._current_info._beatsPerMinute * 60.0)-
+		_main_game.song_player.get_playback_position()
+		)
+	emit_signal("saber_hit",cube,time_offset)

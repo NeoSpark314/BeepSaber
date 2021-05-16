@@ -500,7 +500,7 @@ func _update_points_from_cut(saber, cube, beat_accuracy, cut_angle_accuracy, cut
 	#	return;
 	
 	#send data to saber for esthetics effects
-	saber.hit() 
+	saber.hit(cube) 
 	
 	# check if we hit the cube with the correctly colored saber
 	if (saber.type != cube._note._type):
