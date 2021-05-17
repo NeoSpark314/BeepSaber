@@ -4,10 +4,10 @@
 [ext_resource path="res://game/BeepCube.gd" type="Script" id=2]
 [ext_resource path="res://game/BeepCube_new_material.material" type="Material" id=3]
 
-[sub_resource type="BoxShape" id=2]
+[sub_resource type="BoxShape" id=1]
 extents = Vector3( 0.28, 0.2, 0.458049 )
 
-[sub_resource type="BoxShape" id=1]
+[sub_resource type="BoxShape" id=2]
 extents = Vector3( 0.2, 0.2, 0.2 )
 
 [sub_resource type="Animation" id=3]
@@ -61,7 +61,7 @@ collision_layer = 2
 collision_mask = 16400
 
 [node name="CollisionBig" type="CollisionShape" parent="CubeMeshOrientation/BeepCube_Big"]
-shape = SubResource( 2 )
+shape = SubResource( 1 )
 
 [node name="BeepCube_Small" type="Area" parent="CubeMeshOrientation" groups=[
 "beepcube",
@@ -70,7 +70,7 @@ collision_layer = 2
 collision_mask = 16400
 
 [node name="CollisionSmall" type="CollisionShape" parent="CubeMeshOrientation/BeepCube_Small"]
-shape = SubResource( 1 )
+shape = SubResource( 2 )
 
 [node name="CubeMeshAnimation" type="Spatial" parent="CubeMeshOrientation"]
 
