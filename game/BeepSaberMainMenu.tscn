@@ -241,6 +241,12 @@ __meta__ = {
 }
 
 [node name="song_prev" type="AudioStreamPlayer" parent="."]
+volume_db = -60.0
+
+[node name="Tween" type="Tween" parent="song_prev"]
+
+[node name="stop_prev" type="Timer" parent="song_prev"]
+one_shot = true
 [connection signal="pressed" from="Play_Button" to="." method="_on_Play_Button_pressed"]
 [connection signal="button_up" from="Delete_Button" to="." method="_on_Delete_Button_button_up"]
 [connection signal="pressed" from="Exit_Button" to="." method="_on_Exit_Button_pressed"]
@@ -249,3 +255,4 @@ __meta__ = {
 [connection signal="item_selected" from="DifficultyMenu" to="." method="_select_difficulty"]
 [connection signal="request_completed" from="HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]
 [connection signal="pressed" from="LoadPlaylists_Button" to="." method="_on_LoadPlaylists_Button_pressed"]
+[connection signal="timeout" from="song_prev/stop_prev" to="." method="_on_stop_prev_timeout"]

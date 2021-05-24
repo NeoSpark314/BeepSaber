@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/sword_clash.8a.ogg-8af31692595a1a180e7f0f71aca8bc47.oggstr"
+
+[deps]
+
+source_file="res://game/sabers/particles/sword_clash.8a.ogg"
+dest_files=[ "res://.import/sword_clash.8a.ogg-8af31692595a1a180e7f0f71aca8bc47.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/RobotoMono-Medium.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://game/settings_Panel.gd" type="Script" id=2]
@@ -50,6 +50,13 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
+[sub_resource type="DynamicFont" id=9]
+size = 30
+font_data = ExtResource( 3 )
+
+[sub_resource type="Theme" id=10]
+default_font = SubResource( 9 )
+
 [node name="settings_Panel" type="Panel"]
 margin_right = 896.0
 margin_bottom = 576.0
@@ -96,9 +103,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -135.0
+margin_left = -15.0
 margin_top = 53.0
-margin_right = 135.0
+margin_right = 255.0
 margin_bottom = 104.0
 theme = SubResource( 3 )
 pressed = true
@@ -206,6 +213,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="saber" type="OptionButton" parent="."]
+margin_left = 208.0
+margin_top = 348.0
+margin_right = 419.0
+margin_bottom = 390.0
+theme = SubResource( 10 )
+custom_fonts/font = SubResource( 9 )
+text = "Default saber"
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="wipe_check" type="Timer" parent="."]
 wait_time = 5.0
 autostart = true
@@ -217,4 +237,5 @@ autostart = true
 [connection signal="toggled" from="glare" to="." method="_on_glare_toggled"]
 [connection signal="toggled" from="d_background" to="." method="_on_d_background_toggled"]
 [connection signal="button_up" from="defaults" to="." method="_on_Button_button_up"]
+[connection signal="item_selected" from="saber" to="." method="_on_saber_item_selected"]
 [connection signal="timeout" from="wipe_check" to="." method="_on_wipe_check_timeout"]

@@ -34,7 +34,9 @@ glow_blend_mode = 0
 [sub_resource type="SphereShape" id=2]
 radius = 0.07
 
-[node name="BeepSaber" type="Spatial"]
+[node name="BeepSaber" type="Spatial" groups=[
+"main_game",
+]]
 script = ExtResource( 9 )
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." groups=[

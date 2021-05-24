@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/radial_gradient.png-e1b95f31fbafe720ec3af10cea54aa30.s3tc.stex"
-path.etc="res://.import/radial_gradient.png-e1b95f31fbafe720ec3af10cea54aa30.etc.stex"
+path.s3tc="res://.import/gradient.png-868485b961980f32f4d74d4a0bbe1d87.s3tc.stex"
+path.etc="res://.import/gradient.png-868485b961980f32f4d74d4a0bbe1d87.etc.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://game/data/UI/radial_gradient.png"
-dest_files=[ "res://.import/radial_gradient.png-e1b95f31fbafe720ec3af10cea54aa30.s3tc.stex", "res://.import/radial_gradient.png-e1b95f31fbafe720ec3af10cea54aa30.etc.stex" ]
+source_file="res://game/data/gradient.png"
+dest_files=[ "res://.import/gradient.png-868485b961980f32f4d74d4a0bbe1d87.s3tc.stex", "res://.import/gradient.png-868485b961980f32f4d74d4a0bbe1d87.etc.stex" ]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=true
 flags/filter=true
-flags/mipmaps=false
+flags/mipmaps=true
 flags/anisotropic=false
 flags/srgb=1
 process/fix_alpha_border=false
@@ -32,5 +32,5 @@ process/HDR_as_SRGB=false
 process/invert_color=false
 stream=false
 size_limit=0
-detect_3d=true
+detect_3d=false
 svg/scale=1.0

@@ -4,21 +4,34 @@
 extends Area
 
 # store the saber material in a variable so the main game can set the color on initialize
-onready var _mat : ShaderMaterial = $LightSaber_Mesh.mesh.surface_get_material(0);
 onready var _anim := $AnimationPlayer;
+onready var _main_game = get_tree().get_nodes_in_group("main_game")[0];
 
 # the type of note this saber can cut (set in the game main)
 var type = 0;
 
-onready var imm_geo = $ImmediateGeometry
+
+signal saber_show()
+signal saber_hide()
+signal saber_quickhide()
+signal saber_set_thickness(value)
+signal saber_set_color(value)
+signal saber_set_trail(value)
+signal saber_hit(cube,time_offset)
 
 func show():
 	if (!is_extended()):
 		_anim.play("Show");
+		emit_signal("saber_show")
 
+func get_saber():
+	return $saber_holder.get_child(0);
 
 func is_extended():
-	return $LightSaber_Mesh.translation.y > 0.1;
+	var val = get_saber().get("is_extended")
+	if val != null:
+		return val
+	return false
 
 
 func hide():
@@ -27,49 +40,30 @@ func hide():
 	# again from the fully extended light saber position
 	if (is_extended() and _anim.current_animation != "QuickHide"):
 		_anim.play("Hide");
+		emit_signal("saber_hide")
 
 func set_thickness(value):
-	$LightSaber_Mesh.scale.x = value
-	$LightSaber_Mesh.scale.y = value
+	emit_signal("saber_set_thickness",value)
 	
-func set_tail_size(size=3):
-	max_pos = size
 
 func set_color(color):
-	_mat.set_shader_param("color", color);
-	imm_geo.material_override.set_shader_param("color", color);
+	emit_signal("saber_set_color",color)
 	
+func set_trail(enabled=true):
+	emit_signal("saber_set_trail",enabled)
 
 func _ready():
-	imm_geo.material_override = imm_geo.material_override.duplicate()
+#	set_saber("res://game/sabers/particles/particles_saber.tscn")
 	_anim.play("QuickHide");
-	remove_child(imm_geo)
-	get_tree().get_root().add_child(imm_geo)
+	emit_signal("saber_quickhide")
+	
+	#separates cube collision layers to allow a diferent collider on right/wrong cuts
+	yield(get_tree(),"physics_frame")
+	set_collision_layer_bit(4,!bool(type))
+	set_collision_layer_bit(14,bool(type))
 
-var last_pos = []
-var max_pos = 3
 func _process(delta):
 	if is_extended():
-		var pos = [$base.global_transform.origin,$tip.global_transform.origin]
-		imm_geo.clear()
-		imm_geo.begin(Mesh.PRIMITIVE_TRIANGLES)
-		
-		for i in range(last_pos.size()):
-			var posA = pos
-			if i > 0:
-				posA = last_pos[i-1]
-			var posB = last_pos[i]
-			
-			imm_geo.add_vertex(pos[0])
-			imm_geo.add_vertex(posA[1])
-			imm_geo.add_vertex(posB[1])
-			
-		imm_geo.end()
-		
-		last_pos.insert(0,pos)
-		while last_pos.size() > max_pos:
-			last_pos.remove(last_pos.size()-1)
-		
 		#check floor collision for burn mark
 		$RayCast.force_raycast_update()
 		if $RayCast.is_colliding():
@@ -78,8 +72,16 @@ func _process(delta):
 				var colipoint = $RayCast.get_collision_point()
 				raycoli.burn_mark(colipoint,type)
 		
-	else:
-		imm_geo.clear()
-	
-func get_tip():
-	return $tip.global_transform.origin
+func set_saber(saber_path):
+	var prenewsaber = load(saber_path)
+	var newsaber = prenewsaber.instance()
+	for i in $saber_holder.get_children():
+		i.queue_free()
+	$saber_holder.add_child(newsaber)
+
+func hit(cube):
+	var time_offset = (
+		(cube._note._time/_main_game._current_info._beatsPerMinute * 60.0)-
+		_main_game.song_player.get_playback_position()
+		)
+	emit_signal("saber_hit",cube,time_offset)

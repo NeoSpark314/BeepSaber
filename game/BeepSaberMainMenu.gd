@@ -161,6 +161,11 @@ var _map_id = null;
 var _map_info = null;
 var _map_path = null;
 
+onready var song_prev = $song_prev
+onready var song_prev_Tween = $song_prev/Tween
+var song_prev_lastid = -1
+var song_prev_transition_time = 1.0
+
 func _select_song(id):
 	if id is int:
 		$SongsMenu.select(id)
@@ -189,15 +194,36 @@ func _select_song(id):
 	_select_difficulty(0)
 	
 	#preview song
-	$song_prev.stop()
+	if song_prev.playing:
+		song_prev_Tween.stop_all()
+		song_prev_Tween.interpolate_property(song_prev,"volume_db",
+			song_prev.volume_db, -50, song_prev_transition_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+		song_prev_Tween.start()
+		yield(get_tree().create_timer(song_prev_transition_time),"timeout")
+		song_prev.stop()
 	if not _beepsaber.song_player.playing:
 		var snd_file = File.new()
-		snd_file.open(_map_info._path + _map_info._songFilename, File.READ) #works whether it's a resource or a file
+		snd_file.open(_map_info._path + _map_info._songFilename, File.READ)
 		var stream = AudioStreamOGGVorbis.new()
 		stream.data = snd_file.get_buffer(snd_file.get_len())
 		snd_file.close()
-		$song_prev.stream = stream;
-		$song_prev.play()
+		song_prev.stream = stream;
+		
+		song_prev_Tween.stop_all()
+		song_prev_Tween.interpolate_property(song_prev,"volume_db",
+			song_prev.volume_db, 0, song_prev_transition_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+		song_prev_Tween.start()
+		
+		song_prev.play(float(_map_info._previewStartTime))
+		$song_prev/stop_prev.start(float(_map_info._previewDuration))
+
+func _on_stop_prev_timeout():
+	song_prev_Tween.stop_all()
+	song_prev_Tween.interpolate_property(song_prev,"volume_db",
+		song_prev.volume_db, -50, song_prev_transition_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	song_prev_Tween.start()
+	yield(get_tree().create_timer(song_prev_transition_time),"timeout")
+	song_prev.stop()
 
 
 var _map_difficulty = 0
@@ -362,5 +388,6 @@ func _clean_search():
 	$SongsMenu.sort_items_by_text()
 	$Search_Button/Label.text = ""
 	
+
 
 

@@ -14,13 +14,21 @@ onready var _mesh_instance : MeshInstance = $CubeMeshOrientation/CubeMeshAnimati
 var _mesh : Mesh = null;
 var _mat = null;
 var speed = 1.0;
+export var min_speed = 0.5;
 
 func _ready():
 	_mesh = _mesh_instance.mesh;
 	_mat = _mesh_instance.material_override;
 	# play the spawn animation when this cube enters the scene
-	_anim.playback_speed = speed
+	_anim.playback_speed = max(min_speed,speed)
 	_anim.play("Spawn");
+	
+	#separates cube collision layers to allow a diferent collider on right/wrong cuts
+	yield(get_tree(),"physics_frame")
+	$CubeMeshOrientation/BeepCube_Big.set_collision_mask_bit(4,!bool(_note._type))
+	$CubeMeshOrientation/BeepCube_Big.set_collision_mask_bit(14,bool(_note._type))
+	$CubeMeshOrientation/BeepCube_Small.set_collision_mask_bit(4,bool(_note._type))
+	$CubeMeshOrientation/BeepCube_Small.set_collision_mask_bit(14,!bool(_note._type))
 
 func duplicate_create(color : Color):
 	var mi = $CubeMeshOrientation/CubeMeshAnimation/BeepCube_Mesh;

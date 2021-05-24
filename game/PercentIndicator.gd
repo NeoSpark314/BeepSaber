@@ -1,9 +1,9 @@
-extends TextureRect
+extends TextureProgress
 
 
-func set_percent(value,anim=true):
-	$Label.text = "%d%%" % value
-	material.set_shader_param("percent",float(value)/100)
+func set_percent(val,anim=true):
+	$Label.text = "%d%%" % val
+	value = val
 	if anim:
 		$AnimationPlayer.stop()
 		$AnimationPlayer.play("change")

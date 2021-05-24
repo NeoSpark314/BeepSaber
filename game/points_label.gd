@@ -7,4 +7,4 @@ func show_points(position=Vector3(),value="x",color = Color(1,1,1)):
 	$Viewport/Label.modulate = color
 	$AnimationPlayer.stop()
 	$AnimationPlayer.play("hit")
-	$AudioStreamPlayer3D.play()
+#	$AudioStreamPlayer3D.play()

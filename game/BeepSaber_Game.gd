@@ -192,7 +192,8 @@ func _spawn_cube(note, current_beat):
 	else:
 		return;
 
-	cube.speed = float(menu._map_difficulty_noteJumpMovementSpeed)/9
+	if menu._map_difficulty_noteJumpMovementSpeed > 0:
+		cube.speed = float(menu._map_difficulty_noteJumpMovementSpeed)/9
 	track.add_child(cube);
 
 	var line = -(CUBE_DISTANCE * 3.0 / 2.0) + note._lineIndex * CUBE_DISTANCE;
@@ -422,7 +423,7 @@ func disable_events(disabled):
 # cut the cube by creating two rigid bodies and using a CSGBox to create
 # the cut plane
 func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distance, controller_speed, saber_ends):
-	if not cube_cuts_falloff and _sign == 1: 
+	if not cube_cuts_falloff: 
 		return
 	#remove cutted cubes when there are more than max_cutted_cubes
 	var cutted_cubes_group = get_tree().get_nodes_in_group("cutted_cube")
@@ -498,7 +499,10 @@ func _update_points_from_cut(saber, cube, beat_accuracy, cut_angle_accuracy, cut
 	#if (beat_accuracy == 0.0 || cut_angle_accuracy == 0.0 || cut_distance_accuracy == 0.0):
 	#	_reset_combo();
 	#	return;
-
+	
+	#send data to saber for esthetics effects
+	saber.hit(cube) 
+	
 	# check if we hit the cube with the correctly colored saber
 	if (saber.type != cube._note._type):
 		_reset_combo();
@@ -527,6 +531,7 @@ func _update_points_from_cut(saber, cube, beat_accuracy, cut_angle_accuracy, cut
 	_wrong_notes += 1.0-normalized_points;
 
 	_display_points();
+	
 
 
 func _display_points():
@@ -589,7 +594,7 @@ func _quiet_song():
 # restores song volume when player leaves wall
 func _louden_song():
 	song_player.volume_db = 0.0;
-
+	
 func _on_LeftLightSaber_area_entered(area : Area):
 	if song_player.playing and (area.is_in_group("beepcube")):
 		_cut_cube(left_controller, left_saber, area.get_parent().get_parent());
@@ -644,4 +649,6 @@ func _on_Pause_Panel_continue_button():
 	yield(get_tree().create_timer(0.5),"timeout")
 	$Pause_countdown.visible = false
 	continue_map()
+
+
 
