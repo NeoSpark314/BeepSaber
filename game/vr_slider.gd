@@ -39,12 +39,11 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	var newpos = -vr.rightController.rotation_degrees.x-(vr.rightController.transform.origin.y*20)
 	if is_mouse_in:
 		if vr.button_pressed(vr.BUTTON.RIGHT_INDEX_TRIGGER):
 			# Scroll via "click & drag"
-			var newpos = -vr.rightController.rotation_degrees.x-(vr.rightController.transform.origin.y*20)
 			v_scroll.value += ((relpos-newpos)*20)
-			relpos = newpos
 		elif enable_joystick_scrolling && ! vr.rightController.is_hand:
 			# Scroll via joystick
 			var y_joy = vr.rightController.get_joystick_axis(1)
@@ -55,6 +54,7 @@ func _process(delta):
 					JOYSTICK_FAST_SCROLL_SPEED,
 					abs(y_joy)) * -sign(y_joy) * delta
 				v_scroll.value += scroll_amount
+	relpos = newpos
 	
 func _mouse_entered():
 	is_mouse_in = true
