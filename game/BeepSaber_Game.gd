@@ -98,6 +98,7 @@ func restart_map():
 	$OQ_UI2DKeyboard.visible = false;
 	$OQ_UI2DKeyboard_main.visible = false;
 
+	track.visible = true
 	left_saber.show();
 	right_saber.show();
 	ui_raycast.visible = false;
@@ -150,12 +151,16 @@ func show_menu():
 	$Online_library.visible = true;
 	
 func show_pause_menu():
-	if ($PauseMenu_canvas.visible or not song_player.playing): return;
+	if ($PauseMenu_canvas.visible or not song_player.playing):
+		return;
 
 	if (song_player.playing):
 #		print(_current_info)
 		song_player.stop();
 		$PauseMenu_canvas.ui_control.set_pause_text("%s By %s\nMap author: %s" % [_current_info["_songName"],_current_info["_songAuthorName"],_current_info["_levelAuthorName"]],menu._map_difficulty_name)
+	
+	# Hide the track (cubes, walls, etc) while showing the pause menu
+	track.visible = false;
 
 	ui_raycast.visible = true;
 	$PauseMenu_canvas.visible = true;
@@ -641,6 +646,7 @@ func _on_Pause_Panel_continue_button():
 	$PauseMenu_canvas.visible = false
 	$Settings_canvas.visible = false;
 	$Pause_countdown.visible = true
+	track.visible = true
 	$Pause_countdown.set_label_text("3")
 	yield(get_tree().create_timer(0.5),"timeout")
 	$Pause_countdown.set_label_text("2")
