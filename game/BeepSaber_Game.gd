@@ -2,6 +2,15 @@
 #
 extends Spatial
 
+# TODO add better state management
+enum GameState {
+	Bootup,
+	MapSelection,
+	Playing,
+	Paused,
+	NewHighscore
+}
+
 onready var left_controller := $OQ_ARVROrigin/OQ_LeftController;
 onready var right_controller := $OQ_ARVROrigin/OQ_RightController;
 
@@ -9,6 +18,11 @@ onready var left_saber := $OQ_ARVROrigin/OQ_LeftController/LeftLightSaber;
 onready var right_saber := $OQ_ARVROrigin/OQ_RightController/RightLightSaber;
 
 onready var ui_raycast := $OQ_ARVROrigin/OQ_RightController/Feature_UIRayCast;
+
+onready var right_highscore_canvas := $RightHighscores_Canvas
+onready var mid_highscore_canvas := $MidHighscores_Canvas
+onready var name_selector_canvas := $NameSelector_Canvas
+onready var keyboard := $OQ_UI2DKeyboard
 
 onready var cube_template = preload("res://game/BeepCube.tscn").instance();
 onready var wall_template = preload("res://game/Wall/Wall.tscn").instance();
@@ -30,6 +44,7 @@ const CUBE_HEIGHT_OFFSET = 0.4
 const WALL_HEIGHT = 3.0
 
 
+var _current_game_state = GameState.Bootup;
 var _current_map = null;
 var _current_note_speed = 1.0;
 var _current_info = null;
@@ -48,6 +63,12 @@ var _current_event = 0;
 # AudioStreamPlayer has reset it's playback_position to zero. This flag is set
 # to false once the AudioStreamPlayer reset is detected.
 var _audio_synced_after_restart = false
+
+# current difficulty name (Easy, Normal, Hard, etc.)
+var _current_diff_name = -1;
+# current difficulty rank (1,3,5,etc.)
+var _current_diff_rank = -1;
+
 
 var _high_score = 0;
 
@@ -97,12 +118,15 @@ func restart_map():
 	$Online_library.visible = false;
 	$OQ_UI2DKeyboard.visible = false;
 	$OQ_UI2DKeyboard_main.visible = false;
+	right_highscore_canvas.visible = false;
+	mid_highscore_canvas.visible = false;
+	name_selector_canvas.visible = false;
 
 	track.visible = true
 	left_saber.show();
 	right_saber.show();
+	$Track.visible = true;
 	ui_raycast.visible = false;
-#	$EndScore_OQ_UILabel.visible = false;
 	$Multiplier_Label.visible=true;
 	$Point_Label.visible=true;
 	$Percent.visible=true;
@@ -110,9 +134,13 @@ func restart_map():
 
 func continue_map():
 	song_player.play(song_player.get_playback_position());
+	$Track.visible = true;
 	$MainMenu_OQ_UI2DCanvas.visible = false;
 	$Settings_canvas.visible = false;
 	$Online_library.visible = false;
+	right_highscore_canvas.visible = false;
+	mid_highscore_canvas.visible = false;
+	name_selector_canvas.visible = false;
 
 	left_saber.show();
 	right_saber.show();
@@ -145,6 +173,7 @@ func show_menu():
 		$Point_Label.visible=false;
 		$Percent.visible=false;
 
+	$Track.visible = false;
 	ui_raycast.visible = true;
 	$MainMenu_OQ_UI2DCanvas.visible = true;
 	$Settings_canvas.visible = true;
@@ -165,6 +194,18 @@ func show_pause_menu():
 	ui_raycast.visible = true;
 	$PauseMenu_canvas.visible = true;
 	$Settings_canvas.visible = true;
+	mid_highscore_canvas.visible = false;
+	name_selector_canvas.visible = false;
+	keyboard.visible = false;
+	
+# This function will transitioning the game from it's current state into
+# the provided 'next_state'. In the future, this function could make
+# calls on entered/exited methods to help orchestrate more orderly
+# state transitions (most likely part of a future update)
+func _transition_game_state(next_state):
+	# TODO implement state exit logic
+	# TODO implement state entered logic
+	_current_game_state = next_state
 
 # when the song ended we want to display the current score and
 # the high score
@@ -174,14 +215,56 @@ func _end_song_display():
 
 	var current_percent = int((_right_notes/(_right_notes+_wrong_notes))*100)
 	
-#	$EndScore_OQ_UILabel.set_label_text("Congratulations\nYour Score: %d\nHigh Score: %d\nAccuracy: %d%%" %[_current_points, _high_score,current_percent]);
-#	$EndScore_OQ_UILabel.visible = true;
 	$EndScore_canvas.visible = true
 	$EndScore_canvas.ui_control.show_score(_current_points,_high_score,current_percent,"%s By %s\n%s     Map author: %s" % [_current_info["_songName"],_current_info["_songAuthorName"],menu._map_difficulty_name,_current_info["_levelAuthorName"]])
 	ui_raycast.visible = true;
 	song_player.stop();
-#	show_menu();
+	
+	if Highscores.is_new_highscore(_current_info,_current_diff_rank,_current_points):
+		_on_new_highscore()
+	else:
+		show_menu();
 
+func _on_new_highscore():
+	_transition_game_state(GameState.NewHighscore)
+	
+	# populate middle highscore panel with records
+#	_mid_highscore_panel().load_highscores(
+#		_current_info,_current_diff_rank)
+	
+	# allows player to click on UI elements
+	ui_raycast.visible = true;
+	
+	# show/hide applicable UI elements
+	$Track.visible = false
+	$MainMenu_OQ_UI2DCanvas.visible = false
+	mid_highscore_canvas.visible = true
+	right_highscore_canvas.visible = false
+	name_selector_canvas.visible = true;
+	keyboard.visible = true
+	
+	# fill name selector with most recent player names
+	_name_selector().clear_names()
+	# WARNING: The get_all_player_names() method could become
+	# costly for a very large highscore database (ie. many
+	# songs and many difficulties). If that ever becomes a
+	# concern, we may want to consider caching a list of the
+	# N most recent players instead.
+	for player_name in Highscores.get_all_player_names():
+		_name_selector().add_name(player_name)
+	
+# call this method to submit a new highscore to the database
+func _submit_highscore(player_name):
+	if _current_game_state == GameState.NewHighscore:
+		Highscores.add_highscore(
+			_current_info,
+			_current_diff_rank,
+			player_name,
+			_current_points)
+			
+		Highscores.save_hs_table()
+			
+		show_menu()
 
 const beat_distance = 4.0;
 const beats_ahead = 4.0;
@@ -402,6 +485,9 @@ func _ready():
 	$Online_library.visible = false;
 	$OQ_UI2DKeyboard.visible = false;
 	$OQ_UI2DKeyboard_main.visible = false;
+	mid_highscore_canvas.visible = false;
+	right_highscore_canvas.visible = false;
+	name_selector_canvas.visible = false;
 	show_menu();
 
 func update_cube_colors():
@@ -600,6 +686,18 @@ func _quiet_song():
 func _louden_song():
 	song_player.volume_db = 0.0;
 	
+# accessor method for the side highscore panel (on right side of menu)
+func _right_highscore_panel() -> HighscorePanel:
+	return right_highscore_canvas.ui_control
+	
+# accessor method for the main highscore panel (in middle of screen)
+func _mid_highscore_panel() -> HighscorePanel:
+	return mid_highscore_canvas.ui_control
+	
+# accessor method for the player name selector UI element
+func _name_selector() -> NameSelector:
+	return name_selector_canvas.ui_control
+	
 func _on_LeftLightSaber_area_entered(area : Area):
 	if song_player.playing and (area.is_in_group("beepcube")):
 		_cut_cube(left_controller, left_saber, area.get_parent().get_parent());
@@ -657,4 +755,26 @@ func _on_Pause_Panel_continue_button():
 	continue_map()
 
 
+# FIXME this doesn't always seem to get called :(
+func _on_BeepSaber_tree_exiting():
+	# save highscores before quiting game
+	Highscores.save_hs_table()
 
+func _on_BeepSaberMainMenu_difficulty_changed(map_info, diff_name, diff_rank):
+	_current_diff_name = diff_name
+	_current_diff_rank = diff_rank
+	
+	# menu loads playlist in _ready(), must yield until scene is loaded
+	if not right_highscore_canvas:
+		yield(self,"ready")
+	
+	right_highscore_canvas.show()
+	_right_highscore_panel().load_highscores(map_info,diff_rank)
+
+func _on_OQ_UI2DKeyboard_text_input_enter(text):
+	if _current_game_state == GameState.NewHighscore:
+		_submit_highscore(text)
+
+func _on_NameSelector_name_selected(name):
+	if _current_game_state == GameState.NewHighscore:
+		_submit_highscore(name)

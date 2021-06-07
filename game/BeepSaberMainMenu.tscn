@@ -145,6 +145,11 @@ margin_top = 3.0
 margin_right = 167.0
 margin_bottom = 36.0
 
+[node name="beepsaber_logo" type="Sprite" parent="."]
+position = Vector2( 1278.49, 504.463 )
+scale = Vector2( 0.84375, 0.84375 )
+texture = ExtResource( 2 )
+
 [node name="cover" type="TextureRect" parent="."]
 margin_left = 1050.0
 margin_top = 67.0
