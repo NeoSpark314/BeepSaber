@@ -1,8 +1,11 @@
 extends Panel
 
 var song_data = []
-var current_page = 0
 var current_list = 0
+# the next requestable pages for the current list; null if prev/next page is
+# not requestable (ie. reached end of the list)
+var prev_page_available = null
+var next_page_available = null
 var list_modes = ["hot","rating","latest","downloads","plays"]
 var search_word = ""
 var item_selected = -1
@@ -11,18 +14,37 @@ onready var httpreq = HTTPRequest.new()
 onready var httpdownload = HTTPRequest.new()
 onready var httpcoverdownload = HTTPRequest.new()
 onready var placeholder_cover = preload("res://game/data/beepsaber_logo.png")
+onready var goto_maps_by = $gotoMapsBy
+onready var v_scroll = $ItemList.get_v_scroll()
+
+# structure representing the previous HTTP request we made to beatsaver
+var prev_request = {
+	# required fields
+	"type" : "list",# can be "list","text_search", or "uploader"
+	"page" : 0,
+	
+	# type-specific fields when type is "list"
+	"list" : "hot"
+	
+	# type-specific fields when type is "text_search"
+	# "search_text" = ""
+	
+	# type-specific fields when type is "uploader"
+	# "uploader_id" = ""
+}
 
 export(NodePath) var game;
 export(NodePath) var keyboard;
 
 func enable():
-	update_list()
+	update_list({"type":"list","page":0,"list":"hot"})
 	$ColorRect.visible = false
 
 func _ready():
 	game = get_node(game);
 	keyboard = get_node(keyboard);
 	$ColorRect.visible = true
+	v_scroll.connect("value_changed",self,"_on_ListV_Scroll_value_changed")
 	
 	httpreq.use_threads = true
 	get_tree().get_root().add_child(httpreq)
@@ -38,75 +60,88 @@ func _ready():
 	get_tree().get_root().add_child(httpcoverdownload)
 	httpcoverdownload.connect("request_completed",self,"_update_cover")
 	
-	keyboard.connect("text_input_enter",self,"_text_input_enter")
-	keyboard.connect("text_input_cancel",self,"_text_input_cancel")
-	
+	if keyboard != null:
+		keyboard.connect("text_input_enter",self,"_text_input_enter")
+		keyboard.connect("text_input_cancel",self,"_text_input_cancel")
 
-func update_list(page=0,list="hot"):
-	$page.text = "Page: %d"%(page+1)
-	$up.disabled = true
-	$down.disabled = true
+func update_list(request):
+	var page = request.page
 	$mode.disabled = true
-	$ItemList.clear()
-	song_data = []
-	item_selected = -1
+	if page == 0:
+		# brand new request, clear list to prep for reload
+		$ItemList.clear()
+		goto_maps_by.visible = false
+		song_data = []
+		item_selected = -1
 	httpcoverdownload.cancel_request()
 	httpreq.cancel_request()
-	if list is String:
-		httpreq.request("https://beatsaver.com/api/maps/%s/%s" % [list,page])
-	else:
-		httpreq.request("https://beatsaver.com/api/search/text/%s?q=%s" % [page,search_word.percent_encode()])
+	
+	match request.type:
+		"list":
+			var list = request.list
+			httpreq.request("https://beatsaver.com/api/maps/%s/%s" % [list,page])
+		"text_search":
+			var search_text = request.search_text
+			httpreq.request("https://beatsaver.com/api/search/text/%s?q=%s" % [page,search_text.percent_encode()])
+		"uploader":
+			var uploader_id = request.uploader_id
+			httpreq.request("https://beatsaver.com/api/maps/uploader/%s/%s" % [uploader_id,page])
+		_:
+			vr.log_warning("Unsupported request type '%s'" % request.type)
 
+# return the selected song's data, or null if not song is selected
+func _get_selected_song():
+	if item_selected >= 0 && song_data.size():
+		return song_data[item_selected]
+	return null
 
 func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	if result == 0:
 		var json_data = parse_json(body.get_string_from_utf8())
+		prev_page_available = null
+		next_page_available = null
+		if json_data.has("prevPage"):
+			prev_page_available = json_data["prevPage"]
+		if json_data.has("nextPage"):
+			next_page_available = json_data["nextPage"]
+			
 		if json_data.has("docs"):
 			json_data = json_data["docs"]
+			_current_cover_to_download = song_data.size()
 			for song in json_data:
 				song_data.insert(song_data.size(),song)
 				$ItemList.add_item(song["name"])
 				var tooltip = "Map author: %s" % song["metadata"]["levelAuthorName"]
 				$ItemList.set_item_tooltip($ItemList.get_item_count()-1,tooltip)
 				$ItemList.set_item_icon($ItemList.get_item_count()-1,placeholder_cover)
-	#		print(song_codes)
 	else:
-		vr.log_info("request error "+str(result))
-	$up.disabled = false
-	$down.disabled = false
+		vr.log_error("request error "+str(result))
 	$mode.disabled = false
+	_scroll_page_request_pending = false
 	_update_all_covers()
 
-
-func _on_up_button_up():
-	current_page = max(0,current_page-1)
-	if current_list == -1:
-		update_list(current_page,current_list)
-		return
-	update_list(current_page,list_modes[current_list])
-
-
-func _on_down_button_up():
-	current_page += 1
-	if current_list == -1:
-		update_list(current_page,current_list)
-		return
-	update_list(current_page,list_modes[current_list])
 
 func _on_mode_button_up():
 	current_list += 1
 	current_list %= list_modes.size()
 	$mode.text = list_modes[current_list].capitalize()
-	current_page = 0
-	update_list(current_page,list_modes[current_list])
+	prev_request = {
+		"type" : "list",
+		"page" : 0,
+		"list" : list_modes[current_list]
+	}
+	update_list(prev_request)
 
 
 func _on_ItemList_item_selected(index):
 	item_selected = index
-	var selected_data = song_data[index]
+	var selected_data = _get_selected_song()
+	var metadata = selected_data["metadata"]
+	goto_maps_by.text = "Maps by %s" % metadata["levelAuthorName"]
+	goto_maps_by.visible = true
 	var difficulties = ""
-	for d in selected_data["metadata"]["difficulties"].keys():
-		if selected_data["metadata"]["difficulties"][d] == true:
+	for d in metadata["difficulties"].keys():
+		if metadata["difficulties"][d] == true:
 			difficulties += " %s"%d
 	var text = """[center]%s By %s[/center]
 
@@ -208,7 +243,12 @@ func _text_input_enter(text):
 	search_word = text
 	$mode.text = search_word
 	current_list = -1
-	update_list(current_page,current_list)
+	prev_request = {
+		"type" : "text_search",
+		"page" : 0,
+		"search_text" : search_word
+	}
+	update_list(prev_request)
 	
 func _text_input_cancel():
 	keyboard.visible=false
@@ -217,7 +257,6 @@ func _text_input_cancel():
 var _current_cover_to_download = 0
 
 func _update_all_covers():
-	_current_cover_to_download = 0
 	httpcoverdownload.cancel_request()
 	update_next_cover()
 
@@ -235,3 +274,36 @@ func _update_cover(result, response_code, headers, body):
 		$ItemList.set_item_icon(_current_cover_to_download,img_tex)
 	_current_cover_to_download += 1
 	update_next_cover()
+
+func _on_gotoMapsBy_pressed():
+	var selected_song = _get_selected_song()
+	prev_request = {
+		"type" : "uploader",
+		"page" : 0,
+		"uploader_id" : selected_song["uploader"]["_id"]
+	}
+	update_list(prev_request)
+	
+# SCROLL_TO_FETCH_THRESHOLD
+# Range: 0.0 to 1.0
+# Description: Used to request the next page of songs from the current list
+# once the user scrolls past this threshold
+const SCROLL_TO_FETCH_THRESHOLD = 0.9
+var _scroll_page_request_pending = false
+	
+func _on_ListV_Scroll_value_changed(new_value):
+	var scroll_range = v_scroll.max_value - v_scroll.min_value
+	var scroll_ratio = (new_value + v_scroll.page) / scroll_range
+	if scroll_ratio > SCROLL_TO_FETCH_THRESHOLD:
+		if next_page_available == null:
+			# no next page to load
+			return
+		
+		# prevent back to back requests
+		if _scroll_page_request_pending:
+			return
+		
+		# request next page and update list
+		prev_request.page += 1
+		update_list(prev_request)
+		_scroll_page_request_pending = true
