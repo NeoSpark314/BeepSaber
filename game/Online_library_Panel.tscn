@@ -144,6 +144,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="back" type="Button" parent="."]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 16.0
+margin_top = -944.0
+margin_right = 224.0
+margin_bottom = -880.0
+theme = SubResource( 6 )
+custom_styles/hover = SubResource( 7 )
+custom_styles/pressed = SubResource( 8 )
+custom_styles/normal = SubResource( 9 )
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="gotoMapsBy" type="Button" parent="."]
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -253,5 +269,6 @@ __meta__ = {
 [connection signal="button_up" from="mode" to="." method="_on_mode_button_up"]
 [connection signal="button_up" from="download" to="." method="_on_download_button_up"]
 [connection signal="button_up" from="search" to="." method="_on_search_button_up"]
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="gotoMapsBy" to="." method="_on_gotoMapsBy_pressed"]
 [connection signal="button_up" from="ColorRect/enable" to="." method="enable"]

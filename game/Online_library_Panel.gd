@@ -17,6 +17,10 @@ onready var placeholder_cover = preload("res://game/data/beepsaber_logo.png")
 onready var goto_maps_by = $gotoMapsBy
 onready var v_scroll = $ItemList.get_v_scroll()
 
+const MAX_BACK_STACK_DEPTH = 10
+# series of previous requests that you can go back to
+var back_stack = []
+
 # structure representing the previous HTTP request we made to beatsaver
 var prev_request = {
 	# required fields
@@ -44,6 +48,7 @@ func _ready():
 	game = get_node(game);
 	keyboard = get_node(keyboard);
 	$ColorRect.visible = true
+	$back.visible = false
 	v_scroll.connect("value_changed",self,"_on_ListV_Scroll_value_changed")
 	
 	httpreq.use_threads = true
@@ -78,16 +83,24 @@ func update_list(request):
 	
 	match request.type:
 		"list":
-			var list = request.list
+			var list : String = request.list
+			$mode.text = list.substr(0,1).capitalize() + list.substr(1)
 			httpreq.request("https://beatsaver.com/api/maps/%s/%s" % [list,page])
 		"text_search":
 			var search_text = request.search_text
+			$mode.text = search_text
 			httpreq.request("https://beatsaver.com/api/search/text/%s?q=%s" % [page,search_text.percent_encode()])
 		"uploader":
 			var uploader_id = request.uploader_id
+			$mode.text = "Uploader"
 			httpreq.request("https://beatsaver.com/api/maps/uploader/%s/%s" % [uploader_id,page])
 		_:
 			vr.log_warning("Unsupported request type '%s'" % request.type)
+			
+func _add_to_back_stack(request):
+	back_stack.push_back(request)
+	if back_stack.size() > MAX_BACK_STACK_DEPTH:
+		back_stack.pop_front()
 
 # return the selected song's data, or null if not song is selected
 func _get_selected_song():
@@ -117,6 +130,7 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	else:
 		vr.log_error("request error "+str(result))
 	$mode.disabled = false
+	$back.visible = back_stack.size() > 0
 	_scroll_page_request_pending = false
 	_update_all_covers()
 
@@ -125,6 +139,7 @@ func _on_mode_button_up():
 	current_list += 1
 	current_list %= list_modes.size()
 	$mode.text = list_modes[current_list].capitalize()
+	_add_to_back_stack(prev_request)
 	prev_request = {
 		"type" : "list",
 		"page" : 0,
@@ -243,6 +258,7 @@ func _text_input_enter(text):
 	search_word = text
 	$mode.text = search_word
 	current_list = -1
+	_add_to_back_stack(prev_request)
 	prev_request = {
 		"type" : "text_search",
 		"page" : 0,
@@ -277,6 +293,7 @@ func _update_cover(result, response_code, headers, body):
 
 func _on_gotoMapsBy_pressed():
 	var selected_song = _get_selected_song()
+	_add_to_back_stack(prev_request)
 	prev_request = {
 		"type" : "uploader",
 		"page" : 0,
@@ -307,3 +324,15 @@ func _on_ListV_Scroll_value_changed(new_value):
 		prev_request.page += 1
 		update_list(prev_request)
 		_scroll_page_request_pending = true
+
+func _on_back_pressed():
+	if back_stack.empty():
+		return
+		
+	# re-request latest entry
+	prev_request = back_stack.back()
+	prev_request.page = 0
+	back_stack.pop_back()
+	update_list(prev_request)
+	
+	$back.visible = back_stack.size() > 0
