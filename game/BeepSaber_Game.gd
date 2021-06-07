@@ -126,7 +126,6 @@ func restart_map():
 	right_saber.show();
 	$Track.visible = true;
 	ui_raycast.visible = false;
-#	$EndScore_OQ_UILabel.visible = false;
 	$Multiplier_Label.visible=true;
 	$Point_Label.visible=true;
 	$Percent.visible=true;
@@ -173,7 +172,6 @@ func show_menu():
 		$Point_Label.visible=false;
 		$Percent.visible=false;
 
-	$EndScore_OQ_UILabel.visible = false;
 	$Track.visible = false;
 	ui_raycast.visible = true;
 	$MainMenu_OQ_UI2DCanvas.visible = true;
@@ -212,8 +210,6 @@ func _end_song_display():
 
 	var current_percent = int((_right_notes/(_right_notes+_wrong_notes))*100)
 	
-#	$EndScore_OQ_UILabel.set_label_text("Congratulations\nYour Score: %d\nHigh Score: %d\nAccuracy: %d%%" %[_current_points, _high_score,current_percent]);
-#	$EndScore_OQ_UILabel.visible = true;
 	$EndScore_canvas.visible = true
 	$EndScore_canvas.ui_control.show_score(_current_points,_high_score,current_percent,"%s By %s\n%s     Map author: %s" % [_current_info["_songName"],_current_info["_songAuthorName"],menu._map_difficulty_name,_current_info["_levelAuthorName"]])
 	ui_raycast.visible = true;
@@ -238,8 +234,8 @@ func _on_new_highscore():
 	$Track.visible = false
 	$MainMenu_OQ_UI2DCanvas.visible = false
 	mid_highscore_canvas.visible = true
-	name_selector_canvas.visible = true;
 	right_highscore_canvas.visible = false
+	name_selector_canvas.visible = true;
 	keyboard.visible = true
 	
 	# fill name selector with most recent player names
@@ -484,7 +480,9 @@ func _ready():
 	$Online_library.visible = false;
 	$OQ_UI2DKeyboard.visible = false;
 	$OQ_UI2DKeyboard_main.visible = false;
+	mid_highscore_canvas.visible = false;
 	right_highscore_canvas.visible = false;
+	name_selector_canvas.visible = false;
 	show_menu();
 
 func update_cube_colors():
