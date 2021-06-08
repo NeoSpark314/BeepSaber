@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://game/floor.tscn" type="PackedScene" id=1]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DLabel.tscn" type="PackedScene" id=2]
@@ -23,7 +23,6 @@
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DKeyboard.tscn" type="PackedScene" id=21]
 [ext_resource path="res://game/Points_label_driver.tscn" type="PackedScene" id=22]
 [ext_resource path="res://game/HighscorePanel.tscn" type="PackedScene" id=23]
-[ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DLogWindow.tscn" type="PackedScene" id=24]
 [ext_resource path="res://game/ui/NameSelector/NameSelector.tscn" type="PackedScene" id=25]
 
 [sub_resource type="Environment" id=1]
@@ -91,7 +90,7 @@ game = NodePath("..")
 transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 1, 0, 1.5, -1 )
 
 [node name="BeepSaberMainMenu" parent="MainMenu_OQ_UI2DCanvas" instance=ExtResource( 11 )]
-keyboard = NodePath("../../OQ_UI2DKeyboard_main")
+keyboard = NodePath("../../OQ_UI2DKeyboard")
 
 [node name="Multiplier_Label" parent="." instance=ExtResource( 2 )]
 transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, -1.55441, 1.30572, -2.69107 )
@@ -124,7 +123,7 @@ transparent = true
 [node name="percent_indicator" parent="Percent" instance=ExtResource( 16 )]
 
 [node name="EndScore_canvas" parent="." instance=ExtResource( 3 )]
-transform = Transform( 1.91111, 0, 0, 0, 1.91111, 0, 0, 0, 1.91111, 0, 1.431, -0.777581 )
+transform = Transform( 1.91111, 0, 0, 0, 1.91111, 0, 0, 0, 1.91111, 0, 1.60386, -0.777581 )
 visible = false
 
 [node name="EndScore_panel" parent="EndScore_canvas" instance=ExtResource( 17 )]
@@ -149,7 +148,8 @@ background_color = Color( 0, 0, 0, 1 )
 transparent = false
 
 [node name="Settings_canvas" parent="." instance=ExtResource( 3 )]
-transform = Transform( 1.14193, 0, 2.01698, 0, 2.3178, 0, -2.01698, 0, 1.14193, -2.44264, 1.51576, -0.0546236 )
+transform = Transform( 2.3178, 0, 0, 0, 2.3178, 0, 0, 0, 2.3178, 0, 1.5, -1 )
+visible = false
 
 [node name="settings_Panel" parent="Settings_canvas" instance=ExtResource( 19 )]
 game = NodePath("../..")
@@ -159,43 +159,31 @@ transform = Transform( 0.67553, 0, -1.82835, 0, 1.94915, 0, 1.82835, 0, 0.67553,
 
 [node name="Online_library_Panel" parent="Online_library" instance=ExtResource( 20 )]
 game = NodePath("../..")
-keyboard = NodePath("../../OQ_UI2DKeyboard")
+keyboard = NodePath("../../OQ_UI2DKeyboard_main")
 
 [node name="OQ_UI2DKeyboard" parent="." instance=ExtResource( 21 )]
-transform = Transform( 0.838233, 0.349429, -2.22632, 0, 2.37535, 0.372819, 2.25358, -0.129972, 0.828095, 2.09772, 0.833935, 0.302276 )
+transform = Transform( 2.40442, 0, 0, 0, 2.37659, 0.364816, 0, -0.364816, 2.37659, -0.00735812, 0.350501, -0.67319 )
 visible = false
 
 [node name="OQ_UI2DKeyboard_main" parent="." instance=ExtResource( 21 )]
-transform = Transform( 2.40442, 0, 0, 0, 2.37659, 0.364816, 0, -0.364816, 2.37659, -0.1298, 0.867922, -0.626283 )
+transform = Transform( 0.838233, 0.349429, -2.22632, 0, 2.37535, 0.372819, 2.25358, -0.129972, 0.828095, 2.09772, 0.833935, 0.302276 )
 visible = false
 
 [node name="Points_label_driver" parent="." instance=ExtResource( 22 )]
 
-[node name="RightHighscores_Canvas" parent="." instance=ExtResource( 3 )]
-transform = Transform( 1.73205, 0, -1, 0, 2, 0, 1, 0, 1.73205, 2.13995, 1.42321, -0.612768 )
+[node name="Highscores_Canvas" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 1.73205, 0, 2, 0, -1.73205, 0, 1, -2.29734, 1.42321, -0.236991 )
 
-[node name="HighscorePanel" parent="RightHighscores_Canvas" instance=ExtResource( 23 )]
-margin_right = 752.0
-show_close_button = false
-
-[node name="MidHighscores_Canvas" parent="." instance=ExtResource( 3 )]
-transform = Transform( 2, 0, -4.17233e-07, 0, 2, 0, 4.17233e-07, 0, 2, 0, 1.84653, -0.99 )
-
-[node name="HighscorePanel" parent="MidHighscores_Canvas" instance=ExtResource( 23 )]
+[node name="HighscorePanel" parent="Highscores_Canvas" instance=ExtResource( 23 )]
 margin_right = 752.0
 show_close_button = false
 
 [node name="NameSelector_Canvas" parent="." instance=ExtResource( 3 )]
-transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 1.23481, -0.99 )
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.980611, -0.747554 )
+visible = false
 
 [node name="NameSelector" parent="NameSelector_Canvas" instance=ExtResource( 25 )]
-
-[node name="OQ_UI2DKeyboard" parent="." instance=ExtResource( 21 )]
-transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.7, -0.99 )
-
-[node name="OQ_UI2DLogWindow" parent="." instance=ExtResource( 24 )]
-transform = Transform( 1.79447, 0, 0.883106, 0, 2, 0, -0.883106, 0, 1.79447, -1.53354, 0.251217, -0.709967 )
-visible = false
+mouse_filter = 1
 
 [node name="RigidBody" type="RigidBody" parent="."]
 [connection signal="tree_exiting" from="." to="." method="_on_BeepSaber_tree_exiting"]
@@ -204,10 +192,12 @@ visible = false
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_LeftController/LeftLightSaber" to="." method="_on_LeftLightSaber_area_entered"]
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_RightController/RightLightSaber" to="." method="_on_RightLightSaber_area_entered"]
 [connection signal="difficulty_changed" from="MainMenu_OQ_UI2DCanvas/BeepSaberMainMenu" to="." method="_on_BeepSaberMainMenu_difficulty_changed"]
+[connection signal="settings_requested" from="MainMenu_OQ_UI2DCanvas/BeepSaberMainMenu" to="." method="_on_BeepSaberMainMenu_settings_requested"]
 [connection signal="goto_mainmenu" from="EndScore_canvas/EndScore_panel" to="." method="_on_EndScore_panel_goto_mainmenu"]
 [connection signal="repeat" from="EndScore_canvas/EndScore_panel" to="." method="_on_EndScore_panel_repeat"]
 [connection signal="continue_button" from="PauseMenu_canvas/Pause_Panel" to="." method="_on_Pause_Panel_continue_button"]
 [connection signal="mainmenu_button" from="PauseMenu_canvas/Pause_Panel" to="." method="_on_EndScore_panel_goto_mainmenu"]
 [connection signal="restart_button" from="PauseMenu_canvas/Pause_Panel" to="." method="_on_EndScore_panel_repeat"]
-[connection signal="text_input_enter" from="OQ_UI2DKeyboard" to="." method="_on_OQ_UI2DKeyboard_text_input_enter"]
+[connection signal="apply" from="Settings_canvas/settings_Panel" to="." method="_on_settings_Panel_apply"]
+[connection signal="text_input_enter" from="OQ_UI2DKeyboard_main" to="." method="_on_OQ_UI2DKeyboard_text_input_enter"]
 [connection signal="name_selected" from="NameSelector_Canvas/NameSelector" to="." method="_on_NameSelector_name_selected"]

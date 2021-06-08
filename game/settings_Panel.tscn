@@ -143,9 +143,9 @@ __meta__ = {
 
 [node name="left_sable_col" type="ColorPickerButton" parent="."]
 margin_left = 256.0
-margin_top = 429.0
+margin_top = 407.947
 margin_right = 384.0
-margin_bottom = 493.0
+margin_bottom = 471.947
 text = "Left saber"
 flat = true
 color = Color( 1, 0.101961, 0.101961, 1 )
@@ -156,9 +156,9 @@ __meta__ = {
 
 [node name="right_sable_col" type="ColorPickerButton" parent="."]
 margin_left = 512.0
-margin_top = 429.0
+margin_top = 407.947
 margin_right = 640.0
-margin_bottom = 493.0
+margin_bottom = 471.947
 text = "Right saber"
 flat = true
 color = Color( 0.101961, 0.101961, 1, 1 )
@@ -200,15 +200,29 @@ __meta__ = {
 }
 
 [node name="defaults" type="Button" parent="."]
-margin_left = 728.0
+margin_left = 546.283
 margin_top = 496.0
-margin_right = 874.0
+margin_right = 692.283
 margin_bottom = 556.0
 theme = SubResource( 5 )
 custom_styles/hover = SubResource( 6 )
 custom_styles/pressed = SubResource( 7 )
 custom_styles/normal = SubResource( 8 )
 text = "Default"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="apply" type="Button" parent="."]
+margin_left = 721.352
+margin_top = 496.0
+margin_right = 867.352
+margin_bottom = 556.0
+theme = SubResource( 5 )
+custom_styles/hover = SubResource( 6 )
+custom_styles/pressed = SubResource( 7 )
+custom_styles/normal = SubResource( 8 )
+text = "Apply"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -237,5 +251,6 @@ autostart = true
 [connection signal="toggled" from="glare" to="." method="_on_glare_toggled"]
 [connection signal="toggled" from="d_background" to="." method="_on_d_background_toggled"]
 [connection signal="button_up" from="defaults" to="." method="_on_Button_button_up"]
+[connection signal="pressed" from="apply" to="." method="_on_apply_pressed"]
 [connection signal="item_selected" from="saber" to="." method="_on_saber_item_selected"]
 [connection signal="timeout" from="wipe_check" to="." method="_on_wipe_check_timeout"]

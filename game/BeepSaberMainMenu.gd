@@ -9,6 +9,8 @@ extends Panel
 signal map_changed(map_info);
 # emitted when a new map difficulty is selected
 signal difficulty_changed(map_info,diff_name,diff_rank);
+# emitted when the settings button is pressed
+signal settings_requested()
 
 # we need the main game class here to trigger game start/restart/continue
 var _beepsaber = null;
@@ -244,10 +246,6 @@ func _select_difficulty(id):
 	_map_difficulty = item_meta["id"]
 	_map_difficulty_name = item_meta["Name"]
 	$DifficultyMenu.select(id)
-	var Difficulties = $DifficultyMenu/Playlists
-	for difficulty in Difficulties.get_children():
-		difficulty.modulate = Color(1, 1, 1)
-	Difficulties.get_child(id).modulate = Color(1, 0.5, 0.5)
 	
 	# notify listeners that difficulty has changed
 	var difficulty = _map_info._difficultyBeatmapSets[0]._difficultyBeatmaps[id]
@@ -342,6 +340,8 @@ func _on_Continue_Button_pressed():
 func _on_Stop_Button_pressed():
 	set_mode_game_start();
 
+func _on_Settings_Button_pressed():
+	emit_signal("settings_requested")
 
 const READ_PERMISSION = "android.permission.READ_EXTERNAL_STORAGE"
 
@@ -408,7 +408,3 @@ func _text_input_changed():
 func _clean_search():
 	$SongsMenu.sort_items_by_text()
 	$Search_Button/Label.text = ""
-	
-
-
-

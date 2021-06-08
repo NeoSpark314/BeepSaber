@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Panel",
+"class": "EndScorePanel",
+"language": "GDScript",
+"path": "res://game/EndScore_panel.gd"
+}, {
 "base": "Spatial",
 "class": "Feature_RigidBodyGrab",
 "language": "GDScript",
@@ -65,6 +70,7 @@ _global_script_classes=[ {
 "path": "res://game/Wall/Wall.gd"
 } ]
 _global_script_class_icons={
+"EndScorePanel": "",
 "Feature_RigidBodyGrab": "",
 "Feature_ToolGrab": "",
 "HighscorePanel": "",

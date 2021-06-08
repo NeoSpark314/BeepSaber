@@ -19,8 +19,7 @@ onready var right_saber := $OQ_ARVROrigin/OQ_RightController/RightLightSaber;
 
 onready var ui_raycast := $OQ_ARVROrigin/OQ_RightController/Feature_UIRayCast;
 
-onready var right_highscore_canvas := $RightHighscores_Canvas
-onready var mid_highscore_canvas := $MidHighscores_Canvas
+onready var highscore_canvas := $Highscores_Canvas
 onready var name_selector_canvas := $NameSelector_Canvas
 onready var keyboard := $OQ_UI2DKeyboard
 
@@ -118,8 +117,7 @@ func restart_map():
 	$Online_library.visible = false;
 	$OQ_UI2DKeyboard.visible = false;
 	$OQ_UI2DKeyboard_main.visible = false;
-	right_highscore_canvas.visible = false;
-	mid_highscore_canvas.visible = false;
+	highscore_canvas.visible = false;
 	name_selector_canvas.visible = false;
 
 	track.visible = true
@@ -138,8 +136,7 @@ func continue_map():
 	$MainMenu_OQ_UI2DCanvas.visible = false;
 	$Settings_canvas.visible = false;
 	$Online_library.visible = false;
-	right_highscore_canvas.visible = false;
-	mid_highscore_canvas.visible = false;
+	highscore_canvas.visible = false;
 	name_selector_canvas.visible = false;
 
 	left_saber.show();
@@ -176,7 +173,7 @@ func show_menu():
 	$Track.visible = false;
 	ui_raycast.visible = true;
 	$MainMenu_OQ_UI2DCanvas.visible = true;
-	$Settings_canvas.visible = true;
+	$Settings_canvas.visible = false;
 	$Online_library.visible = true;
 	
 func show_pause_menu():
@@ -193,8 +190,7 @@ func show_pause_menu():
 
 	ui_raycast.visible = true;
 	$PauseMenu_canvas.visible = true;
-	$Settings_canvas.visible = true;
-	mid_highscore_canvas.visible = false;
+	$Settings_canvas.visible = false;
 	name_selector_canvas.visible = false;
 	keyboard.visible = false;
 	
@@ -222,15 +218,13 @@ func _end_song_display():
 	
 	if Highscores.is_new_highscore(_current_info,_current_diff_rank,_current_points):
 		_on_new_highscore()
-	else:
-		show_menu();
 
 func _on_new_highscore():
 	_transition_game_state(GameState.NewHighscore)
 	
-	# populate middle highscore panel with records
-#	_mid_highscore_panel().load_highscores(
-#		_current_info,_current_diff_rank)
+	# populate highscore panel with records
+	_highscore_panel().load_highscores(
+		_current_info,_current_diff_rank)
 	
 	# allows player to click on UI elements
 	ui_raycast.visible = true;
@@ -238,8 +232,8 @@ func _on_new_highscore():
 	# show/hide applicable UI elements
 	$Track.visible = false
 	$MainMenu_OQ_UI2DCanvas.visible = false
-	mid_highscore_canvas.visible = true
-	right_highscore_canvas.visible = false
+	_endscore_panel().set_buttons_disabled(true)
+	highscore_canvas.visible = true
 	name_selector_canvas.visible = true;
 	keyboard.visible = true
 	
@@ -256,6 +250,11 @@ func _on_new_highscore():
 # call this method to submit a new highscore to the database
 func _submit_highscore(player_name):
 	if _current_game_state == GameState.NewHighscore:
+		_endscore_panel().set_buttons_disabled(false)
+		name_selector_canvas.visible = false
+		highscore_canvas.visible = false
+		keyboard.visible = false
+		
 		Highscores.add_highscore(
 			_current_info,
 			_current_diff_rank,
@@ -263,8 +262,6 @@ func _submit_highscore(player_name):
 			_current_points)
 			
 		Highscores.save_hs_table()
-			
-		show_menu()
 
 const beat_distance = 4.0;
 const beats_ahead = 4.0;
@@ -485,8 +482,7 @@ func _ready():
 	$Online_library.visible = false;
 	$OQ_UI2DKeyboard.visible = false;
 	$OQ_UI2DKeyboard_main.visible = false;
-	mid_highscore_canvas.visible = false;
-	right_highscore_canvas.visible = false;
+	highscore_canvas.visible = false;
 	name_selector_canvas.visible = false;
 	show_menu();
 
@@ -687,12 +683,11 @@ func _louden_song():
 	song_player.volume_db = 0.0;
 	
 # accessor method for the side highscore panel (on right side of menu)
-func _right_highscore_panel() -> HighscorePanel:
-	return right_highscore_canvas.ui_control
+func _highscore_panel() -> HighscorePanel:
+	return highscore_canvas.ui_control
 	
-# accessor method for the main highscore panel (in middle of screen)
-func _mid_highscore_panel() -> HighscorePanel:
-	return mid_highscore_canvas.ui_control
+func _endscore_panel() -> EndScorePanel:
+	return $EndScore_canvas.ui_control
 	
 # accessor method for the player name selector UI element
 func _name_selector() -> NameSelector:
@@ -765,11 +760,19 @@ func _on_BeepSaberMainMenu_difficulty_changed(map_info, diff_name, diff_rank):
 	_current_diff_rank = diff_rank
 	
 	# menu loads playlist in _ready(), must yield until scene is loaded
-	if not right_highscore_canvas:
+	if not highscore_canvas:
 		yield(self,"ready")
 	
-	right_highscore_canvas.show()
-	_right_highscore_panel().load_highscores(map_info,diff_rank)
+	highscore_canvas.show()
+	_highscore_panel().load_highscores(map_info,diff_rank)
+
+func _on_BeepSaberMainMenu_settings_requested():
+	$MainMenu_OQ_UI2DCanvas.hide()
+	$Highscores_Canvas.hide()
+	$Settings_canvas.show()
+
+func _on_settings_Panel_apply():
+	show_menu()
 
 func _on_OQ_UI2DKeyboard_text_input_enter(text):
 	if _current_game_state == GameState.NewHighscore:
