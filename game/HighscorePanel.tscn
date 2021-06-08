@@ -59,13 +59,13 @@ __meta__ = {
 [node name="LeftRight" type="HBoxContainer" parent="Margin/VBox"]
 margin_top = 37.0
 margin_right = 900.0
-margin_bottom = 437.0
+margin_bottom = 433.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Margin/VBox/LeftRight"]
 margin_right = 537.0
-margin_bottom = 400.0
+margin_bottom = 396.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 1.5
@@ -76,7 +76,7 @@ __meta__ = {
 
 [node name="Margin" type="MarginContainer" parent="Margin/VBox/LeftRight/ScrollContainer"]
 margin_right = 537.0
-margin_bottom = 400.0
+margin_bottom = 396.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/margin_right = 10
@@ -88,7 +88,7 @@ custom_constants/margin_bottom = 10
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 527.0
-margin_bottom = 390.0
+margin_bottom = 386.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -374,13 +374,13 @@ align = 2
 [node name="VBox" type="VBoxContainer" parent="Margin/VBox/LeftRight"]
 margin_left = 541.0
 margin_right = 900.0
-margin_bottom = 400.0
+margin_bottom = 396.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="SongCover" type="TextureRect" parent="Margin/VBox/LeftRight/VBox"]
 margin_right = 359.0
-margin_bottom = 291.0
+margin_bottom = 287.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 texture = ExtResource( 4 )
@@ -388,9 +388,9 @@ expand = true
 stretch_mode = 6
 
 [node name="SongInfo_Label" type="Label" parent="Margin/VBox/LeftRight/VBox"]
-margin_top = 295.0
+margin_top = 291.0
 margin_right = 359.0
-margin_bottom = 400.0
+margin_bottom = 396.0
 text = "Song Author: TheFatRat
 Song Title: Time Lapse
 Beatmap Author: Timeweaver"
@@ -401,7 +401,7 @@ __meta__ = {
 }
 
 [node name="Exit_Button" type="Button" parent="Margin/VBox"]
-margin_top = 441.0
+margin_top = 437.0
 margin_right = 900.0
 margin_bottom = 480.0
 text = "Close"

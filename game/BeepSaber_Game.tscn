@@ -177,6 +177,7 @@ transform = Transform( 1, 0, 1.73205, 0, 2, 0, -1.73205, 0, 1, -2.29734, 1.42321
 [node name="HighscorePanel" parent="Highscores_Canvas" instance=ExtResource( 23 )]
 margin_right = 752.0
 show_close_button = false
+show_song_info = false
 
 [node name="NameSelector_Canvas" parent="." instance=ExtResource( 3 )]
 transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.980611, -0.747554 )
