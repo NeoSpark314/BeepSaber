@@ -31,6 +31,12 @@ func _ready():
 func clear_table():
 	_hs_table = {}
 	
+# removes a given map from the table, effectively resetting that map's records
+func remove_map(map_info):
+	var hs_key = SongUtils.get_key(map_info)
+	_hs_table.erase(hs_key)
+	save_hs_table()
+	
 # returns true if score is a new highscore in the table, false otherwise
 func is_new_highscore(map_info,diff_rank,score):
 	var hs_key = SongUtils.get_key(map_info)

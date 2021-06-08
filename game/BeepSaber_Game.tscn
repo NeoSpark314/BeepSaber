@@ -182,6 +182,7 @@ show_song_info = false
 [node name="NameSelector_Canvas" parent="." instance=ExtResource( 3 )]
 transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.980611, -0.747554 )
 visible = false
+transparent = true
 
 [node name="NameSelector" parent="NameSelector_Canvas" instance=ExtResource( 25 )]
 mouse_filter = 1

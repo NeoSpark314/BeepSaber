@@ -21,6 +21,12 @@ func _ready():
 func clear_table():
 	_pc_table = {}
 	
+# removes a given map from the table, effectively resetting that map's counters
+func remove_map(map_info):
+	var song_key = SongUtils.get_key(map_info)
+	_pc_table.erase(song_key)
+	save_table()
+	
 # increments the maps play count by 1.
 #
 # map_info : data structure as read for map's info.dat file

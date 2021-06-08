@@ -102,7 +102,9 @@ func _set_cur_playlist(pl):
 	
 	$SongsMenu.clear()
 	
+	var song_count = 0
 	if pl.has("Songs"):
+		song_count = pl["Songs"].size()
 		for dat in pl["Songs"]:
 			_wire_song_dat(dat);
 			
@@ -113,7 +115,10 @@ func _set_cur_playlist(pl):
 		yield(get_tree(),"idle_frame")
 	
 	if current_id.size() > 0:
-		_select_song(current_id[0])
+		var selected_id = current_id[0]
+		if selected_id >= song_count:
+			selected_id = song_count - 1
+		_select_song(selected_id)
 
 var default_song_icon = preload("res://game/data/beepsaber_logo.png")
 func _wire_song_dat(dat):
@@ -290,6 +295,10 @@ func _on_Delete_Button_button_up():
 		_delete_map();
 	
 func _delete_map():
+	if _map_info:
+		Highscores.remove_map(_map_info)
+		PlayCount.remove_map(_map_info)
+		
 	if _map_path:
 		var dir = Directory.new();
 		if dir.open(_map_path) == 0:
