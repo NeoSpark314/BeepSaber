@@ -186,9 +186,11 @@ func _select_song(id):
 	# notify listeners that map changed
 	emit_signal("map_changed",_map_info)
 	
+	var play_count = PlayCount.get_total_play_count(_map_info)
 	$SongInfo_Label.text = """Song Author: %s
 	Song Title: %s
-	Beatmap Author: %s""" %[_map_info._songAuthorName, _map_info._songName, _map_info._levelAuthorName]
+	Beatmap Author: %s
+	Play Count: %d""" %[_map_info._songAuthorName, _map_info._songName, _map_info._levelAuthorName,play_count]
 
 	$cover.texture = _load_cover(_song_path(id), _map_info._coverImageFilename);
 	

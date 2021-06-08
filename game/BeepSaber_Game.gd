@@ -8,6 +8,7 @@ enum GameState {
 	MapSelection,
 	Playing,
 	Paused,
+	MapComplete,
 	NewHighscore
 }
 
@@ -128,6 +129,8 @@ func restart_map():
 	$Multiplier_Label.visible=true;
 	$Point_Label.visible=true;
 	$Percent.visible=true;
+	
+	_transition_game_state(GameState.Playing)
 
 
 func continue_map():
@@ -142,6 +145,8 @@ func continue_map():
 	left_saber.show();
 	right_saber.show();
 	ui_raycast.visible = false;
+	
+	_transition_game_state(GameState.Playing)
 
 
 func start_map(info, map_data):
@@ -206,6 +211,8 @@ func _transition_game_state(next_state):
 # when the song ended we want to display the current score and
 # the high score
 func _end_song_display():
+	PlayCount.increment_play_count(_current_info,_current_diff_rank)
+	
 	if (_current_points > _high_score):
 		_high_score = _current_points;
 
@@ -378,6 +385,7 @@ func _process_map(dt):
 		_current_event += 1;
 
 	if (song_player.get_playback_position() >= song_player.stream.get_length()-1):
+		_transition_game_state(GameState.MapComplete)
 		_end_song_display();
 
 func _spawn_event(data,beat):
@@ -437,18 +445,20 @@ func _update_saber_end_variabless(dt):
 
 func _physics_process(dt):
 	if (vr.button_just_released(vr.BUTTON.ENTER)):
+		_transition_game_state(GameState.Paused)
 		show_pause_menu();
 
-	if song_player.playing and not _audio_synced_after_restart:
-		# 0.5 seconds is a pretty concervative number to use for the audio
-		# resync check. Having this duration be this long might only be an
-		# issue for maps that spawn notes extremely early into the song.
-		if song_player.get_playback_position() < 0.5:
-			_audio_synced_after_restart = true;
-	elif song_player.playing:
-		_process_map(dt);
-		_update_controller_movement_aabb(left_controller);
-		_update_controller_movement_aabb(right_controller);
+	if _current_game_state == GameState.Playing:
+		if song_player.playing and not _audio_synced_after_restart:
+			# 0.5 seconds is a pretty concervative number to use for the audio
+			# resync check. Having this duration be this long might only be an
+			# issue for maps that spawn notes extremely early into the song.
+			if song_player.get_playback_position() < 0.5:
+				_audio_synced_after_restart = true;
+		elif song_player.playing:
+			_process_map(dt);
+			_update_controller_movement_aabb(left_controller);
+			_update_controller_movement_aabb(right_controller);
 	
 	_check_and_update_saber(left_controller, left_saber);
 	_check_and_update_saber(right_controller, right_saber);

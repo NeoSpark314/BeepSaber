@@ -33,7 +33,7 @@ func clear_table():
 	
 # returns true if score is a new highscore in the table, false otherwise
 func is_new_highscore(map_info,diff_rank,score):
-	var hs_key = _get_hs_key(map_info)
+	var hs_key = SongUtils.get_key(map_info)
 	return _is_new_highscore(hs_key,diff_rank,score)
 	
 # adds a new score record to the table. if the score is not a highscore
@@ -47,7 +47,7 @@ func is_new_highscore(map_info,diff_rank,score):
 # return : None
 func add_highscore(map_info,diff_rank,player_name,score):
 	# get existing records for song + difficulty
-	var hs_key = _get_hs_key(map_info)
+	var hs_key = SongUtils.get_key(map_info)
 	var records = _get_records(hs_key,diff_rank)
 	
 	# construct a new record and resort the list
@@ -66,7 +66,7 @@ func add_highscore(map_info,diff_rank,player_name,score):
 		
 # return : the list of records for the given map + difficulty
 func get_records(map_info,diff_rank):
-	var hs_key = _get_hs_key(map_info)
+	var hs_key = SongUtils.get_key(map_info)
 	return _get_records(hs_key,diff_rank)
 	
 # return : list of all unique players names in highscore table
@@ -145,35 +145,4 @@ static func _highest_and_oldest(lhs, rhs):
 			return true
 	return false
 
-const HIGHSCORE_KEY_ORDER = [
-	'_songAuthorName',
-	'_songName',
-	'_songSubName',
-	'_levelAuthorName']
 
-# creates a unique key for looking up highscores given a map_info
-#
-# KeyFormat = [SA,SN,SSN,LA]
-#   SA  -> Song Author
-#   SN  -> Song Name
-#   SSN -> Song Sub-Name
-#   LA  -> Level Author
-func _get_hs_key(map_info):
-	var hs_key = '['
-	for i in range(HIGHSCORE_KEY_ORDER.size()):
-		var mi_key = HIGHSCORE_KEY_ORDER[i]
-		if i != 0:
-			hs_key += ','
-		
-		var mi_val = ""
-		if map_info.has(mi_key):
-			mi_val = map_info[mi_key]
-			mi_val.replace("\"",'')
-			mi_val.replace("'",'')
-		else:
-			vr.log_warning("map_info does not contain key '%s'" % mi_key)
-		
-		hs_key += "'%s'" % mi_val
-	hs_key += ']'
-		
-	return hs_key

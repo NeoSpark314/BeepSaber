@@ -64,6 +64,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://OQ_Toolkit/OQ_Classes/OQClass_ToolGrabLinearController.gd"
 }, {
+"base": "Node",
+"class": "PlayCountTable",
+"language": "GDScript",
+"path": "res://game/scripts/PlayCountTable.gd"
+}, {
+"base": "Node",
+"class": "SongUtils",
+"language": "GDScript",
+"path": "res://game/scripts/SongUtils.gd"
+}, {
 "base": "Spatial",
 "class": "Wall",
 "language": "GDScript",
@@ -81,6 +91,8 @@ _global_script_class_icons={
 "OQClass_Tool": "",
 "OQClass_ToolGrabController": "",
 "OQClass_ToolGrabLinearController": "",
+"PlayCountTable": "",
+"SongUtils": "",
 "Wall": ""
 }
 
@@ -94,6 +106,7 @@ config/icon="res://icon.png"
 
 vr="*res://OQ_Toolkit/vr_autoload.gd"
 Highscores="*res://game/scripts/HighscoreTable/HighscoreTable.gd"
+PlayCount="*res://game/scripts/PlayCountTable.gd"
 
 [display]
 
