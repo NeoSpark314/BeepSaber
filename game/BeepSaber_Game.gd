@@ -2,7 +2,6 @@
 #
 extends Spatial
 
-# TODO add better state management
 enum GameState {
 	Bootup,
 	MapSelection,
@@ -202,13 +201,53 @@ func show_pause_menu():
 	highscore_keyboard.visible = false;
 	
 # This function will transitioning the game from it's current state into
-# the provided 'next_state'. In the future, this function could make
-# calls on entered/exited methods to help orchestrate more orderly
-# state transitions (most likely part of a future update)
+# the provided 'next_state'.
 func _transition_game_state(next_state):
-	# TODO implement state exit logic
-	# TODO implement state entered logic
+	_on_game_state_exited(_current_game_state)
 	_current_game_state = next_state
+	_on_game_state_entered(_current_game_state)
+
+# Callback when the game is transitioning out of the given state.
+#
+# TODO: In the future, this function could perform things like hide/show
+# various nodes based on the state, clear/reset member variables, etc.
+func _on_game_state_exited(state):
+	match state:
+		GameState.Bootup:
+			pass
+		GameState.MapSelection:
+			pass
+		GameState.Playing:
+			pass
+		GameState.Paused:
+			pass
+		GameState.MapComplete:
+			pass
+		GameState.NewHighscore:
+			pass
+		_:
+			vr.log_warning("Unhandled exit event for state %s" % state)
+
+# Callback when the game is transitioning into the given state.
+#
+# TODO: In the future, this function could perform things like hide/show
+# various nodes based on the state, clear/reset member variables, etc.
+func _on_game_state_entered(state):
+	match state:
+		GameState.Bootup:
+			pass
+		GameState.MapSelection:
+			pass
+		GameState.Playing:
+			pass
+		GameState.Paused:
+			pass
+		GameState.MapComplete:
+			pass
+		GameState.NewHighscore:
+			pass
+		_:
+			vr.log_warning("Unhandled enter event for state %s" % state)
 
 # when the song ended we want to display the current score and
 # the high score
@@ -497,6 +536,8 @@ func _ready():
 	highscore_canvas.visible = false;
 	name_selector_canvas.visible = false;
 	show_menu();
+	
+	_transition_game_state(GameState.MapSelection)
 
 func update_cube_colors():
 	cube_left.update_color_only(COLOR_LEFT);
