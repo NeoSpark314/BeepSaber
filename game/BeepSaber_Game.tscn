@@ -201,5 +201,6 @@ mouse_filter = 1
 [connection signal="mainmenu_button" from="PauseMenu_canvas/Pause_Panel" to="." method="_on_EndScore_panel_goto_mainmenu"]
 [connection signal="restart_button" from="PauseMenu_canvas/Pause_Panel" to="." method="_on_EndScore_panel_repeat"]
 [connection signal="apply" from="Settings_canvas/settings_Panel" to="." method="_on_settings_Panel_apply"]
+[connection signal="text_input_enter" from="OQ_UI2DKeyboard" to="." method="_on_OQ_UI2DKeyboard_text_input_enter"]
 [connection signal="text_input_enter" from="OQ_UI2DKeyboard_main" to="." method="_on_OQ_UI2DKeyboard_text_input_enter"]
 [connection signal="name_selected" from="NameSelector_Canvas/NameSelector" to="." method="_on_NameSelector_name_selected"]
