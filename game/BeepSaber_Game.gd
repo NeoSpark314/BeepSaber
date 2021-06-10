@@ -22,7 +22,9 @@ onready var ui_raycast := $OQ_ARVROrigin/OQ_RightController/Feature_UIRayCast;
 
 onready var highscore_canvas := $Highscores_Canvas
 onready var name_selector_canvas := $NameSelector_Canvas
-onready var keyboard := $OQ_UI2DKeyboard
+onready var highscore_keyboard := $Keyboard_highscore
+
+onready var online_search_keyboard := $Keyboard_online_search
 
 onready var cube_template = preload("res://game/BeepCube.tscn").instance();
 onready var wall_template = preload("res://game/Wall/Wall.tscn").instance();
@@ -116,8 +118,8 @@ func restart_map():
 	$MainMenu_OQ_UI2DCanvas.visible = false;
 	$Settings_canvas.visible = false;
 	$Online_library.visible = false;
-	$OQ_UI2DKeyboard.visible = false;
-	$OQ_UI2DKeyboard_main.visible = false;
+	online_search_keyboard.visible = false;
+	highscore_keyboard.visible = false;
 	highscore_canvas.visible = false;
 	name_selector_canvas.visible = false;
 
@@ -197,7 +199,7 @@ func show_pause_menu():
 	$PauseMenu_canvas.visible = true;
 	$Settings_canvas.visible = false;
 	name_selector_canvas.visible = false;
-	keyboard.visible = false;
+	highscore_keyboard.visible = false;
 	
 # This function will transitioning the game from it's current state into
 # the provided 'next_state'. In the future, this function could make
@@ -242,7 +244,7 @@ func _on_new_highscore():
 	_endscore_panel().set_buttons_disabled(true)
 	highscore_canvas.visible = true
 	name_selector_canvas.visible = true;
-	keyboard.visible = true
+	highscore_keyboard.visible = true
 	
 	# fill name selector with most recent player names
 	_name_selector().clear_names()
@@ -260,7 +262,7 @@ func _submit_highscore(player_name):
 		_endscore_panel().set_buttons_disabled(false)
 		name_selector_canvas.visible = false
 		highscore_canvas.visible = false
-		keyboard.visible = false
+		highscore_keyboard.visible = false
 		
 		Highscores.add_highscore(
 			_current_info,
@@ -490,8 +492,8 @@ func _ready():
 	$MainMenu_OQ_UI2DCanvas.visible = false;
 	$Settings_canvas.visible = false;
 	$Online_library.visible = false;
-	$OQ_UI2DKeyboard.visible = false;
-	$OQ_UI2DKeyboard_main.visible = false;
+	online_search_keyboard.visible = false;
+	highscore_keyboard.visible = false;
 	highscore_canvas.visible = false;
 	name_selector_canvas.visible = false;
 	show_menu();
@@ -784,7 +786,7 @@ func _on_BeepSaberMainMenu_settings_requested():
 func _on_settings_Panel_apply():
 	show_menu()
 
-func _on_OQ_UI2DKeyboard_text_input_enter(text):
+func _on_Keyboard_highscore_text_input_enter(text):
 	if _current_game_state == GameState.NewHighscore:
 		_submit_highscore(text)
 

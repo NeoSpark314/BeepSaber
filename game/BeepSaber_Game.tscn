@@ -90,7 +90,7 @@ game = NodePath("..")
 transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 1, 0, 1.5, -1 )
 
 [node name="BeepSaberMainMenu" parent="MainMenu_OQ_UI2DCanvas" instance=ExtResource( 11 )]
-keyboard = NodePath("../../OQ_UI2DKeyboard")
+keyboard = NodePath("../../Keyboard_highscore")
 
 [node name="Multiplier_Label" parent="." instance=ExtResource( 2 )]
 transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, -1.55441, 1.30572, -2.69107 )
@@ -159,13 +159,13 @@ transform = Transform( 0.67553, 0, -1.82835, 0, 1.94915, 0, 1.82835, 0, 0.67553,
 
 [node name="Online_library_Panel" parent="Online_library" instance=ExtResource( 20 )]
 game = NodePath("../..")
-keyboard = NodePath("../../OQ_UI2DKeyboard_main")
+keyboard = NodePath("../../Keyboard_online_search")
 
-[node name="OQ_UI2DKeyboard" parent="." instance=ExtResource( 21 )]
+[node name="Keyboard_highscore" parent="." instance=ExtResource( 21 )]
 transform = Transform( 2.40442, 0, 0, 0, 2.37659, 0.364816, 0, -0.364816, 2.37659, -0.00735812, 0.350501, -0.67319 )
 visible = false
 
-[node name="OQ_UI2DKeyboard_main" parent="." instance=ExtResource( 21 )]
+[node name="Keyboard_online_search" parent="." instance=ExtResource( 21 )]
 transform = Transform( 0.838233, 0.349429, -2.22632, 0, 2.37535, 0.372819, 2.25358, -0.129972, 0.828095, 2.09772, 0.833935, 0.302276 )
 visible = false
 
@@ -201,6 +201,6 @@ mouse_filter = 1
 [connection signal="mainmenu_button" from="PauseMenu_canvas/Pause_Panel" to="." method="_on_EndScore_panel_goto_mainmenu"]
 [connection signal="restart_button" from="PauseMenu_canvas/Pause_Panel" to="." method="_on_EndScore_panel_repeat"]
 [connection signal="apply" from="Settings_canvas/settings_Panel" to="." method="_on_settings_Panel_apply"]
-[connection signal="text_input_enter" from="OQ_UI2DKeyboard" to="." method="_on_OQ_UI2DKeyboard_text_input_enter"]
-[connection signal="text_input_enter" from="OQ_UI2DKeyboard_main" to="." method="_on_OQ_UI2DKeyboard_text_input_enter"]
+[connection signal="text_input_enter" from="Keyboard_highscore" to="." method="_on_Keyboard_highscore_text_input_enter"]
+[connection signal="text_input_enter" from="Keyboard_online_search" to="." method="_on_OQ_UI2DKeyboard_text_input_enter"]
 [connection signal="name_selected" from="NameSelector_Canvas/NameSelector" to="." method="_on_NameSelector_name_selected"]

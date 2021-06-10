@@ -8,8 +8,8 @@ export var focus_on_visible := true;
 var _text_edit : TextEdit = null;
 var _keyboard = null;
 
-signal text_input_cancel;
-signal text_input_enter;
+signal text_input_cancel();
+signal text_input_enter(text);
 
 
 func _on_cancel():
