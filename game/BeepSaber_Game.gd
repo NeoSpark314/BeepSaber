@@ -762,11 +762,6 @@ func _on_Pause_Panel_continue_button():
 	continue_map()
 
 
-# FIXME this doesn't always seem to get called :(
-func _on_BeepSaber_tree_exiting():
-	# save highscores before quiting game
-	Highscores.save_hs_table()
-
 func _on_BeepSaberMainMenu_difficulty_changed(map_info, diff_name, diff_rank):
 	_current_diff_name = diff_name
 	_current_diff_rank = diff_rank
