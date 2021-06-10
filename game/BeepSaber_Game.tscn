@@ -186,8 +186,6 @@ transparent = true
 
 [node name="NameSelector" parent="NameSelector_Canvas" instance=ExtResource( 25 )]
 mouse_filter = 1
-
-[node name="RigidBody" type="RigidBody" parent="."]
 [connection signal="tree_exiting" from="." to="." method="_on_BeepSaber_tree_exiting"]
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_entered"]
 [connection signal="area_exited" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_exited"]
