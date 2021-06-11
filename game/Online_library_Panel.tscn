@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/RobotoMono-Medium.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://game/Online_library_Panel.gd" type="Script" id=2]
@@ -14,14 +14,14 @@ border_width_right = 8
 border_width_bottom = 8
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="DynamicFont" id=15]
+[sub_resource type="DynamicFont" id=2]
 size = 45
 font_data = ExtResource( 1 )
 
-[sub_resource type="Theme" id=16]
-default_font = SubResource( 15 )
+[sub_resource type="Theme" id=3]
+default_font = SubResource( 2 )
 
-[sub_resource type="StyleBoxFlat" id=14]
+[sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 4
 border_width_top = 4
@@ -29,14 +29,14 @@ border_width_right = 4
 border_width_bottom = 4
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=5]
 size = 32
 font_data = ExtResource( 3 )
 
-[sub_resource type="Theme" id=5]
-default_font = SubResource( 4 )
+[sub_resource type="Theme" id=6]
+default_font = SubResource( 5 )
 
-[sub_resource type="StyleBoxFlat" id=6]
+[sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -44,7 +44,7 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=7]
+[sub_resource type="StyleBoxFlat" id=8]
 bg_color = Color( 0.270588, 0.270588, 0.270588, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -52,7 +52,7 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=8]
+[sub_resource type="StyleBoxFlat" id=9]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -60,23 +60,16 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="DynamicFont" id=9]
+[sub_resource type="DynamicFont" id=10]
 size = 20
 font_data = ExtResource( 1 )
 
-[sub_resource type="DynamicFont" id=10]
-size = 32
-font_data = ExtResource( 1 )
-
-[sub_resource type="Theme" id=11]
-default_font = SubResource( 10 )
-
-[sub_resource type="DynamicFont" id=12]
+[sub_resource type="DynamicFont" id=13]
 size = 40
 font_data = ExtResource( 1 )
 
-[sub_resource type="Theme" id=13]
-default_font = SubResource( 12 )
+[sub_resource type="Theme" id=14]
+default_font = SubResource( 13 )
 
 [node name="Online_library_Panel" type="Panel"]
 margin_right = 1536.0
@@ -93,8 +86,8 @@ margin_left = 16.0
 margin_top = 80.0
 margin_right = 880.0
 margin_bottom = -112.0
-theme = SubResource( 16 )
-custom_styles/bg = SubResource( 14 )
+theme = SubResource( 3 )
+custom_styles/bg = SubResource( 4 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 items = [ "Ítem 0", ExtResource( 5 ), false, "Ítem 1", ExtResource( 5 ), false, "Ítem 2", ExtResource( 5 ), false ]
 fixed_icon_size = Vector2( 80, 80 )
@@ -103,48 +96,18 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="up" type="Button" parent="."]
-margin_left = 16.0
-margin_top = 16.0
-margin_right = 192.0
-margin_bottom = 72.0
-theme = SubResource( 5 )
-custom_styles/hover = SubResource( 6 )
-custom_styles/pressed = SubResource( 7 )
-custom_styles/disabled = SubResource( 7 )
-custom_styles/normal = SubResource( 8 )
-text = "Previous"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="mode" type="Button" parent="."]
-margin_left = 256.0
+margin_left = 331.875
 margin_top = 16.0
-margin_right = 488.0
+margin_right = 563.875
 margin_bottom = 72.0
-theme = SubResource( 5 )
-custom_styles/hover = SubResource( 6 )
-custom_styles/pressed = SubResource( 7 )
-custom_styles/disabled = SubResource( 7 )
-custom_styles/normal = SubResource( 8 )
+theme = SubResource( 6 )
+custom_styles/hover = SubResource( 7 )
+custom_styles/pressed = SubResource( 8 )
+custom_styles/disabled = SubResource( 8 )
+custom_styles/normal = SubResource( 9 )
 text = "Hot"
 clip_text = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="down" type="Button" parent="."]
-margin_left = 704.0
-margin_top = 16.0
-margin_right = 880.0
-margin_bottom = 72.0
-theme = SubResource( 5 )
-custom_styles/hover = SubResource( 6 )
-custom_styles/pressed = SubResource( 7 )
-custom_styles/disabled = SubResource( 7 )
-custom_styles/normal = SubResource( 8 )
-text = "Next"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -156,10 +119,10 @@ margin_left = 344.0
 margin_top = -88.0
 margin_right = 552.0
 margin_bottom = -24.0
-theme = SubResource( 5 )
-custom_styles/hover = SubResource( 6 )
-custom_styles/pressed = SubResource( 7 )
-custom_styles/normal = SubResource( 8 )
+theme = SubResource( 6 )
+custom_styles/hover = SubResource( 7 )
+custom_styles/pressed = SubResource( 8 )
+custom_styles/normal = SubResource( 9 )
 text = "Download"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -172,11 +135,43 @@ margin_left = 624.0
 margin_top = -88.0
 margin_right = 832.0
 margin_bottom = -24.0
-theme = SubResource( 5 )
-custom_styles/hover = SubResource( 6 )
-custom_styles/pressed = SubResource( 7 )
-custom_styles/normal = SubResource( 8 )
+theme = SubResource( 6 )
+custom_styles/hover = SubResource( 7 )
+custom_styles/pressed = SubResource( 8 )
+custom_styles/normal = SubResource( 9 )
 text = "Search"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="back" type="Button" parent="."]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 16.0
+margin_top = -944.0
+margin_right = 224.0
+margin_bottom = -880.0
+theme = SubResource( 6 )
+custom_styles/hover = SubResource( 7 )
+custom_styles/pressed = SubResource( 8 )
+custom_styles/normal = SubResource( 9 )
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="gotoMapsBy" type="Button" parent="."]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 904.0
+margin_top = -88.0
+margin_right = 1112.0
+margin_bottom = -24.0
+theme = SubResource( 6 )
+custom_styles/hover = SubResource( 7 )
+custom_styles/pressed = SubResource( 8 )
+custom_styles/normal = SubResource( 9 )
+text = "Maps By XYZ"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -189,7 +184,7 @@ margin_left = 16.0
 margin_top = -104.0
 margin_right = -1200.0
 margin_bottom = -16.0
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 10 )
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -203,23 +198,8 @@ margin_left = 654.0
 margin_top = -145.0
 margin_right = -23.0
 margin_bottom = -118.0
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 10 )
 text = "From beatsaver.com"
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="page" type="Label" parent="."]
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 496.0
-margin_top = -944.0
-margin_right = -200.0
-margin_bottom = -888.0
-theme = SubResource( 11 )
-text = "Page: 1"
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -244,8 +224,8 @@ anchor_bottom = 1.0
 margin_left = 904.0
 margin_top = -672.0
 margin_right = -32.0
-margin_bottom = -64.0
-theme = SubResource( 13 )
+margin_bottom = -120.0
+theme = SubResource( 14 )
 bbcode_enabled = true
 bbcode_text = "[center]Select a song to see the details
 
@@ -277,18 +257,18 @@ margin_left = -392.0
 margin_top = -48.0
 margin_right = 392.0
 margin_bottom = 48.0
-theme = SubResource( 5 )
-custom_styles/hover = SubResource( 6 )
-custom_styles/pressed = SubResource( 7 )
-custom_styles/normal = SubResource( 8 )
+theme = SubResource( 6 )
+custom_styles/hover = SubResource( 7 )
+custom_styles/pressed = SubResource( 8 )
+custom_styles/normal = SubResource( 9 )
 text = "Press here to connect and download new songs"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 [connection signal="item_selected" from="ItemList" to="." method="_on_ItemList_item_selected"]
-[connection signal="button_up" from="up" to="." method="_on_up_button_up"]
 [connection signal="button_up" from="mode" to="." method="_on_mode_button_up"]
-[connection signal="button_up" from="down" to="." method="_on_down_button_up"]
 [connection signal="button_up" from="download" to="." method="_on_download_button_up"]
 [connection signal="button_up" from="search" to="." method="_on_search_button_up"]
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="gotoMapsBy" to="." method="_on_gotoMapsBy_pressed"]
 [connection signal="button_up" from="ColorRect/enable" to="." method="enable"]

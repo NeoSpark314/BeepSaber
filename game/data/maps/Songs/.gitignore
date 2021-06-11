@@ -1,0 +1,6 @@
+# Ignore everything
+*
+
+# But not the ignore and the demo song
+!.gitignore
+!TheFatRat_Timelapse/

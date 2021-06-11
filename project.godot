@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Panel",
+"class": "EndScorePanel",
+"language": "GDScript",
+"path": "res://game/EndScore_panel.gd"
+}, {
 "base": "Spatial",
 "class": "Feature_RigidBodyGrab",
 "language": "GDScript",
@@ -18,6 +23,21 @@ _global_script_classes=[ {
 "class": "Feature_ToolGrab",
 "language": "GDScript",
 "path": "res://OQ_Toolkit/OQ_ARVRController/scripts/Feature_ToolGrab.gd"
+}, {
+"base": "Panel",
+"class": "HighscorePanel",
+"language": "GDScript",
+"path": "res://game/HighscorePanel.gd"
+}, {
+"base": "Node",
+"class": "HighscoreTable",
+"language": "GDScript",
+"path": "res://game/scripts/HighscoreTable/HighscoreTable.gd"
+}, {
+"base": "Control",
+"class": "NameSelector",
+"language": "GDScript",
+"path": "res://game/ui/NameSelector/NameSelector.gd"
 }, {
 "base": "RigidBody",
 "class": "OQClass_GrabbableRigidBody",
@@ -44,19 +64,35 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://OQ_Toolkit/OQ_Classes/OQClass_ToolGrabLinearController.gd"
 }, {
+"base": "Node",
+"class": "PlayCountTable",
+"language": "GDScript",
+"path": "res://game/scripts/PlayCountTable.gd"
+}, {
+"base": "Node",
+"class": "SongUtils",
+"language": "GDScript",
+"path": "res://game/scripts/SongUtils.gd"
+}, {
 "base": "Spatial",
 "class": "Wall",
 "language": "GDScript",
 "path": "res://game/Wall/Wall.gd"
 } ]
 _global_script_class_icons={
+"EndScorePanel": "",
 "Feature_RigidBodyGrab": "",
 "Feature_ToolGrab": "",
+"HighscorePanel": "",
+"HighscoreTable": "",
+"NameSelector": "",
 "OQClass_GrabbableRigidBody": "",
 "OQClass_GrabbableToolPart": "",
 "OQClass_Tool": "",
 "OQClass_ToolGrabController": "",
 "OQClass_ToolGrabLinearController": "",
+"PlayCountTable": "",
+"SongUtils": "",
 "Wall": ""
 }
 
@@ -69,6 +105,8 @@ config/icon="res://icon.png"
 [autoload]
 
 vr="*res://OQ_Toolkit/vr_autoload.gd"
+Highscores="*res://game/scripts/HighscoreTable/HighscoreTable.gd"
+PlayCount="*res://game/scripts/PlayCountTable.gd"
 
 [display]
 

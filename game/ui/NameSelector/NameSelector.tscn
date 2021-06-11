@@ -1,0 +1,45 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://game/data/beep_saber.theme" type="Theme" id=1]
+[ext_resource path="res://game/ui/NameSelector/NameSelector.gd" type="Script" id=2]
+
+[node name="NameSelector" type="Control"]
+margin_right = 534.0
+margin_bottom = 60.0
+rect_clip_content = true
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NameRow" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/separation = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BaseButton" type="Button" parent="NameRow"]
+margin_right = 107.0
+margin_bottom = 60.0
+text = "Name 1"
+
+[node name="BaseButton2" type="Button" parent="NameRow"]
+margin_left = 117.0
+margin_right = 224.0
+margin_bottom = 60.0
+text = "Name 1"
+
+[node name="BaseButton3" type="Button" parent="NameRow"]
+margin_left = 234.0
+margin_right = 341.0
+margin_bottom = 60.0
+text = "Name 1"
+
+[node name="BaseButton4" type="Button" parent="NameRow"]
+margin_left = 351.0
+margin_right = 458.0
+margin_bottom = 60.0
+text = "Name 1"

@@ -1,11 +1,12 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/oq_ui2d_standard.theme" type="Theme" id=1]
-[ext_resource path="res://game/data/beepsaber_logo.png" type="Texture" id=2]
+[ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/Roboto-Medium.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://game/BeepSaberMainMenu.gd" type="Script" id=3]
 [ext_resource path="res://game/data/maps/Songs/TheFatRat_Timelapse/cover.jpg" type="Texture" id=4]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/RobotoMono-Medium.ttf" type="DynamicFontData" id=5]
 [ext_resource path="res://game/vr_slider.gd" type="Script" id=6]
+[ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/oq_ui2d_standard_font.tres" type="DynamicFont" id=7]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 1 )
@@ -62,6 +63,13 @@ border_width_right = 4
 border_width_bottom = 4
 border_color = Color( 1, 1, 1, 1 )
 
+[sub_resource type="Theme" id=11]
+default_font = ExtResource( 7 )
+
+[sub_resource type="DynamicFont" id=12]
+size = 30
+font_data = ExtResource( 2 )
+
 [sub_resource type="DynamicFont" id=9]
 size = 28
 font_data = ExtResource( 5 )
@@ -79,11 +87,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="beepsaber_logo" type="Sprite" parent="."]
-position = Vector2( 1158, 521.344 )
-scale = Vector2( 0.84375, 0.84375 )
-texture = ExtResource( 2 )
-
 [node name="Play_Button" type="Button" parent="."]
 margin_left = 448.0
 margin_top = 576.0
@@ -99,9 +102,9 @@ __meta__ = {
 
 [node name="Delete_Button" type="Button" parent="."]
 margin_left = 864.0
-margin_top = 448.0
+margin_top = 511.0
 margin_right = 1040.0
-margin_bottom = 496.0
+margin_bottom = 559.0
 custom_styles/hover = SubResource( 2 )
 custom_styles/pressed = SubResource( 3 )
 custom_styles/disabled = SubResource( 5 )
@@ -113,14 +116,27 @@ __meta__ = {
 }
 
 [node name="Exit_Button" type="Button" parent="."]
-margin_left = 1277.52
+margin_left = 1265.0
 margin_top = 576.0
-margin_right = 1389.52
+margin_right = 1390.0
 margin_bottom = 624.0
 custom_styles/hover = SubResource( 2 )
 custom_styles/pressed = SubResource( 3 )
 custom_styles/normal = SubResource( 4 )
 text = "Exit"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Settings_Button" type="Button" parent="."]
+margin_left = 1265.0
+margin_top = 520.0
+margin_right = 1390.0
+margin_bottom = 568.0
+custom_styles/hover = SubResource( 2 )
+custom_styles/pressed = SubResource( 3 )
+custom_styles/normal = SubResource( 4 )
+text = "Settings"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -161,11 +177,11 @@ __meta__ = {
 margin_left = 864.0
 margin_top = 320.0
 margin_right = 1328.0
-margin_bottom = 448.0
+margin_bottom = 468.0
 text = "Song Author: TheFatRat
 Song Title: Time Lapse
-Beatmap Author: Timeweaver"
-valign = 1
+Beatmap Author: Timeweaver
+Play Count: 10"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -181,6 +197,20 @@ custom_colors/font_color_selected = Color( 1, 0.494118, 0.494118, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 fixed_icon_size = Vector2( 60, 60 )
 script = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlaylistSelector" type="OptionButton" parent="."]
+margin_left = 139.0
+margin_top = 12.0
+margin_right = 845.0
+margin_bottom = 60.0
+theme = SubResource( 11 )
+custom_fonts/font = SubResource( 12 )
+text = "All Songs"
+flat = true
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -202,18 +232,6 @@ __meta__ = {
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
 download_chunk_size = 65536
 timeout = 4
-
-[node name="Songs_Label" type="Label" parent="."]
-margin_left = 131.0
-margin_top = 16.0
-margin_right = 848.0
-margin_bottom = 64.0
-text = "Songs"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Songs_Label2" type="Label" parent="."]
 margin_left = 864.0
@@ -250,8 +268,10 @@ one_shot = true
 [connection signal="pressed" from="Play_Button" to="." method="_on_Play_Button_pressed"]
 [connection signal="button_up" from="Delete_Button" to="." method="_on_Delete_Button_button_up"]
 [connection signal="pressed" from="Exit_Button" to="." method="_on_Exit_Button_pressed"]
+[connection signal="pressed" from="Settings_Button" to="." method="_on_Settings_Button_pressed"]
 [connection signal="button_up" from="Search_Button" to="." method="_on_Search_Button_button_up"]
 [connection signal="item_selected" from="SongsMenu" to="." method="_select_song"]
+[connection signal="item_selected" from="PlaylistSelector" to="." method="_on_PlaylistSelector_item_selected"]
 [connection signal="item_selected" from="DifficultyMenu" to="." method="_select_difficulty"]
 [connection signal="request_completed" from="HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]
 [connection signal="pressed" from="LoadPlaylists_Button" to="." method="_on_LoadPlaylists_Button_pressed"]

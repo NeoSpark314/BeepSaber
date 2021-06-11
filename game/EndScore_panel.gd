@@ -1,4 +1,5 @@
 extends Panel
+class_name EndScorePanel
 
 var animated_percent = 0
 signal repeat()
@@ -32,6 +33,10 @@ func show_score(score,record,percent,song_string=""):
 	
 	$Tween.interpolate_property(self,"animated_percent",0,percent,3,Tween.TRANS_QUAD,Tween.EASE_OUT)
 	$Tween.start()
+
+func set_buttons_disabled(disabled):
+	$Repeat.disabled = disabled
+	$MainMenu.disabled = disabled
 
 func _on_Tween_tween_step(object, key, elapsed, value):
 	if key==":animated_percent":

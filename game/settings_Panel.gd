@@ -1,5 +1,7 @@
 extends Panel
 
+signal apply()
+
 export(NodePath) var game;
 onready var file = File.new()
 var savedata = {
@@ -162,4 +164,5 @@ func _on_wipe_check_timeout():
 			dir.remove(config_path)
 			get_tree().change_scene("res://GameMain.tscn")
 
-
+func _on_apply_pressed():
+	emit_signal("apply")
