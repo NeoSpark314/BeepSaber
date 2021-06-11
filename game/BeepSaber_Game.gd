@@ -74,8 +74,6 @@ var _current_diff_name = -1;
 var _current_diff_rank = -1;
 
 
-var _high_score = 0;
-
 var _current_points = 0;
 var _current_multiplier = 1;
 var _current_combo = 0;
@@ -134,9 +132,6 @@ func _transition_game_state(next_state):
 	_on_game_state_entered(_current_game_state)
 
 # Callback when the game is transitioning out of the given state.
-#
-# TODO: In the future, this function could perform things like hide/show
-# various nodes based on the state, clear/reset member variables, etc.
 func _on_game_state_exited(state):
 	match state:
 		GameState.Bootup:
@@ -155,9 +150,6 @@ func _on_game_state_exited(state):
 			vr.log_warning("Unhandled exit event for state %s" % state)
 
 # Callback when the game is transitioning into the given state.
-#
-# TODO: In the future, this function could perform things like hide/show
-# various nodes based on the state, clear/reset member variables, etc.
 func _on_game_state_entered(state):
 	match state:
 		GameState.Bootup:
@@ -294,14 +286,18 @@ func _on_song_ended():
 	song_player.stop();
 	PlayCount.increment_play_count(_current_info,_current_diff_rank)
 	
-	# TODO get rid of this
-	if (_current_points > _high_score):
-		_high_score = _current_points;
+	var highscore = Highscores.get_highscore(_current_info,_current_diff_rank)
+	if highscore == null:
+		# no highscores exist yet
+		highscore = _current_points
+	elif _current_points > highscore:
+		# player's score is the new highscore!
+		highscore = _current_points;
 
 	var current_percent = int((_right_notes/(_right_notes+_wrong_notes))*100)
 	$EndScore_canvas.ui_control.show_score(
 		_current_points,
-		_high_score,# TODO use value from highscore table
+		highscore,
 		current_percent,
 		"%s By %s\n%s     Map author: %s" % [
 			_current_info["_songName"],
