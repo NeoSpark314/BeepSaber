@@ -32,13 +32,6 @@ func initialize(beepsaber_game):
 	_beepsaber = beepsaber_game;
 
 
-func set_mode_game_start():
-	$Play_Button.visible = true;
-
-
-func set_mode_continue():
-	$Play_Button.visible = false;
-
 
 var path = "res://game/data/maps/";
 var dlpath = str(OS.get_system_dir(3))+"/";
@@ -394,16 +387,6 @@ func _on_Play_Button_pressed():
 func _on_Exit_Button_pressed():
 	get_tree().quit()
 
-
-func _on_Restart_Button_pressed():
-	_beepsaber.restart_map();
-
-
-func _on_Continue_Button_pressed():
-	_beepsaber.continue_map();
-
-func _on_Stop_Button_pressed():
-	set_mode_game_start();
 
 func _on_Settings_Button_pressed():
 	emit_signal("settings_requested")
