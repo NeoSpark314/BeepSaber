@@ -56,6 +56,14 @@ far = 1024.0
 
 [node name="PlayerHead" type="Area" parent="OQ_ARVROrigin/OQ_ARVRCamera"]
 
+[node name="FPS_Label" parent="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" instance=ExtResource( 2 )]
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, -0.778996, 0.48322, -1.51666 )
+visible = false
+text = "FPS: "
+margin = 0
+background_color = Color( 0, 0, 0, 0 )
+transparent = true
+
 [node name="CollisionShape" type="CollisionShape" parent="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead"]
 shape = SubResource( 2 )
 
@@ -96,11 +104,6 @@ keyboard = NodePath("../../Keyboard_highscore")
 transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, -1.55441, 1.30572, -2.69107 )
 text = "Multiplier"
 margin = 0
-billboard = false
-depth_test = true
-resize_mode = 0
-font_size_multiplier = 1.0
-font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0, 0, 0, 0 )
 transparent = true
 
@@ -108,11 +111,6 @@ transparent = true
 transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 1, 1.47323, 1.30572, -2.69107 )
 text = "Score"
 margin = 0
-billboard = false
-depth_test = true
-resize_mode = 0
-font_size_multiplier = 1.0
-font_color = Color( 1, 1, 1, 1 )
 background_color = Color( 0, 0, 0, 0 )
 transparent = true
 
@@ -138,14 +136,7 @@ visible = false
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.49382, -0.649511 )
 visible = false
 text = "3"
-margin = 16
-billboard = false
-depth_test = true
-resize_mode = 0
 font_size_multiplier = 4.587
-font_color = Color( 1, 1, 1, 1 )
-background_color = Color( 0, 0, 0, 1 )
-transparent = false
 
 [node name="Settings_canvas" parent="." instance=ExtResource( 3 )]
 transform = Transform( 2.3178, 0, 0, 0, 2.3178, 0, 0, 0, 2.3178, 0, 1.5, -1 )
