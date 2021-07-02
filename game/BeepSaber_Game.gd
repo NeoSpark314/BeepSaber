@@ -769,13 +769,23 @@ func _name_selector() -> NameSelector:
 	return name_selector_canvas.ui_control
 	
 func _on_LeftLightSaber_area_entered(area : Area):
-	if song_player.playing and (area.is_in_group("beepcube")):
-		_cut_cube(left_controller, left_saber, area.get_parent().get_parent());
+	if song_player.playing:
+		if area.is_in_group("beepcube"):
+			_cut_cube(left_controller, left_saber, area.get_parent().get_parent());
+		elif area.is_in_group("bomb"):
+			_reset_combo()
+			# remove bomb
+			area.get_parent().get_parent().queue_free()
 
 
 func _on_RightLightSaber_area_entered(area : Area):
-	if song_player.playing and (area.is_in_group("beepcube")):
-		_cut_cube(right_controller, right_saber, area.get_parent().get_parent());
+	if song_player.playing:
+		if area.is_in_group("beepcube"):
+			_cut_cube(right_controller, right_saber, area.get_parent().get_parent());
+		elif area.is_in_group("bomb"):
+			_reset_combo()
+			# remove bomb
+			area.get_parent().get_parent().queue_free()
 
 func _on_PlayerHead_area_entered(area):
 	if area.is_in_group("wall"):
