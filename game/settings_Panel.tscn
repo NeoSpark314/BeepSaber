@@ -1,8 +1,9 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/RobotoMono-Medium.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://game/settings_Panel.gd" type="Script" id=2]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/Roboto-Medium.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://game/vr_slider.tscn" type="PackedScene" id=4]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 1 )
@@ -94,7 +95,7 @@ __meta__ = {
 }
 
 [node name="VBox" type="VBoxContainer" parent="ScrollContainer"]
-margin_right = 840.0
+margin_right = 828.0
 margin_bottom = 467.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -103,7 +104,7 @@ __meta__ = {
 }
 
 [node name="d_background" type="CheckButton" parent="ScrollContainer/VBox"]
-margin_right = 840.0
+margin_right = 828.0
 margin_bottom = 51.0
 theme = SubResource( 3 )
 pressed = true
@@ -114,7 +115,7 @@ __meta__ = {
 
 [node name="cut_blocks" type="CheckButton" parent="ScrollContainer/VBox"]
 margin_top = 55.0
-margin_right = 840.0
+margin_right = 828.0
 margin_bottom = 106.0
 theme = SubResource( 3 )
 pressed = true
@@ -125,7 +126,7 @@ __meta__ = {
 
 [node name="glare" type="CheckButton" parent="ScrollContainer/VBox"]
 margin_top = 110.0
-margin_right = 840.0
+margin_right = 828.0
 margin_bottom = 161.0
 theme = SubResource( 3 )
 pressed = true
@@ -136,7 +137,7 @@ __meta__ = {
 
 [node name="saber_tail" type="CheckButton" parent="ScrollContainer/VBox"]
 margin_top = 165.0
-margin_right = 840.0
+margin_right = 828.0
 margin_bottom = 216.0
 theme = SubResource( 3 )
 pressed = true
@@ -147,7 +148,7 @@ __meta__ = {
 
 [node name="show_fps" type="CheckButton" parent="ScrollContainer/VBox"]
 margin_top = 220.0
-margin_right = 840.0
+margin_right = 828.0
 margin_bottom = 271.0
 theme = SubResource( 3 )
 text = "Show FPS:"
@@ -157,7 +158,7 @@ __meta__ = {
 
 [node name="bombs_enabled" type="CheckButton" parent="ScrollContainer/VBox"]
 margin_top = 275.0
-margin_right = 840.0
+margin_right = 828.0
 margin_bottom = 326.0
 theme = SubResource( 3 )
 pressed = true
@@ -168,7 +169,7 @@ __meta__ = {
 
 [node name="SaberThicknessRow" type="HBoxContainer" parent="ScrollContainer/VBox"]
 margin_top = 330.0
-margin_right = 840.0
+margin_right = 828.0
 margin_bottom = 373.0
 
 [node name="saber_thickness_label" type="Label" parent="ScrollContainer/VBox/SaberThicknessRow"]
@@ -182,7 +183,7 @@ __meta__ = {
 
 [node name="saber_thickness" type="HSlider" parent="ScrollContainer/VBox/SaberThicknessRow"]
 margin_left = 327.0
-margin_right = 840.0
+margin_right = 828.0
 margin_bottom = 43.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -194,7 +195,7 @@ __meta__ = {
 
 [node name="SaberTypeRow" type="HBoxContainer" parent="ScrollContainer/VBox"]
 margin_top = 377.0
-margin_right = 840.0
+margin_right = 828.0
 margin_bottom = 420.0
 
 [node name="saber_type_label" type="Label" parent="ScrollContainer/VBox/SaberTypeRow"]
@@ -208,7 +209,7 @@ __meta__ = {
 
 [node name="saber" type="OptionButton" parent="ScrollContainer/VBox/SaberTypeRow"]
 margin_left = 213.0
-margin_right = 840.0
+margin_right = 828.0
 margin_bottom = 43.0
 size_flags_horizontal = 3
 theme = SubResource( 5 )
@@ -221,7 +222,7 @@ __meta__ = {
 
 [node name="SaberColorsRow" type="HBoxContainer" parent="ScrollContainer/VBox"]
 margin_top = 424.0
-margin_right = 840.0
+margin_right = 828.0
 margin_bottom = 467.0
 
 [node name="left_saber_col_label" type="Label" parent="ScrollContainer/VBox/SaberColorsRow"]
@@ -235,7 +236,7 @@ __meta__ = {
 
 [node name="left_saber_col" type="ColorPickerButton" parent="ScrollContainer/VBox/SaberColorsRow"]
 margin_left = 270.0
-margin_right = 553.0
+margin_right = 547.0
 margin_bottom = 43.0
 size_flags_horizontal = 3
 text = "Left saber"
@@ -247,8 +248,8 @@ __meta__ = {
 }
 
 [node name="right_saber_col" type="ColorPickerButton" parent="ScrollContainer/VBox/SaberColorsRow"]
-margin_left = 557.0
-margin_right = 840.0
+margin_left = 551.0
+margin_right = 828.0
 margin_bottom = 43.0
 size_flags_horizontal = 3
 text = "Right saber"
@@ -286,6 +287,9 @@ text = "Apply"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="vr_slider" parent="." instance=ExtResource( 4 )]
+scroll_node = NodePath("../ScrollContainer")
 
 [node name="wipe_check" type="Timer" parent="."]
 wait_time = 5.0

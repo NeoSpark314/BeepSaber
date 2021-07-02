@@ -5,7 +5,7 @@
 [ext_resource path="res://game/BeepSaberMainMenu.gd" type="Script" id=3]
 [ext_resource path="res://game/data/maps/Songs/TheFatRat_Timelapse/cover.jpg" type="Texture" id=4]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/RobotoMono-Medium.ttf" type="DynamicFontData" id=5]
-[ext_resource path="res://game/vr_slider.gd" type="Script" id=6]
+[ext_resource path="res://game/vr_slider.tscn" type="PackedScene" id=6]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/oq_ui2d_standard_font.tres" type="DynamicFont" id=7]
 
 [sub_resource type="StyleBoxFlat" id=1]
@@ -196,7 +196,6 @@ custom_styles/bg = SubResource( 8 )
 custom_colors/font_color_selected = Color( 1, 0.494118, 0.494118, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 fixed_icon_size = Vector2( 60, 60 )
-script = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -224,7 +223,6 @@ theme = SubResource( 12 )
 custom_styles/bg = SubResource( 8 )
 custom_colors/font_color_selected = Color( 1, 0.494118, 0.494118, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
-script = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -265,6 +263,11 @@ volume_db = -60.0
 [node name="stop_prev" type="Timer" parent="song_prev"]
 one_shot = true
 
+[node name="song_vr_slider" parent="." instance=ExtResource( 6 )]
+scroll_node = NodePath("../SongsMenu")
+
+[node name="diff_vr_slider" parent="." instance=ExtResource( 6 )]
+scroll_node = NodePath("../DifficultyMenu")
 [connection signal="pressed" from="Play_Button" to="." method="_on_Play_Button_pressed"]
 [connection signal="button_up" from="Delete_Button" to="." method="_on_Delete_Button_button_up"]
 [connection signal="pressed" from="Exit_Button" to="." method="_on_Exit_Button_pressed"]

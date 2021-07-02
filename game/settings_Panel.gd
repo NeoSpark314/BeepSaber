@@ -79,8 +79,9 @@ func _on_Button_button_up():
 
 #settings down here
 func _on_HSlider_value_changed(value,overwrite=true):
-	game.left_saber.set_thickness(float(value)/100);
-	game.right_saber.set_thickness(float(value)/100);
+	if game:
+		game.left_saber.set_thickness(float(value)/100);
+		game.right_saber.set_thickness(float(value)/100);
 	
 	if overwrite:
 		savedata.thickness = value
@@ -91,7 +92,8 @@ func _on_HSlider_value_changed(value,overwrite=true):
 
 
 func _on_cut_blocks_toggled(button_pressed,overwrite=true):
-	game.cube_cuts_falloff = button_pressed;
+	if game:
+		game.cube_cuts_falloff = button_pressed;
 	
 	if overwrite:
 		savedata.cube_cuts_falloff = button_pressed
@@ -101,9 +103,10 @@ func _on_cut_blocks_toggled(button_pressed,overwrite=true):
 
 
 func _on_left_saber_col_color_changed(color,overwrite=true):
-	game.COLOR_LEFT = color
-	game.update_saber_colors()
-	game.update_cube_colors()
+	if game:
+		game.COLOR_LEFT = color
+		game.update_saber_colors()
+		game.update_cube_colors()
 	
 	if overwrite:
 		savedata.COLOR_LEFT = color
@@ -113,9 +116,10 @@ func _on_left_saber_col_color_changed(color,overwrite=true):
 
 
 func _on_right_saber_col_color_changed(color,overwrite=true):
-	game.COLOR_RIGHT = color
-	game.update_saber_colors()
-	game.update_cube_colors()
+	if game:
+		game.COLOR_RIGHT = color
+		game.update_saber_colors()
+		game.update_cube_colors()
 	
 	if overwrite:
 		savedata.COLOR_RIGHT = color
@@ -136,8 +140,9 @@ func _on_saber_tail_toggled(button_pressed,overwrite=true):
 
 
 func _on_glare_toggled(button_pressed,overwrite=true):
-	var env = get_tree().get_nodes_in_group("enviroment")[0]
-	env.environment.glow_enabled = button_pressed
+	var env_nodes = get_tree().get_nodes_in_group("enviroment")
+	for node in env_nodes:
+		node.environment.glow_enabled = button_pressed
 	
 	if overwrite:
 		savedata.glare = button_pressed
@@ -147,7 +152,8 @@ func _on_glare_toggled(button_pressed,overwrite=true):
 
 
 func _on_d_background_toggled(button_pressed,overwrite=true):
-	game.disable_events(!button_pressed)
+	if game:
+		game.disable_events(!button_pressed)
 	
 	if overwrite:
 		savedata.events = button_pressed
@@ -169,7 +175,8 @@ func _on_saber_item_selected(index,overwrite=true):
 		saber.select(index)
 
 func _on_show_fps_toggled(button_pressed,overwrite=true):
-	game.fps_label.visible = button_pressed
+	if game:
+		game.fps_label.visible = button_pressed
 	
 	if overwrite:
 		savedata.show_fps = button_pressed
@@ -179,7 +186,8 @@ func _on_show_fps_toggled(button_pressed,overwrite=true):
 
 
 func _on_bombs_enabled_toggled(button_pressed,overwrite=true):
-	game.bombs_enabled = button_pressed
+	if game:
+		game.bombs_enabled = button_pressed
 	
 	if overwrite:
 		savedata.bombs_enabled = button_pressed

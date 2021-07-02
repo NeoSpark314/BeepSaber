@@ -3,7 +3,7 @@
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/RobotoMono-Medium.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://game/Online_library_Panel.gd" type="Script" id=2]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/Roboto-Medium.ttf" type="DynamicFontData" id=3]
-[ext_resource path="res://game/vr_slider.gd" type="Script" id=4]
+[ext_resource path="res://game/vr_slider.tscn" type="PackedScene" id=4]
 [ext_resource path="res://game/data/beepsaber_logo.png" type="Texture" id=5]
 
 [sub_resource type="StyleBoxFlat" id=1]
@@ -91,7 +91,6 @@ custom_styles/bg = SubResource( 4 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 items = [ "Ítem 0", ExtResource( 5 ), false, "Ítem 1", ExtResource( 5 ), false, "Ítem 2", ExtResource( 5 ), false ]
 fixed_icon_size = Vector2( 80, 80 )
-script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -266,6 +265,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="vr_slider" parent="." instance=ExtResource( 4 )]
+scroll_node = NodePath("../ItemList")
 [connection signal="item_selected" from="ItemList" to="." method="_on_ItemList_item_selected"]
 [connection signal="button_up" from="mode" to="." method="_on_mode_button_up"]
 [connection signal="button_up" from="download" to="." method="_on_download_button_up"]

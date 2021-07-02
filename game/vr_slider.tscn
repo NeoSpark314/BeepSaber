@@ -2,10 +2,5 @@
 
 [ext_resource path="res://game/vr_slider.gd" type="Script" id=1]
 
-[node name="vr_slider" type="Control"]
-margin_right = 40.0
-margin_bottom = 40.0
+[node name="vr_slider" type="Node"]
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
