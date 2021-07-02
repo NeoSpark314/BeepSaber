@@ -17,6 +17,15 @@ var savedata = {
 var defaults
 const config_path = "user://config.dat"
 
+onready var saber = $ScrollContainer/VBox/SaberTypeRow/saber
+onready var glare = $ScrollContainer/VBox/glare
+onready var sabe_tail = $ScrollContainer/VBox/saber_tail
+onready var saber_thickness = $ScrollContainer/VBox/SaberThicknessRow/saber_thickness
+onready var cut_blocks = $ScrollContainer/VBox/cut_blocks
+onready var d_background = $ScrollContainer/VBox/d_background
+onready var left_saber_col = $ScrollContainer/VBox/SaberColorsRow/left_saber_col
+onready var right_saber_col = $ScrollContainer/VBox/SaberColorsRow/right_saber_col
+
 var sabers = [
 	["Default saber","res://game/sabers/default/default_saber.tscn"],
 	["Particle sword","res://game/sabers/particles/particles_saber.tscn"]
@@ -31,16 +40,16 @@ func _ready():
 		savedata = file.get_var(true)
 		file.close()
 	
-	$saber.clear()
+	saber.clear()
 	for s in sabers:
-		$saber.add_item(s[0])
+		saber.add_item(s[0])
 	
 	#correct controls
 	yield(get_tree(),"idle_frame")
 	_on_HSlider_value_changed(savedata.thickness,false)
-	_on_cuttedBlocks_toggled(savedata.cube_cuts_falloff,false)
-	_on_left_sable_col_color_changed(savedata.COLOR_LEFT,false)
-	_on_right_sable_col_color_changed(savedata.COLOR_RIGHT,false)
+	_on_cut_blocks_toggled(savedata.cube_cuts_falloff,false)
+	_on_left_saber_col_color_changed(savedata.COLOR_LEFT,false)
+	_on_right_saber_col_color_changed(savedata.COLOR_RIGHT,false)
 	_on_saber_tail_toggled(savedata.saber_tail,false)
 	if savedata.has("glare"):
 		_on_glare_toggled(savedata.glare,false)
@@ -69,21 +78,21 @@ func _on_HSlider_value_changed(value,overwrite=true):
 		savedata.thickness = value
 		save_current_settings()
 	else:
-		$saber_thicknes.value = value
+		saber_thickness.value = value
 
 
 
-func _on_cuttedBlocks_toggled(button_pressed,overwrite=true):
+func _on_cut_blocks_toggled(button_pressed,overwrite=true):
 	game.cube_cuts_falloff = button_pressed;
 	
 	if overwrite:
 		savedata.cube_cuts_falloff = button_pressed
 		save_current_settings()
 	else:
-		$cuttedBlocks.pressed = button_pressed
+		cut_blocks.pressed = button_pressed
 
 
-func _on_left_sable_col_color_changed(color,overwrite=true):
+func _on_left_saber_col_color_changed(color,overwrite=true):
 	game.COLOR_LEFT = color
 	game.update_saber_colors()
 	game.update_cube_colors()
@@ -92,10 +101,10 @@ func _on_left_sable_col_color_changed(color,overwrite=true):
 		savedata.COLOR_LEFT = color
 		save_current_settings()
 	else:
-		$left_sable_col.color = color
+		left_saber_col.color = color
 
 
-func _on_right_sable_col_color_changed(color,overwrite=true):
+func _on_right_saber_col_color_changed(color,overwrite=true):
 	game.COLOR_RIGHT = color
 	game.update_saber_colors()
 	game.update_cube_colors()
@@ -104,7 +113,7 @@ func _on_right_sable_col_color_changed(color,overwrite=true):
 		savedata.COLOR_RIGHT = color
 		save_current_settings()
 	else:
-		$right_sable_col.color = color
+		right_saber_col.color = color
 
 
 func _on_saber_tail_toggled(button_pressed,overwrite=true):
@@ -115,7 +124,7 @@ func _on_saber_tail_toggled(button_pressed,overwrite=true):
 		savedata.saber_tail = button_pressed
 		save_current_settings()
 	else:
-		$saber_tail.pressed = button_pressed
+		sabe_tail.pressed = button_pressed
 
 
 func _on_glare_toggled(button_pressed,overwrite=true):
@@ -126,7 +135,7 @@ func _on_glare_toggled(button_pressed,overwrite=true):
 		savedata.glare = button_pressed
 		save_current_settings()
 	else:
-		$glare.pressed = button_pressed
+		glare.pressed = button_pressed
 
 
 func _on_d_background_toggled(button_pressed,overwrite=true):
@@ -136,7 +145,7 @@ func _on_d_background_toggled(button_pressed,overwrite=true):
 		savedata.events = button_pressed
 		save_current_settings()
 	else:
-		$d_background.pressed = button_pressed
+		d_background.pressed = button_pressed
 
 func _on_saber_item_selected(index,overwrite=true):
 	for ls in get_tree().get_nodes_in_group("lightsaber"):
@@ -149,7 +158,7 @@ func _on_saber_item_selected(index,overwrite=true):
 		savedata.saber = index
 		save_current_settings()
 	else:
-		$saber.select(index)
+		saber.select(index)
 	
 	
 #check if A, B and right thumbstick buttons are pressed at the same time to delete settings

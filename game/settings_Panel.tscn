@@ -20,13 +20,20 @@ font_data = ExtResource( 1 )
 default_font = SubResource( 2 )
 
 [sub_resource type="DynamicFont" id=4]
-size = 32
+size = 30
 font_data = ExtResource( 3 )
 
 [sub_resource type="Theme" id=5]
 default_font = SubResource( 4 )
 
-[sub_resource type="StyleBoxFlat" id=6]
+[sub_resource type="DynamicFont" id=6]
+size = 32
+font_data = ExtResource( 3 )
+
+[sub_resource type="Theme" id=7]
+default_font = SubResource( 6 )
+
+[sub_resource type="StyleBoxFlat" id=8]
 bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -34,7 +41,7 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=7]
+[sub_resource type="StyleBoxFlat" id=9]
 bg_color = Color( 0.270588, 0.270588, 0.270588, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -42,20 +49,13 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=8]
+[sub_resource type="StyleBoxFlat" id=10]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 5
 border_width_top = 5
 border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
-
-[sub_resource type="DynamicFont" id=9]
-size = 30
-font_data = ExtResource( 3 )
-
-[sub_resource type="Theme" id=10]
-default_font = SubResource( 9 )
 
 [node name="settings_Panel" type="Panel"]
 margin_right = 896.0
@@ -82,70 +82,136 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="cuttedBlocks" type="CheckButton" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -51.5
-margin_top = -107.0
-margin_right = 275.5
-margin_bottom = -56.0
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+margin_left = 27.0
+margin_top = 71.0
+margin_right = 867.0
+margin_bottom = 481.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBox" type="VBoxContainer" parent="ScrollContainer"]
+margin_right = 840.0
+margin_bottom = 410.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="d_background" type="CheckButton" parent="ScrollContainer/VBox"]
+margin_right = 840.0
+margin_bottom = 51.0
 theme = SubResource( 3 )
 pressed = true
-text = "Cutted blocks"
+text = "Dynamic Background: "
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="saber_tail" type="CheckButton" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -15.0
-margin_top = 53.0
-margin_right = 255.0
-margin_bottom = 104.0
+[node name="cut_blocks" type="CheckButton" parent="ScrollContainer/VBox"]
+margin_top = 55.0
+margin_right = 840.0
+margin_bottom = 106.0
 theme = SubResource( 3 )
 pressed = true
-text = "Saber tail"
+text = "Cut Blocks: "
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="saber_thickness_label" type="Label" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -142.5
-margin_top = -27.0
-margin_right = 142.5
-margin_bottom = 16.0
+[node name="glare" type="CheckButton" parent="ScrollContainer/VBox"]
+margin_top = 110.0
+margin_right = 840.0
+margin_bottom = 161.0
 theme = SubResource( 3 )
-text = "Saber thickness"
+pressed = true
+text = "Glow: "
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="saber_thicknes" type="HSlider" parent="."]
-margin_left = 256.0
-margin_top = 293.0
-margin_right = 448.0
-margin_bottom = 309.0
-rect_scale = Vector2( 2, 2 )
+[node name="saber_tail" type="CheckButton" parent="ScrollContainer/VBox"]
+margin_top = 165.0
+margin_right = 840.0
+margin_bottom = 216.0
+theme = SubResource( 3 )
+pressed = true
+text = "Saber Tail: "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SaberThicknessRow" type="HBoxContainer" parent="ScrollContainer/VBox"]
+margin_top = 220.0
+margin_right = 840.0
+margin_bottom = 263.0
+
+[node name="saber_thickness_label" type="Label" parent="ScrollContainer/VBox/SaberThicknessRow"]
+margin_right = 323.0
+margin_bottom = 43.0
+theme = SubResource( 3 )
+text = "Saber Thickness: "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="saber_thickness" type="HSlider" parent="ScrollContainer/VBox/SaberThicknessRow"]
+margin_left = 327.0
+margin_right = 840.0
+margin_bottom = 43.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
 min_value = 10.0
 value = 100.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="left_sable_col" type="ColorPickerButton" parent="."]
-margin_left = 256.0
-margin_top = 407.947
-margin_right = 384.0
-margin_bottom = 471.947
+[node name="SaberTypeRow" type="HBoxContainer" parent="ScrollContainer/VBox"]
+margin_top = 267.0
+margin_right = 840.0
+margin_bottom = 310.0
+
+[node name="saber_type_label" type="Label" parent="ScrollContainer/VBox/SaberTypeRow"]
+margin_right = 209.0
+margin_bottom = 43.0
+theme = SubResource( 3 )
+text = "Saber Type:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="saber" type="OptionButton" parent="ScrollContainer/VBox/SaberTypeRow"]
+margin_left = 213.0
+margin_right = 840.0
+margin_bottom = 43.0
+size_flags_horizontal = 3
+theme = SubResource( 5 )
+custom_fonts/font = SubResource( 4 )
+text = "Default saber"
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SaberColorsRow" type="HBoxContainer" parent="ScrollContainer/VBox"]
+margin_top = 314.0
+margin_right = 840.0
+margin_bottom = 357.0
+
+[node name="left_saber_col_label" type="Label" parent="ScrollContainer/VBox/SaberColorsRow"]
+margin_right = 266.0
+margin_bottom = 43.0
+theme = SubResource( 3 )
+text = "Saber Colors: "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="left_saber_col" type="ColorPickerButton" parent="ScrollContainer/VBox/SaberColorsRow"]
+margin_left = 270.0
+margin_right = 553.0
+margin_bottom = 43.0
+size_flags_horizontal = 3
 text = "Left saber"
 flat = true
 color = Color( 1, 0.101961, 0.101961, 1 )
@@ -154,47 +220,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="right_sable_col" type="ColorPickerButton" parent="."]
-margin_left = 512.0
-margin_top = 407.947
-margin_right = 640.0
-margin_bottom = 471.947
+[node name="right_saber_col" type="ColorPickerButton" parent="ScrollContainer/VBox/SaberColorsRow"]
+margin_left = 557.0
+margin_right = 840.0
+margin_bottom = 43.0
+size_flags_horizontal = 3
 text = "Right saber"
 flat = true
 color = Color( 0.101961, 0.101961, 1, 1 )
 edit_alpha = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="glare" type="CheckButton" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -253.0
-margin_top = -107.0
-margin_right = -97.0
-margin_bottom = -56.0
-theme = SubResource( 3 )
-pressed = true
-text = "Glow"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="d_background" type="CheckButton" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -208.0
-margin_top = -184.0
-margin_right = 214.0
-margin_bottom = -133.0
-theme = SubResource( 3 )
-pressed = true
-text = "Dynamic background"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -204,38 +238,25 @@ margin_left = 546.283
 margin_top = 496.0
 margin_right = 692.283
 margin_bottom = 556.0
-theme = SubResource( 5 )
-custom_styles/hover = SubResource( 6 )
-custom_styles/pressed = SubResource( 7 )
-custom_styles/normal = SubResource( 8 )
+theme = SubResource( 7 )
+custom_styles/hover = SubResource( 8 )
+custom_styles/pressed = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
 text = "Default"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="apply" type="Button" parent="."]
-margin_left = 721.352
+margin_left = 719.136
 margin_top = 496.0
-margin_right = 867.352
+margin_right = 865.136
 margin_bottom = 556.0
-theme = SubResource( 5 )
-custom_styles/hover = SubResource( 6 )
-custom_styles/pressed = SubResource( 7 )
-custom_styles/normal = SubResource( 8 )
+theme = SubResource( 7 )
+custom_styles/hover = SubResource( 8 )
+custom_styles/pressed = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
 text = "Apply"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="saber" type="OptionButton" parent="."]
-margin_left = 208.0
-margin_top = 348.0
-margin_right = 419.0
-margin_bottom = 390.0
-theme = SubResource( 10 )
-custom_fonts/font = SubResource( 9 )
-text = "Default saber"
-flat = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -243,14 +264,14 @@ __meta__ = {
 [node name="wipe_check" type="Timer" parent="."]
 wait_time = 5.0
 autostart = true
-[connection signal="toggled" from="cuttedBlocks" to="." method="_on_cuttedBlocks_toggled"]
-[connection signal="toggled" from="saber_tail" to="." method="_on_saber_tail_toggled"]
-[connection signal="value_changed" from="saber_thicknes" to="." method="_on_HSlider_value_changed"]
-[connection signal="color_changed" from="left_sable_col" to="." method="_on_left_sable_col_color_changed"]
-[connection signal="color_changed" from="right_sable_col" to="." method="_on_right_sable_col_color_changed"]
-[connection signal="toggled" from="glare" to="." method="_on_glare_toggled"]
-[connection signal="toggled" from="d_background" to="." method="_on_d_background_toggled"]
+[connection signal="toggled" from="ScrollContainer/VBox/d_background" to="." method="_on_d_background_toggled"]
+[connection signal="toggled" from="ScrollContainer/VBox/cut_blocks" to="." method="_on_cut_blocks_toggled"]
+[connection signal="toggled" from="ScrollContainer/VBox/glare" to="." method="_on_glare_toggled"]
+[connection signal="toggled" from="ScrollContainer/VBox/saber_tail" to="." method="_on_saber_tail_toggled"]
+[connection signal="value_changed" from="ScrollContainer/VBox/SaberThicknessRow/saber_thickness" to="." method="_on_HSlider_value_changed"]
+[connection signal="item_selected" from="ScrollContainer/VBox/SaberTypeRow/saber" to="." method="_on_saber_item_selected"]
+[connection signal="color_changed" from="ScrollContainer/VBox/SaberColorsRow/left_saber_col" to="." method="_on_left_saber_col_color_changed"]
+[connection signal="color_changed" from="ScrollContainer/VBox/SaberColorsRow/right_saber_col" to="." method="_on_right_saber_col_color_changed"]
 [connection signal="button_up" from="defaults" to="." method="_on_Button_button_up"]
 [connection signal="pressed" from="apply" to="." method="_on_apply_pressed"]
-[connection signal="item_selected" from="saber" to="." method="_on_saber_item_selected"]
 [connection signal="timeout" from="wipe_check" to="." method="_on_wipe_check_timeout"]
