@@ -60,6 +60,7 @@ border_color = Color( 1, 1, 1, 1 )
 [node name="settings_Panel" type="Panel"]
 margin_right = 896.0
 margin_bottom = 576.0
+mouse_filter = 1
 custom_styles/panel = SubResource( 1 )
 script = ExtResource( 2 )
 __meta__ = {
@@ -87,18 +88,22 @@ margin_left = 27.0
 margin_top = 71.0
 margin_right = 867.0
 margin_bottom = 481.0
+scroll_horizontal_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="VBox" type="VBoxContainer" parent="ScrollContainer"]
-margin_right = 828.0
-margin_bottom = 412.0
+margin_right = 840.0
+margin_bottom = 467.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="d_background" type="CheckButton" parent="ScrollContainer/VBox"]
-margin_right = 828.0
+margin_right = 840.0
 margin_bottom = 51.0
 theme = SubResource( 3 )
 pressed = true
@@ -109,7 +114,7 @@ __meta__ = {
 
 [node name="cut_blocks" type="CheckButton" parent="ScrollContainer/VBox"]
 margin_top = 55.0
-margin_right = 828.0
+margin_right = 840.0
 margin_bottom = 106.0
 theme = SubResource( 3 )
 pressed = true
@@ -120,7 +125,7 @@ __meta__ = {
 
 [node name="glare" type="CheckButton" parent="ScrollContainer/VBox"]
 margin_top = 110.0
-margin_right = 828.0
+margin_right = 840.0
 margin_bottom = 161.0
 theme = SubResource( 3 )
 pressed = true
@@ -131,7 +136,7 @@ __meta__ = {
 
 [node name="saber_tail" type="CheckButton" parent="ScrollContainer/VBox"]
 margin_top = 165.0
-margin_right = 828.0
+margin_right = 840.0
 margin_bottom = 216.0
 theme = SubResource( 3 )
 pressed = true
@@ -142,7 +147,7 @@ __meta__ = {
 
 [node name="show_fps" type="CheckButton" parent="ScrollContainer/VBox"]
 margin_top = 220.0
-margin_right = 828.0
+margin_right = 840.0
 margin_bottom = 271.0
 theme = SubResource( 3 )
 text = "Show FPS:"
@@ -150,10 +155,21 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SaberThicknessRow" type="HBoxContainer" parent="ScrollContainer/VBox"]
+[node name="bombs_enabled" type="CheckButton" parent="ScrollContainer/VBox"]
 margin_top = 275.0
-margin_right = 828.0
-margin_bottom = 318.0
+margin_right = 840.0
+margin_bottom = 326.0
+theme = SubResource( 3 )
+pressed = true
+text = "Bombs Enabled:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SaberThicknessRow" type="HBoxContainer" parent="ScrollContainer/VBox"]
+margin_top = 330.0
+margin_right = 840.0
+margin_bottom = 373.0
 
 [node name="saber_thickness_label" type="Label" parent="ScrollContainer/VBox/SaberThicknessRow"]
 margin_right = 323.0
@@ -166,7 +182,7 @@ __meta__ = {
 
 [node name="saber_thickness" type="HSlider" parent="ScrollContainer/VBox/SaberThicknessRow"]
 margin_left = 327.0
-margin_right = 828.0
+margin_right = 840.0
 margin_bottom = 43.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -177,9 +193,9 @@ __meta__ = {
 }
 
 [node name="SaberTypeRow" type="HBoxContainer" parent="ScrollContainer/VBox"]
-margin_top = 322.0
-margin_right = 828.0
-margin_bottom = 365.0
+margin_top = 377.0
+margin_right = 840.0
+margin_bottom = 420.0
 
 [node name="saber_type_label" type="Label" parent="ScrollContainer/VBox/SaberTypeRow"]
 margin_right = 209.0
@@ -192,7 +208,7 @@ __meta__ = {
 
 [node name="saber" type="OptionButton" parent="ScrollContainer/VBox/SaberTypeRow"]
 margin_left = 213.0
-margin_right = 828.0
+margin_right = 840.0
 margin_bottom = 43.0
 size_flags_horizontal = 3
 theme = SubResource( 5 )
@@ -204,9 +220,9 @@ __meta__ = {
 }
 
 [node name="SaberColorsRow" type="HBoxContainer" parent="ScrollContainer/VBox"]
-margin_top = 369.0
-margin_right = 828.0
-margin_bottom = 412.0
+margin_top = 424.0
+margin_right = 840.0
+margin_bottom = 467.0
 
 [node name="left_saber_col_label" type="Label" parent="ScrollContainer/VBox/SaberColorsRow"]
 margin_right = 266.0
@@ -219,7 +235,7 @@ __meta__ = {
 
 [node name="left_saber_col" type="ColorPickerButton" parent="ScrollContainer/VBox/SaberColorsRow"]
 margin_left = 270.0
-margin_right = 547.0
+margin_right = 553.0
 margin_bottom = 43.0
 size_flags_horizontal = 3
 text = "Left saber"
@@ -231,8 +247,8 @@ __meta__ = {
 }
 
 [node name="right_saber_col" type="ColorPickerButton" parent="ScrollContainer/VBox/SaberColorsRow"]
-margin_left = 551.0
-margin_right = 828.0
+margin_left = 557.0
+margin_right = 840.0
 margin_bottom = 43.0
 size_flags_horizontal = 3
 text = "Right saber"
@@ -279,6 +295,7 @@ autostart = true
 [connection signal="toggled" from="ScrollContainer/VBox/glare" to="." method="_on_glare_toggled"]
 [connection signal="toggled" from="ScrollContainer/VBox/saber_tail" to="." method="_on_saber_tail_toggled"]
 [connection signal="toggled" from="ScrollContainer/VBox/show_fps" to="." method="_on_show_fps_toggled"]
+[connection signal="toggled" from="ScrollContainer/VBox/bombs_enabled" to="." method="_on_bombs_enabled_toggled"]
 [connection signal="value_changed" from="ScrollContainer/VBox/SaberThicknessRow/saber_thickness" to="." method="_on_HSlider_value_changed"]
 [connection signal="item_selected" from="ScrollContainer/VBox/SaberTypeRow/saber" to="." method="_on_saber_item_selected"]
 [connection signal="color_changed" from="ScrollContainer/VBox/SaberColorsRow/left_saber_col" to="." method="_on_left_saber_col_color_changed"]

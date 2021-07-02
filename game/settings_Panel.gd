@@ -12,6 +12,7 @@ var savedata = {
 	saber_tail = true,
 	glare = false,
 	show_fps = false,
+	bombs_enabled = true,
 	events = true,
 	saber = 0
 }
@@ -27,6 +28,7 @@ onready var d_background = $ScrollContainer/VBox/d_background
 onready var left_saber_col = $ScrollContainer/VBox/SaberColorsRow/left_saber_col
 onready var right_saber_col = $ScrollContainer/VBox/SaberColorsRow/right_saber_col
 onready var show_fps = $ScrollContainer/VBox/show_fps
+onready var bombs_enabled = $ScrollContainer/VBox/bombs_enabled
 
 var sabers = [
 	["Default saber","res://game/sabers/default/default_saber.tscn"],
@@ -61,6 +63,8 @@ func _ready():
 		_on_saber_item_selected(savedata.saber,false)
 	if savedata.has("show_fps"):
 		_on_show_fps_toggled(savedata.show_fps,false)
+	if savedata.has("bombs_enabled"):
+		_on_bombs_enabled_toggled(savedata.bombs_enabled,false)
 
 func save_current_settings():
 	file.open(config_path,File.WRITE)
@@ -172,6 +176,16 @@ func _on_show_fps_toggled(button_pressed,overwrite=true):
 		save_current_settings()
 	else:
 		show_fps.pressed = button_pressed
+
+
+func _on_bombs_enabled_toggled(button_pressed,overwrite=true):
+	game.bombs_enabled = button_pressed
+	
+	if overwrite:
+		savedata.bombs_enabled = button_pressed
+		save_current_settings()
+	else:
+		bombs_enabled.pressed = button_pressed
 	
 #check if A, B and right thumbstick buttons are pressed at the same time to delete settings
 func _on_wipe_check_timeout():

@@ -91,6 +91,7 @@ var _wrong_notes = 0;
 #settings
 var cube_cuts_falloff = true
 var max_cutted_cubes = 32
+var bombs_enabled = true
 
 func restart_map():
 	_audio_synced_after_restart = false
@@ -338,7 +339,7 @@ func _spawn_note(note, current_beat):
 		note_node = cube_left.duplicate();
 	elif (note._type == 1):
 		note_node = cube_right.duplicate();
-	elif (note._type == 3):
+	elif (note._type == 3) and bombs_enabled:
 		is_cube = false
 		note_node = bomb_template.instance()
 	else:
