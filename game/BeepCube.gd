@@ -1,7 +1,5 @@
 # BeepCube is the standard cube that will get cut by the sabers
-extends Spatial
-
-var _note;
+extends Note
 
 # the animation player contains the span animation that is applied to the CubeMeshAnimation node
 onready var _anim = $CubeMeshOrientation/CubeMeshAnimation/AnimationPlayer;
@@ -13,7 +11,6 @@ onready var _mesh_instance : MeshInstance = $CubeMeshOrientation/CubeMeshAnimati
 # reuse it when we create the cut cube pieces
 var _mesh : Mesh = null;
 var _mat = null;
-var speed = 1.0;
 export var min_speed = 0.5;
 
 func _ready():

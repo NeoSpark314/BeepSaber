@@ -35,6 +35,7 @@ onready var wall_template = preload("res://game/Wall/Wall.tscn").instance();
 onready var cube_material_template = preload("res://game/BeepCube_new_material.material");
 onready var cube_half_template = preload("res://game/BeepCube_CutFadeout.gd");
 onready var cube_particles_template = preload("res://game/BeepCube_SliceParticles.tscn");
+export(PackedScene) var bomb_template : PackedScene
 
 var cube_left = null
 var cube_right = null
@@ -330,18 +331,22 @@ const beats_ahead = 4.0;
 const CUBE_DISTANCE = 0.5;
 const CUBE_ROTATIONS = [180, 0, 270, 90, -135, 135, -45, 45, 0];
 
-func _spawn_cube(note, current_beat):
-	var cube = null;
+func _spawn_note(note, current_beat):
+	var note_node = null;
+	var is_cube = true
 	if (note._type == 0):
-		cube = cube_left.duplicate();
+		note_node = cube_left.duplicate();
 	elif (note._type == 1):
-		cube = cube_right.duplicate();
+		note_node = cube_right.duplicate();
+	elif (note._type == 3):
+		is_cube = false
+		note_node = bomb_template.instance()
 	else:
 		return;
 
 	if menu._map_difficulty_noteJumpMovementSpeed > 0:
-		cube.speed = float(menu._map_difficulty_noteJumpMovementSpeed)/9
-	track.add_child(cube);
+		note_node.speed = float(menu._map_difficulty_noteJumpMovementSpeed)/9
+	track.add_child(note_node);
 
 	var line = -(CUBE_DISTANCE * 3.0 / 2.0) + note._lineIndex * CUBE_DISTANCE;
 	var layer = CUBE_DISTANCE + note._lineLayer * CUBE_DISTANCE;
@@ -350,16 +355,17 @@ func _spawn_cube(note, current_beat):
 
 	var distance = note._time - current_beat;
 
-	cube.transform.origin = Vector3(
+	note_node.transform.origin = Vector3(
 		line,
 		CUBE_HEIGHT_OFFSET + layer,
 		-distance * beat_distance);
 
-	cube._cube_mesh_orientation.rotation.z = rotation_z;
-	if note._cutDirection==8:
-		cube._cube_mesh_orientation.rotation.y = deg2rad(180);
+	if is_cube:
+		note_node._cube_mesh_orientation.rotation.z = rotation_z;
+		if note._cutDirection==8:
+			note_node._cube_mesh_orientation.rotation.y = deg2rad(180);
 
-	cube._note = note;
+	note_node._note = note;
 
 # constants used to interpret the '_type' field in map obstacles
 const WALL_TYPE_FULL_HEIGHT = 0;
@@ -409,7 +415,7 @@ func _process_map(dt):
 	# spawn notes
 	var n =_current_map._notes;
 	while (_current_note < n.size() && n[_current_note]._time <= current_beat+beats_ahead):
-		_spawn_cube(n[_current_note], current_beat);
+		_spawn_note(n[_current_note], current_beat);
 		_current_note += 1;
 
 	# spawn obstacles (walls)

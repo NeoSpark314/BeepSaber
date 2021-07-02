@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://game/floor.tscn" type="PackedScene" id=1]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DLabel.tscn" type="PackedScene" id=2]
@@ -23,6 +23,7 @@
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DKeyboard.tscn" type="PackedScene" id=21]
 [ext_resource path="res://game/Points_label_driver.tscn" type="PackedScene" id=22]
 [ext_resource path="res://game/HighscorePanel.tscn" type="PackedScene" id=23]
+[ext_resource path="res://game/Bomb/Bomb.tscn" type="PackedScene" id=24]
 [ext_resource path="res://game/ui/NameSelector/NameSelector.tscn" type="PackedScene" id=25]
 
 [sub_resource type="Environment" id=1]
@@ -40,6 +41,7 @@ radius = 0.07
 "main_game",
 ]]
 script = ExtResource( 9 )
+bomb_template = ExtResource( 24 )
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." groups=[
 "enviroment",

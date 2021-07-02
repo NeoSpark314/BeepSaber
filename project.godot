@@ -44,6 +44,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://game/ui/NameSelector/NameSelector.gd"
 }, {
+"base": "Spatial",
+"class": "Note",
+"language": "GDScript",
+"path": "res://game/Note.gd"
+}, {
 "base": "RigidBody",
 "class": "OQClass_GrabbableRigidBody",
 "language": "GDScript",
@@ -92,6 +97,7 @@ _global_script_class_icons={
 "HighscoreTable": "",
 "ImageUtils": "",
 "NameSelector": "",
+"Note": "",
 "OQClass_GrabbableRigidBody": "",
 "OQClass_GrabbableToolPart": "",
 "OQClass_Tool": "",
@@ -181,6 +187,7 @@ ui_end={
 3d_physics/layer_3="Player"
 3d_physics/layer_4="Floor"
 3d_physics/layer_5="Saber"
+3d_physics/layer_6="Bombs"
 
 [physics]
 
