@@ -777,6 +777,8 @@ func _on_LeftLightSaber_area_entered(area : Area):
 			_reset_combo()
 			# remove bomb
 			area.get_parent().get_parent().queue_free()
+			# perform haptic feedback for bomb explosion
+			left_controller.simple_rumble(1.0, 0.15);
 
 
 func _on_RightLightSaber_area_entered(area : Area):
@@ -787,6 +789,8 @@ func _on_RightLightSaber_area_entered(area : Area):
 			_reset_combo()
 			# remove bomb
 			area.get_parent().get_parent().queue_free()
+			# perform haptic feedback for bomb explosion
+			right_controller.simple_rumble(1.0, 0.15);
 
 func _on_PlayerHead_area_entered(area):
 	if area.is_in_group("wall"):
