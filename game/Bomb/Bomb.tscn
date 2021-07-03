@@ -106,6 +106,7 @@ material/0 = ExtResource( 1 )
 [node name="Area" type="Area" parent="BombAnimation" groups=[
 "bomb",
 ]]
+monitoring = false
 collision_layer = 32
 collision_mask = 16
 
