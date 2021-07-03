@@ -6,10 +6,14 @@
 [sub_resource type="SphereMesh" id=1]
 radius = 0.8
 height = 1.6
+radial_segments = 16
+rings = 16
 
 [sub_resource type="CylinderMesh" id=2]
 top_radius = 0.1
 bottom_radius = 0.1
+radial_segments = 10
+rings = 1
 
 [sub_resource type="SphereShape" id=3]
 radius = 0.224242
