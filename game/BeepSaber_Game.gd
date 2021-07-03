@@ -437,7 +437,7 @@ func _process_map(dt):
 
 		# remove children that go to far
 		if ((c.global_transform.origin.z - depth) > 2.0):
-			if not c is Wall:
+			if c is BeepCube:
 				_reset_combo();
 			c.queue_free();
 

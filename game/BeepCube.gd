@@ -1,5 +1,6 @@
 # BeepCube is the standard cube that will get cut by the sabers
 extends Note
+class_name BeepCube
 
 # the animation player contains the span animation that is applied to the CubeMeshAnimation node
 onready var _anim = $CubeMeshOrientation/CubeMeshAnimation/AnimationPlayer;
