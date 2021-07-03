@@ -344,6 +344,9 @@ func _spawn_note(note, current_beat):
 		note_node = bomb_template.instance()
 	else:
 		return;
+		
+	# disable collision until it gets nearer to player (helps with performance)
+	note_node.collision_disabled = true
 
 	if menu._map_difficulty_noteJumpMovementSpeed > 0:
 		note_node.speed = float(menu._map_difficulty_noteJumpMovementSpeed)/9
@@ -434,6 +437,10 @@ func _process_map(dt):
 		if c is Wall:
 			# compute wall's depth based on duration
 			depth = beat_distance * c._obstacle._duration
+		else:
+			# enable bomb/cube collision when it gets closer enough to player
+			if c.global_transform.origin.z > -2.5:
+				c.collision_disabled = false
 
 		# remove children that go to far
 		if ((c.global_transform.origin.z - depth) > 2.0):

@@ -12,6 +12,7 @@ onready var _mesh_instance : MeshInstance = $CubeMeshOrientation/CubeMeshAnimati
 # reuse it when we create the cut cube pieces
 var _mesh : Mesh = null;
 var _mat = null;
+var collision_disabled = false setget _set_colision_disabled
 export var min_speed = 0.5;
 
 func _ready():
@@ -38,4 +39,9 @@ func duplicate_create(color : Color):
 
 func update_color_only(color : Color):
 	_mat.set_shader_param("color",color);
+	
+func _set_colision_disabled(value):
+	collision_disabled = value
+	$CubeMeshOrientation/BeepCube_Big/CollisionBig.disabled = value
+	$CubeMeshOrientation/BeepCube_Small/CollisionSmall.disabled = value
 
