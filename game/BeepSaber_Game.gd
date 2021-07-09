@@ -183,6 +183,7 @@ func show_menu():
 	$MainMenu_OQ_UI2DCanvas.visible = true;
 	$Settings_canvas.visible = false;
 	$Online_library.visible = true;
+	$event_driver.reset_rings()
 	
 func show_pause_menu():
 	if ($PauseMenu_canvas.visible or not song_player.playing):

@@ -112,6 +112,7 @@ PlayCount="*res://game/scripts/PlayCountTable.gd"
 
 window/size/width=960
 window/size/height=540
+window/vsync/use_vsync=false
 
 [gdnative]
 

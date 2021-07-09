@@ -36,24 +36,16 @@ func _update_level(dt):
 
 		prev_hz = hz
 		
-	#procces ring rotations
-	if ring_rot_speed > 0:
-		for ring in $Level/rings.get_children():
-			if ring is Spatial:
-				var rot = ring_rot_speed
-				if ring_rot_inv_dir: rot *= -1
-				ring.rotate_z((rot * dt) * (float(ring.get_index()+1)/5))
-			
 
 # create the level data that is displayed
 func _setup_level():
-	# create a specrum analyzer
+	# create a spectrum analyzer
 	AudioServer.add_bus_effect(0, AudioEffectSpectrumAnalyzer.new());
 	_spectrum = AudioServer.get_bus_effect_instance(0,0);
-	# and create some cubes to display it in the level (updated in _update_level(dt))
+	# create some cubes to display it in the level (updated in _update_level)
 	var s = $Level/SpectrumBar;
 	_spectrum_nodes.push_back(s);
-	for  i in range(0, 7):
+	for i in range(0, 7):
 		s = s.duplicate()
 		$Level.add_child(s);
 		s.translation.x += 2.0;
@@ -69,13 +61,14 @@ func update_colors():
 		
 func set_all_off():
 	if not disabled:
-		for i in [0,1,2,3,4]:
+		for i in range(5):
 			change_light_color(i,-1)
 	else:
 		update_colors()
-		for i in [1,2,3]:
-			change_light_color(i,-1)
+		for i in range(3):
+			change_light_color(i+1,-1)
 		$Level/rings.visible = false
+
 func set_all_on():
 		update_colors()
 		$Level/rings.visible = true
@@ -83,37 +76,21 @@ func set_all_on():
 func procces_event(data,beat):
 	if disabled: return
 #	print(data)
-	if int(data._type) in [0,1,2,3,4]:
+	if int(data._type) in range(5):
 		match int(data._value):
-			0:
-				change_light_color(data._type,-1)
-			1:
-				change_light_color(data._type,game.COLOR_RIGHT)
-			2:
-				change_light_color(data._type,game.COLOR_RIGHT,1)
-			3:
-				change_light_color(data._type,game.COLOR_RIGHT,2)
-			5:
-				change_light_color(data._type,game.COLOR_LEFT)
-			6:
-				change_light_color(data._type,game.COLOR_LEFT,1)
-			7:
-				change_light_color(data._type,game.COLOR_LEFT,2)
+			0: change_light_color(data._type,-1)
+			1: change_light_color(data._type,game.COLOR_RIGHT)
+			2: change_light_color(data._type,game.COLOR_RIGHT,1)
+			3: change_light_color(data._type,game.COLOR_RIGHT,2)
+			5: change_light_color(data._type,game.COLOR_LEFT)
+			6: change_light_color(data._type,game.COLOR_LEFT,1)
+			7: change_light_color(data._type,game.COLOR_LEFT,2)
 	else:
 		match int(data._type):
 			8:
-				if not $Level/rings/Tween.is_active():
-					ring_rot_inv_dir = bool(randi()%2)
-				$Level/rings/Tween.stop(self,"ring_rot_speed")
-				$Level/rings/Tween.interpolate_property(self,"ring_rot_speed",3.0,0.0,2,Tween.TRANS_QUAD,Tween.EASE_OUT)
-				$Level/rings/Tween.start()
+				$Level/rings.rings_rotate()
 			9:
-				$Level/rings/AnimationPlayer.stop(false)
-				if $Level/rings/AnimationPlayer.current_animation == "out":
-					$Level/rings/AnimationPlayer.play("in")
-				else:
-					$Level/rings/AnimationPlayer.play("out")
-					
+				$Level/rings.rings_out_in()
 			12:
 				var val = float(data._value)/8
 				$Level/t2/AnimationPlayer.playback_speed = val
@@ -156,13 +133,16 @@ func change_light_color(type,color=-1,transition_mode=0):
 			m.albedo_color = Color.black
 		tween.stop_all()
 		$Level/Sphere.material_override.set_shader_param("bg_%d_intensity"%int(type),0.0)
+		$Level/rings.material_override.set_shader_param("color",Color.black)
 		group.visible = false
 		return
 	else:
 		for m in shader:
 			m.set_shader_param("albedo_color",color)
 		$Level/Sphere.material_override.set_shader_param("bg_%d_tint"%int(type),color)
-	
+		if type == 4:
+			$Level/rings.material_override.set_shader_param("albedo_color",color)
+			
 	match transition_mode:
 		0:
 			for m in material:
@@ -185,6 +165,9 @@ func change_light_color(type,color=-1,transition_mode=0):
 			if material[0].albedo_color == Color(0,0,0):
 				group.visible = false
 			
+
+func reset_rings():
+	$Level/rings.reset()
 
 func _on_Tween_tween_step(object, key, elapsed, value : Color, id):
 	if id == null: return
