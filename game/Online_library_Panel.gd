@@ -89,7 +89,7 @@ func update_list(request):
 		"text_search":
 			var search_text = request.search_text
 			$mode.text = search_text
-			httpreq.request("https://beatsaver.com/api/search/text/%s?q=%s" % [page,search_text.percent_encode()])
+			httpreq.request("https://beatsaver.com/api/search/text/%s?q=%s&automapper=true" % [page,search_text.percent_encode()])
 		"uploader":
 			var uploader_id = request.uploader_id
 			$mode.text = "Uploader"
@@ -304,7 +304,7 @@ func _on_gotoMapsBy_pressed():
 	prev_request = {
 		"type" : "uploader",
 		"page" : 0,
-		"uploader_id" : selected_song["uploader"]["_id"]
+		"uploader_id" : selected_song["uploader"]["id"]
 	}
 	update_list(prev_request)
 	
