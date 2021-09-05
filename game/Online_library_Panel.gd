@@ -82,6 +82,8 @@ func update_list(request):
 		item_selected = -1
 	httpcoverdownload.cancel_request()
 	httpreq.cancel_request()
+	prev_page_available = page
+	next_page_available = null
 	
 	match request.type:
 		"list":
@@ -91,7 +93,8 @@ func update_list(request):
 		"text_search":
 			var search_text = request.search_text
 			$mode.text = search_text
-			httpreq.request("https://beatsaver.com/api/search/text/%s?q=%s&automapper=true" % [page,search_text.percent_encode()])
+			vr.log_info("Requesting page %s" % page)
+			httpreq.request("https://beatsaver.com/api/search/text/%s?q=%s&sortOrder=Relevance&automapper=true" % [page,search_text.percent_encode()])
 		"uploader":
 			var uploader_id = request.uploader_id
 			$mode.text = "Uploader"
@@ -113,12 +116,7 @@ func _get_selected_song():
 func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	if result == 0:
 		var json_data = parse_json(body.get_string_from_utf8())
-		prev_page_available = null
-		next_page_available = null
-		if json_data.has("prevPage"):
-			prev_page_available = json_data["prevPage"]
-		if json_data.has("nextPage"):
-			next_page_available = json_data["nextPage"]
+		next_page_available = prev_page_available + 1
 			
 		if json_data.has("docs"):
 			json_data = json_data["docs"]
