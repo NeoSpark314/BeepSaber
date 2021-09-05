@@ -278,7 +278,14 @@ func _update_all_covers():
 
 func update_next_cover():
 	if _current_cover_to_download < song_data.size():
-		httpcoverdownload.request("https://beatsaver.com%s" % song_data[_current_cover_to_download]["coverURL"])
+		var cover_url = _get_cover_url_from_song_data(song_data[_current_cover_to_download])
+		
+		if cover_url == null:
+			# song didn't have a cover. skip this cover and move to next one
+			_current_cover_to_download += 1
+			update_next_cover()
+		else:
+			httpcoverdownload.request(cover_url)
 
 func _update_cover(result, response_code, headers, body):
 	if result == 0:
@@ -336,3 +343,17 @@ func _on_back_pressed():
 	update_list(prev_request)
 	
 	$back.visible = back_stack.size() > 0
+	
+func _get_cover_url_from_song_data(song_data):
+	var song_versions = song_data['versions']
+	var version_data = null
+	if len(song_versions) == 1:
+		version_data = song_versions[0]# is there always 1 version?!?
+	elif len(song_versions) > 1:
+		vr.log_warning("The are %d versions for this song, but only getting cover for the first. song_data = %s" % [len(song_versions),song_data])
+		version_data = song_versions[0]
+	else:
+		vr.log_warning("No version info available in song_data: %s" % song_data)
+		return null
+		
+	return version_data['coverURL']
