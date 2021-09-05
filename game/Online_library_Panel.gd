@@ -9,7 +9,7 @@ var next_page_available = null
 var list_modes = ["hot","rating","latest","downloads","plays"]
 var search_word = ""
 var item_selected = -1
-var downloading = []#[["name","key"]]
+var downloading = []#[["name","version_info"]]
 onready var httpreq = HTTPRequest.new()
 onready var httpdownload = HTTPRequest.new()
 onready var httpcoverdownload = HTTPRequest.new()
@@ -181,14 +181,14 @@ Difficulties:%s
 func _on_download_button_up():
 	OS.request_permissions()
 	if item_selected == -1: return
-	downloading.insert(downloading.size(),[song_data[item_selected]["name"],song_data[item_selected]["key"]])
+	var version_info = song_data[item_selected]['versions'][0]
+	downloading.insert(downloading.size(),[song_data[item_selected]["name"],version_info])
 	download_next()
-#	$download.disabled = true
 	
 	
 func download_next():
 	if downloading.size() > 0:
-		httpdownload.request("https://beatsaver.com/api/download/key/%s" % downloading[0][1])
+		httpdownload.request(downloading[0][1]['downloadURL'])
 		$Label.text = "Downloading: %s - %d left" % [str(downloading[0][0]),downloading.size()-1]
 		$Label.visible = true
 		
