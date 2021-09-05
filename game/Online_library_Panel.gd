@@ -6,7 +6,9 @@ var current_list = 0
 # not requestable (ie. reached end of the list)
 var prev_page_available = null
 var next_page_available = null
-var list_modes = ["hot","rating","latest","downloads","plays"]
+# Older API used to support more lists. temporarily limiting to ones that still work
+#var list_modes = ["hot","rating","latest","downloads","plays"]
+var list_modes = ["plays"]
 var search_word = ""
 var item_selected = -1
 var downloading = []#[["name","version_info"]]
@@ -28,7 +30,7 @@ var prev_request = {
 	"page" : 0,
 	
 	# type-specific fields when type is "list"
-	"list" : "hot"
+	"list" : "plays"
 	
 	# type-specific fields when type is "text_search"
 	# "search_text" = ""
@@ -41,7 +43,7 @@ export(NodePath) var game;
 export(NodePath) var keyboard;
 
 func enable():
-	update_list({"type":"list","page":0,"list":"hot"})
+	update_list({"type":"list","page":0,"list":"plays"})
 	$ColorRect.visible = false
 
 func _ready():
