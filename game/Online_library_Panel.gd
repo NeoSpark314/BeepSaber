@@ -93,7 +93,6 @@ func update_list(request):
 		"text_search":
 			var search_text = request.search_text
 			$mode.text = search_text
-			vr.log_info("Requesting page %s" % page)
 			httpreq.request("https://beatsaver.com/api/search/text/%s?q=%s&sortOrder=Relevance&automapper=true" % [page,search_text.percent_encode()])
 		"uploader":
 			var uploader_id = request.uploader_id
