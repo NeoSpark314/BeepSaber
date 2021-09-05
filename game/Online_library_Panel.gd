@@ -154,6 +154,7 @@ func _on_ItemList_item_selected(index):
 	item_selected = index
 	var selected_data = _get_selected_song()
 	var metadata = selected_data["metadata"]
+	var dur_s = int(metadata["duration"])
 	var version = selected_data["versions"][0]
 	goto_maps_by.text = "Maps by %s" % metadata["levelAuthorName"]
 	goto_maps_by.visible = true
@@ -163,7 +164,7 @@ func _on_ItemList_item_selected(index):
 	var text = """[center]%s By %s[/center]
 
 Map author: %s
-Duration: %s
+Duration: %dm %ds
 Difficulties:%s
 
 [center]Description:[/center]
@@ -171,7 +172,7 @@ Difficulties:%s
 		metadata["songName"],
 		metadata["songAuthorName"],
 		metadata["levelAuthorName"],
-		metadata["duration"],
+		dur_s/60,dur_s%60,
 		difficulties,
 		selected_data["description"],
 	]
