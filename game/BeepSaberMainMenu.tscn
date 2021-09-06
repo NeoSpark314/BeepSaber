@@ -63,19 +63,19 @@ border_width_right = 4
 border_width_bottom = 4
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="Theme" id=11]
+[sub_resource type="Theme" id=9]
 default_font = ExtResource( 7 )
 
-[sub_resource type="DynamicFont" id=12]
+[sub_resource type="DynamicFont" id=10]
 size = 30
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=9]
+[sub_resource type="DynamicFont" id=11]
 size = 28
 font_data = ExtResource( 5 )
 
-[sub_resource type="Theme" id=10]
-default_font = SubResource( 9 )
+[sub_resource type="Theme" id=12]
+default_font = SubResource( 11 )
 
 [node name="BeepSaberMainMenu" type="Panel"]
 margin_right = 1408.0
@@ -206,8 +206,8 @@ margin_left = 139.0
 margin_top = 12.0
 margin_right = 845.0
 margin_bottom = 60.0
-theme = SubResource( 11 )
-custom_fonts/font = SubResource( 12 )
+theme = SubResource( 9 )
+custom_fonts/font = SubResource( 10 )
 text = "All Songs"
 flat = true
 align = 1
@@ -220,7 +220,7 @@ margin_left = 864.0
 margin_top = 64.0
 margin_right = 1040.0
 margin_bottom = 320.0
-theme = SubResource( 10 )
+theme = SubResource( 12 )
 custom_styles/bg = SubResource( 8 )
 custom_colors/font_color_selected = Color( 1, 0.494118, 0.494118, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
