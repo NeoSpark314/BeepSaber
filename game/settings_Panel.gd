@@ -140,7 +140,9 @@ func _on_d_background_toggled(button_pressed,overwrite=true):
 
 func _on_saber_item_selected(index,overwrite=true):
 	for ls in get_tree().get_nodes_in_group("lightsaber"):
-		ls.set_saber(sabers[index][1])
+		var saber_exists = range(sabers.size()).has(index)
+		if saber_exists: ls.set_saber(sabers[index][1])
+		else: ls.set_saber(sabers[0][1])
 	yield(get_tree(),"idle_frame")
 	game.update_saber_colors()
 	_on_saber_tail_toggled(savedata.saber_tail,false)
