@@ -15,9 +15,11 @@ var downloading = []#[["name","version_info"]]
 onready var httpreq = HTTPRequest.new()
 onready var httpdownload = HTTPRequest.new()
 onready var httpcoverdownload = HTTPRequest.new()
+onready var httppreviewdownload = HTTPRequest.new()
 onready var placeholder_cover = preload("res://game/data/beepsaber_logo.png")
 onready var goto_maps_by = $gotoMapsBy
 onready var v_scroll = $ItemList.get_v_scroll()
+onready var song_prev = $song_prev
 
 const MAX_BACK_STACK_DEPTH = 10
 # series of previous requests that you can go back to
@@ -66,6 +68,11 @@ func _ready():
 	httpcoverdownload.download_chunk_size = 65536
 	get_tree().get_root().add_child(httpcoverdownload)
 	httpcoverdownload.connect("request_completed",self,"_update_cover")
+	
+	httppreviewdownload.use_threads = true
+	httppreviewdownload.download_chunk_size = 65536
+	get_tree().get_root().add_child(httppreviewdownload)
+	httppreviewdownload.connect("request_completed",self,"_on_preview_download_completed")
 	
 	if keyboard != null:
 		keyboard.connect("text_input_enter",self,"_text_input_enter")
@@ -177,6 +184,7 @@ Difficulties:%s
 	
 	$TextureRect.texture = $ItemList.get_item_icon(index)
 
+	httppreviewdownload.request(selected_data['versions'][0]['previewURL'])
 
 func _on_download_button_up():
 	OS.request_permissions()
@@ -247,7 +255,13 @@ func _on_HTTPRequest_download_completed(result, response_code, headers, body):
 		
 	download_next()
 		
-
+func _on_preview_download_completed(result, response_code, headers, body):
+	if result == 0:
+		var stream = AudioStreamMP3.new()
+		stream.data = body
+		song_prev.stop()
+		song_prev.stream = stream
+		song_prev.play(0)
 
 func _on_search_button_up():
 	keyboard.visible=true
