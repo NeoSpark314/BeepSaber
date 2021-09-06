@@ -6,10 +6,12 @@ var current_list = 0
 # not requestable (ie. reached end of the list)
 var prev_page_available = null
 var next_page_available = null
-var list_modes = ["hot","rating","latest","downloads","plays"]
+# Older API used to support more lists. temporarily limiting to ones that still work
+#var list_modes = ["hot","rating","latest","downloads","plays"]
+var list_modes = ["plays"]
 var search_word = ""
 var item_selected = -1
-var downloading = []#[["name","key"]]
+var downloading = []#[["name","version_info"]]
 onready var httpreq = HTTPRequest.new()
 onready var httpdownload = HTTPRequest.new()
 onready var httpcoverdownload = HTTPRequest.new()
@@ -28,7 +30,7 @@ var prev_request = {
 	"page" : 0,
 	
 	# type-specific fields when type is "list"
-	"list" : "hot"
+	"list" : "plays"
 	
 	# type-specific fields when type is "text_search"
 	# "search_text" = ""
@@ -41,7 +43,7 @@ export(NodePath) var game;
 export(NodePath) var keyboard;
 
 func enable():
-	update_list({"type":"list","page":0,"list":"hot"})
+	update_list({"type":"list","page":0,"list":"plays"})
 	$ColorRect.visible = false
 
 func _ready():
@@ -80,6 +82,8 @@ func update_list(request):
 		item_selected = -1
 	httpcoverdownload.cancel_request()
 	httpreq.cancel_request()
+	prev_page_available = page
+	next_page_available = null
 	
 	match request.type:
 		"list":
@@ -89,7 +93,7 @@ func update_list(request):
 		"text_search":
 			var search_text = request.search_text
 			$mode.text = search_text
-			httpreq.request("https://beatsaver.com/api/search/text/%s?q=%s" % [page,search_text.percent_encode()])
+			httpreq.request("https://beatsaver.com/api/search/text/%s?q=%s&sortOrder=Relevance&automapper=true" % [page,search_text.percent_encode()])
 		"uploader":
 			var uploader_id = request.uploader_id
 			$mode.text = "Uploader"
@@ -111,12 +115,7 @@ func _get_selected_song():
 func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	if result == 0:
 		var json_data = parse_json(body.get_string_from_utf8())
-		prev_page_available = null
-		next_page_available = null
-		if json_data.has("prevPage"):
-			prev_page_available = json_data["prevPage"]
-		if json_data.has("nextPage"):
-			next_page_available = json_data["nextPage"]
+		next_page_available = prev_page_available + 1
 			
 		if json_data.has("docs"):
 			json_data = json_data["docs"]
@@ -152,24 +151,25 @@ func _on_ItemList_item_selected(index):
 	item_selected = index
 	var selected_data = _get_selected_song()
 	var metadata = selected_data["metadata"]
+	var dur_s = int(metadata["duration"])
+	var version = selected_data["versions"][0]
 	goto_maps_by.text = "Maps by %s" % metadata["levelAuthorName"]
 	goto_maps_by.visible = true
 	var difficulties = ""
-	for d in metadata["difficulties"].keys():
-		if metadata["difficulties"][d] == true:
-			difficulties += " %s"%d
+	for diff in version['diffs']:
+		difficulties += " %s" % diff['difficulty']
 	var text = """[center]%s By %s[/center]
 
 Map author: %s
-Duration: %s
-difficulties:%s
+Duration: %dm %ds
+Difficulties:%s
 
 [center]Description:[/center]
 %s""" % [
-		selected_data["metadata"]["songName"],
-		selected_data["metadata"]["songAuthorName"],
-		selected_data["metadata"]["levelAuthorName"],
-		selected_data["metadata"]["duration"],
+		metadata["songName"],
+		metadata["songAuthorName"],
+		metadata["levelAuthorName"],
+		dur_s/60,dur_s%60,
 		difficulties,
 		selected_data["description"],
 	]
@@ -181,14 +181,14 @@ difficulties:%s
 func _on_download_button_up():
 	OS.request_permissions()
 	if item_selected == -1: return
-	downloading.insert(downloading.size(),[song_data[item_selected]["name"],song_data[item_selected]["key"]])
+	var version_info = song_data[item_selected]['versions'][0]
+	downloading.insert(downloading.size(),[song_data[item_selected]["name"],version_info])
 	download_next()
-#	$download.disabled = true
 	
 	
 func download_next():
 	if downloading.size() > 0:
-		httpdownload.request("https://beatsaver.com/api/download/key/%s" % downloading[0][1])
+		httpdownload.request(downloading[0][1]['downloadURL'])
 		$Label.text = "Downloading: %s - %d left" % [str(downloading[0][0]),downloading.size()-1]
 		$Label.visible = true
 		
@@ -278,7 +278,14 @@ func _update_all_covers():
 
 func update_next_cover():
 	if _current_cover_to_download < song_data.size():
-		httpcoverdownload.request("https://beatsaver.com%s" % song_data[_current_cover_to_download]["coverURL"])
+		var cover_url = _get_cover_url_from_song_data(song_data[_current_cover_to_download])
+		
+		if cover_url == null:
+			# song didn't have a cover. skip this cover and move to next one
+			_current_cover_to_download += 1
+			update_next_cover()
+		else:
+			httpcoverdownload.request(cover_url)
 
 func _update_cover(result, response_code, headers, body):
 	if result == 0:
@@ -297,7 +304,7 @@ func _on_gotoMapsBy_pressed():
 	prev_request = {
 		"type" : "uploader",
 		"page" : 0,
-		"uploader_id" : selected_song["uploader"]["_id"]
+		"uploader_id" : selected_song["uploader"]["id"]
 	}
 	update_list(prev_request)
 	
@@ -336,3 +343,17 @@ func _on_back_pressed():
 	update_list(prev_request)
 	
 	$back.visible = back_stack.size() > 0
+	
+func _get_cover_url_from_song_data(song_data):
+	var song_versions = song_data['versions']
+	var version_data = null
+	if len(song_versions) == 1:
+		version_data = song_versions[0]# is there always 1 version?!?
+	elif len(song_versions) > 1:
+		vr.log_warning("The are %d versions for this song, but only getting cover for the first. song_data = %s" % [len(song_versions),song_data])
+		version_data = song_versions[0]
+	else:
+		vr.log_warning("No version info available in song_data: %s" % song_data)
+		return null
+		
+	return version_data['coverURL']
