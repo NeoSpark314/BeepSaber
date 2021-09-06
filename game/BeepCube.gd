@@ -33,11 +33,11 @@ func _ready():
 func duplicate_create(color : Color):
 	var mi = $CubeMeshOrientation/CubeMeshAnimation/BeepCube_Mesh;
 	_mat = mi.material_override.duplicate(true);
-	_mat.set_shader_param("albedo",color);
+	_mat.set_shader_param("color",color);
 	mi.mesh = mi.mesh.duplicate();
 	mi.material_override = _mat;
 	_mesh = mi.mesh;
 
 func update_color_only(color : Color):
-	_mat.set_shader_param("albedo",color);
+	_mat.set_shader_param("color",color);
 
