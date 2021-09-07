@@ -525,6 +525,7 @@ var _lpf = null;
 func _ready():
 	_main_menu = $MainMenu_OQ_UI2DCanvas.find_node("BeepSaberMainMenu", true, false);
 	_main_menu.initialize(self);
+	$Online_library.ui_control.main_menu_node = _main_menu
 
 	cube_left = cube_template.duplicate();
 	cube_right = cube_template.duplicate();

@@ -2,6 +2,8 @@ extends Panel
 
 var song_data = []
 var current_list = 0
+# reference to the main main node (used for playing downloadable song previews)
+var main_menu_node = null
 # the next requestable pages for the current list; null if prev/next page is
 # not requestable (ie. reached end of the list)
 var prev_page_available = null
@@ -19,7 +21,6 @@ onready var httppreviewdownload = HTTPRequest.new()
 onready var placeholder_cover = preload("res://game/data/beepsaber_logo.png")
 onready var goto_maps_by = $gotoMapsBy
 onready var v_scroll = $ItemList.get_v_scroll()
-onready var song_prev = $song_prev
 
 const MAX_BACK_STACK_DEPTH = 10
 # series of previous requests that you can go back to
@@ -257,11 +258,13 @@ func _on_HTTPRequest_download_completed(result, response_code, headers, body):
 		
 func _on_preview_download_completed(result, response_code, headers, body):
 	if result == 0:
-		var stream = AudioStreamMP3.new()
-		stream.data = body
-		song_prev.stop()
-		song_prev.stream = stream
-		song_prev.play(0)
+		# request preview to be played by the main menu node
+		if main_menu_node != null:
+			main_menu_node.play_preview(
+				body, # song data buffer
+				0,    # start previous at time 0
+				-1,   # play preview song for entire duration
+				'mp3')# bsaver has all it's previews in mp3 format for now
 
 func _on_search_button_up():
 	keyboard.visible=true

@@ -266,8 +266,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="song_prev" type="AudioStreamPlayer" parent="."]
-
 [connection signal="item_selected" from="ItemList" to="." method="_on_ItemList_item_selected"]
 [connection signal="button_up" from="mode" to="." method="_on_mode_button_up"]
 [connection signal="button_up" from="download" to="." method="_on_download_button_up"]

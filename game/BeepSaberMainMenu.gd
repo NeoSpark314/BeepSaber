@@ -213,7 +213,7 @@ func _load_cover(cover_path, filename):
 	tex.create_from_image(ImageUtils.get_img_from_buffer(img_data));
 	return tex;
 
-func _play_preview(filepath_or_buffer, start_time = 0, duration = -1, buffer_data_type_hint = 'ogg'):
+func play_preview(filepath_or_buffer, start_time = 0, duration = -1, buffer_data_type_hint = 'ogg'):
 	var data := PoolByteArray()
 	
 	if filepath_or_buffer is String:
@@ -313,7 +313,7 @@ func _select_song(id):
 	
 	# preview song
 	var song_filepath = _map_info._path + _map_info._songFilename
-	_play_preview(song_filepath,_map_info._previewStartTime,_map_info._previewDuration)
+	play_preview(song_filepath,_map_info._previewStartTime,_map_info._previewDuration)
 
 func _on_stop_prev_timeout():
 	song_prev_Tween.stop_all()
