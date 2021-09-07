@@ -230,7 +230,6 @@ __meta__ = {
 }
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
-download_chunk_size = 65536
 timeout = 4
 
 [node name="Songs_Label2" type="Label" parent="."]
@@ -265,6 +264,7 @@ volume_db = -60.0
 
 [node name="stop_prev" type="Timer" parent="song_prev"]
 one_shot = true
+
 [connection signal="pressed" from="Play_Button" to="." method="_on_Play_Button_pressed"]
 [connection signal="button_up" from="Delete_Button" to="." method="_on_Delete_Button_button_up"]
 [connection signal="pressed" from="Exit_Button" to="." method="_on_Exit_Button_pressed"]

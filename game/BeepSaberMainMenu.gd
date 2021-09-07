@@ -213,6 +213,59 @@ func _load_cover(cover_path, filename):
 	tex.create_from_image(ImageUtils.get_img_from_buffer(img_data));
 	return tex;
 
+func _play_preview(filepath_or_buffer, start_time = 0, duration = -1, buffer_data_type_hint = 'ogg'):
+	var data := PoolByteArray()
+	
+	if filepath_or_buffer is String:
+		# get song preview data from file
+		var snd_file = File.new()
+		snd_file.open(filepath_or_buffer, File.READ)
+		data = snd_file.get_buffer(snd_file.get_len())
+		snd_file.close()
+		# TODO parse type hint from file extension
+		buffer_data_type_hint = 'ogg'
+	elif filepath_or_buffer is PoolByteArray:
+		# take song preview data from buffer as-is. trust passed type hint
+		data = filepath_or_buffer
+	else:
+		vr.log_error('_play_preview() - Unsupported song preview data type %s' % typeof(filepath_or_buffer))
+		return
+		
+	# load song data into audio stream based on type hint
+	var stream = null
+	if buffer_data_type_hint == 'ogg' or buffer_data_type_hint == 'egg':
+		stream = AudioStreamOGGVorbis.new()
+	elif buffer_data_type_hint == 'mp3':
+		stream = AudioStreamMP3.new()
+	else:
+		vr.log_error('_play_preview() - Unsupported buffer_data_type_hint %s' % buffer_data_type_hint)
+		return
+	
+	stream.data = data
+	if duration == -1:
+		# assume preview duration based on parsed audio length
+		duration = stream.get_length()
+	
+	# fade out preview if ones already running
+	if song_prev.playing:
+		song_prev_Tween.stop_all()
+		song_prev_Tween.interpolate_property(song_prev,"volume_db",
+			song_prev.volume_db, -50, song_prev_transition_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+		song_prev_Tween.start()
+		yield(get_tree().create_timer(song_prev_transition_time),"timeout")
+		song_prev.stop()
+	
+	# start the requested preview
+	if not _beepsaber.song_player.playing:
+		song_prev.stream = stream;
+		
+		song_prev_Tween.stop_all()
+		song_prev_Tween.interpolate_property(song_prev,"volume_db",
+			song_prev.volume_db, 0, song_prev_transition_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+		song_prev_Tween.start()
+		
+		song_prev.play(float(start_time))
+		$song_prev/stop_prev.start(float(duration))
 
 # a loaded beat map will have an info dictionary; this is a global variable here
 # to later extend it to load different maps
@@ -258,29 +311,9 @@ func _select_song(id):
 	
 	_select_difficulty(0)
 	
-	#preview song
-	if song_prev.playing:
-		song_prev_Tween.stop_all()
-		song_prev_Tween.interpolate_property(song_prev,"volume_db",
-			song_prev.volume_db, -50, song_prev_transition_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
-		song_prev_Tween.start()
-		yield(get_tree().create_timer(song_prev_transition_time),"timeout")
-		song_prev.stop()
-	if not _beepsaber.song_player.playing:
-		var snd_file = File.new()
-		snd_file.open(_map_info._path + _map_info._songFilename, File.READ)
-		var stream = AudioStreamOGGVorbis.new()
-		stream.data = snd_file.get_buffer(snd_file.get_len())
-		snd_file.close()
-		song_prev.stream = stream;
-		
-		song_prev_Tween.stop_all()
-		song_prev_Tween.interpolate_property(song_prev,"volume_db",
-			song_prev.volume_db, 0, song_prev_transition_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
-		song_prev_Tween.start()
-		
-		song_prev.play(float(_map_info._previewStartTime))
-		$song_prev/stop_prev.start(float(_map_info._previewDuration))
+	# preview song
+	var song_filepath = _map_info._path + _map_info._songFilename
+	_play_preview(song_filepath,_map_info._previewStartTime,_map_info._previewDuration)
 
 func _on_stop_prev_timeout():
 	song_prev_Tween.stop_all()
