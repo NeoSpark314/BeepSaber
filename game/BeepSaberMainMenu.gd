@@ -222,8 +222,7 @@ func play_preview(filepath_or_buffer, start_time = 0, duration = -1, buffer_data
 		snd_file.open(filepath_or_buffer, File.READ)
 		data = snd_file.get_buffer(snd_file.get_len())
 		snd_file.close()
-		# TODO parse type hint from file extension
-		buffer_data_type_hint = 'ogg'
+		buffer_data_type_hint = filepath_or_buffer.get_extension()
 	elif filepath_or_buffer is PoolByteArray:
 		# take song preview data from buffer as-is. trust passed type hint
 		data = filepath_or_buffer
