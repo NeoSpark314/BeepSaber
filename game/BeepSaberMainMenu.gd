@@ -198,14 +198,19 @@ func _load_song_info(load_path):
 	return map_info;
 	
 func _load_cover(cover_path, filename):
-	if not (filename.ends_with(".jpg") or filename.ends_with(".png")):
-		print("wrong format");
-		return;
+	# read cover image data from file into a buffer
+	var file = File.new()
+	var img_data = null
+	if file.open(cover_path+filename, File.READ) == OK:
+		img_data = file.get_buffer(file.get_len())
+		file.close()
+	else:
+		vr.log_error('Failed to open cover image file "%s"' % cover_path+filename)
+		return
+		
+	# parse buffer into an ImageTexture
 	var tex = ImageTexture.new();
-	var img = Image.new();
-	
-	img.load(cover_path+filename);
-	tex.create_from_image(img); #instead of loading from resources, load form file
+	tex.create_from_image(ImageUtils.get_img_from_buffer(img_data));
 	return tex;
 
 
