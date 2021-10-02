@@ -3,8 +3,16 @@ extends Control
 onready var beatsage_request_ := $BeatSageRequest
 
 func _on_SubmitButton_pressed():
-	# TODO fill this out
-	var request_data = {}
+	var request_data = {
+		"youtube_url": "https://www.youtube.com/watch?v=iqJKohK2f8g",
+		"audio_metadata_title": "Heartbreak Anthem",
+		"audio_metadata_artist": "Galantis, David Guetta, Little Mix",
+		"difficulties": "Hard,Expert,Normal,ExpertPlus",
+		"modes": "Standard",
+		"events": "DotBlocks",
+		"environment": "DefaultEnvironment",
+		"system_tag": "v2",
+	}
 	if beatsage_request_.request(request_data):
 		$SubmitButton.disabled = true
 

@@ -37,9 +37,9 @@ var request_id_ = null
 func _ready():
 	_transition_state(State.eIdle)
 
-func request(request_data):
+func request(request_obj):
 	var okay = true
-	var data_to_send = '--boundary\nContent-Disposition: form-data; name="youtube_url"\n\nhttps://www.youtube.com/watch?v=uD4SrW5m8NE\n--boundary\nContent-Disposition: form-data; name="audio_metadata_title"\n\nHeartbreak Anthem\n--boundary\nContent-Disposition: form-data; name="audio_metadata_artist"\n\nGalantis, David Guetta, Little Mix\n--boundary\nContent-Disposition: form-data; name="difficulties"\n\nHard,Expert,Normal,ExpertPlus\n--boundary\nContent-Disposition: form-data; name="modes"\n\nStandard\n--boundary\nContent-Disposition: form-data; name="events"\n\nDotBlocks\n--boundary\nContent-Disposition: form-data; name="environment"\n\nDefaultEnvironment\n--boundary\nContent-Disposition: form-data; name="system_tag"\n\nv2\n--boundary--'
+	var data_to_send = _build_request_data(request_obj)
 	var headers = ["Content-Type: multipart/form-data; boundary=boundary"]
 	
 	# initiate request
@@ -63,6 +63,18 @@ func request(request_data):
 		_transition_state(State.eIdle)
 	
 	return okay
+
+func _build_request_data(request_obj):
+	var request_data = ""
+	for key in request_obj.keys():
+		var value = request_obj[key]
+		request_data += "--boundary\n"
+		request_data += 'Content-Disposition: form-data; name="%s"\n\n' % key
+		request_data += '%s\n' % str(value)
+	
+	request_data += "--boundary--\n"
+	
+	return request_data
 
 func _transition_state(next_state):
 	match (next_state):
