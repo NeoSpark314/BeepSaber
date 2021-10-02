@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://game/ui/BeatSageUI/BeatSageTest.gd" type="Script" id=1]
+[ext_resource path="res://game/BeatSageRequest/BeatSageRequest.tscn" type="PackedScene" id=2]
+
+[node name="BeatSageTest" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SubmitButton" type="Button" parent="."]
+margin_left = 9.0
+margin_top = 9.0
+margin_right = 66.0
+margin_bottom = 29.0
+text = "Submit"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BeatSageRequest" parent="." instance=ExtResource( 2 )]
+
+[connection signal="pressed" from="SubmitButton" to="." method="_on_SubmitButton_pressed"]
+[connection signal="download_complete" from="BeatSageRequest" to="." method="_on_BeatSageRequest_download_complete"]
+[connection signal="heartbeat" from="BeatSageRequest" to="." method="_on_BeatSageRequest_heartbeat"]
+[connection signal="request_failed" from="BeatSageRequest" to="." method="_on_BeatSageRequest_request_failed"]
