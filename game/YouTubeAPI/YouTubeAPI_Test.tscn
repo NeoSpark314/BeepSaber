@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://game/YouTubeAPI/YouTubeAPI_Test.gd" type="Script" id=1]
+[ext_resource path="res://game/YouTubeAPI/YouTubeAPI.tscn" type="PackedScene" id=2]
+
+[node name="YouTubeAPI_Test" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -1.0
+margin_right = -1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="YouTubeAPI" parent="." instance=ExtResource( 2 )]
+
+[node name="Label" type="Label" parent="."]
+margin_left = 12.0
+margin_top = 15.0
+margin_right = 116.0
+margin_bottom = 29.0
+text = "YouTube Search:"
+
+[node name="SearchLineEdit" type="LineEdit" parent="."]
+margin_left = 121.0
+margin_top = 10.0
+margin_right = 442.0
+margin_bottom = 34.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SearchButton" type="Button" parent="."]
+margin_left = 451.0
+margin_top = 12.0
+margin_right = 505.0
+margin_bottom = 32.0
+text = "Search"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="failed_request" from="YouTubeAPI" to="." method="_on_YouTubeAPI_failed_request"]
+[connection signal="search_complete" from="YouTubeAPI" to="." method="_on_YouTubeAPI_search_complete"]
+[connection signal="pressed" from="SearchButton" to="." method="_on_SearchButton_pressed"]
