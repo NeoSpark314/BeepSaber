@@ -5,7 +5,14 @@ signal search_complete(videos)
 
 onready var search_request_ = $SearchRequest
 
+const DEBUG_SEARCH = false
 func search(search_text: String):
+	if DEBUG_SEARCH:
+		var result_data = _get_search_result_data_from_html_file()
+		var videos = _get_videos_from_search_result(result_data)
+		emit_signal("search_complete",videos)
+		return
+	
 	var search_query = search_text.replace(' ','+')
 	var res = search_request_.request(
 		'https://www.youtube.com/results?search_query=%s' % search_query)
