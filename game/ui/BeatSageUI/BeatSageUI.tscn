@@ -2,7 +2,7 @@
 
 [ext_resource path="res://game/BlackWhiteThem.tres" type="Theme" id=1]
 [ext_resource path="res://game/ui/BeatSageUI/BeatSageUI.gd" type="Script" id=2]
-[ext_resource path="res://game/YouTubeAPI/youtube_icon.png" type="Texture" id=3]
+[ext_resource path="res://game/ui/YouTubeUI/youtube_icon.png" type="Texture" id=3]
 [ext_resource path="res://game/ui/BeatSageUI/beat_sage_icon.png" type="Texture" id=4]
 [ext_resource path="res://game/ui/BeatSageUI/BeatSageRequest/BeatSageRequest.tscn" type="PackedScene" id=5]
 

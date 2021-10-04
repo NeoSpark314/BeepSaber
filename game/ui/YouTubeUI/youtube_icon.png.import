@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/youtube_icon.png-44db046b8b8a165651a04a4f686a02df.s3tc.stex"
-path.etc="res://.import/youtube_icon.png-44db046b8b8a165651a04a4f686a02df.etc.stex"
+path.s3tc="res://.import/youtube_icon.png-c68cd52846b3c27fca3fb91bb0ae8fde.s3tc.stex"
+path.etc="res://.import/youtube_icon.png-c68cd52846b3c27fca3fb91bb0ae8fde.etc.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://game/YouTubeAPI/youtube_icon.png"
-dest_files=[ "res://.import/youtube_icon.png-44db046b8b8a165651a04a4f686a02df.s3tc.stex", "res://.import/youtube_icon.png-44db046b8b8a165651a04a4f686a02df.etc.stex" ]
+source_file="res://game/ui/YouTubeUI/youtube_icon.png"
+dest_files=[ "res://.import/youtube_icon.png-c68cd52846b3c27fca3fb91bb0ae8fde.s3tc.stex", "res://.import/youtube_icon.png-c68cd52846b3c27fca3fb91bb0ae8fde.etc.stex" ]
 
 [params]
 
