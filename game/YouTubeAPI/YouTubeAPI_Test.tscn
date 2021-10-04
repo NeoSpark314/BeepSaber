@@ -61,9 +61,33 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="SelectSongButton" type="Button" parent="."]
+margin_left = 1096.0
+margin_top = 880.0
+margin_right = 1304.0
+margin_bottom = 944.0
+disabled = true
+text = "Select Song"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BackButton" type="Button" parent="."]
+margin_left = 1312.0
+margin_top = 880.0
+margin_right = 1520.0
+margin_bottom = 944.0
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="ThumbnailRequestPool" parent="." instance=ExtResource( 3 )]
 
 [connection signal="failed_request" from="YouTubeAPI" to="." method="_on_YouTubeAPI_failed_request"]
 [connection signal="search_complete" from="YouTubeAPI" to="." method="_on_YouTubeAPI_search_complete"]
 [connection signal="pressed" from="SearchButton" to="." method="_on_SearchButton_pressed"]
+[connection signal="item_selected" from="ResultsList" to="." method="_on_ResultsList_item_selected"]
+[connection signal="pressed" from="SelectSongButton" to="." method="_on_SelectSongButton_pressed"]
+[connection signal="pressed" from="BackButton" to="." method="_on_BackButton_pressed"]
 [connection signal="request_complete" from="ThumbnailRequestPool" to="." method="_on_ThumbnailRequestPool_request_complete"]

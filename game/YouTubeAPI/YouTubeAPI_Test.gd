@@ -1,14 +1,20 @@
 extends Panel
 
+signal song_selected(video_metadata)
+
 onready var api := $YouTubeAPI
 onready var search_line_edit := $SearchLineEdit
 onready var search_button := $SearchButton
 onready var results_list := $ResultsList
+onready var select_song_button := $SelectSongButton
 onready var thumbnail_request_pool := $ThumbnailRequestPool
 
 var _video_idx_by_id = {}
 
+var selected_video_metadata = null
+
 func _on_SearchButton_pressed():
+	select_song_button.disabled = true
 	results_list.clear()
 	_video_idx_by_id.clear()
 	search_button.disabled = true
@@ -22,7 +28,6 @@ func _on_YouTubeAPI_failed_request():
 
 func _on_YouTubeAPI_search_complete(videos):
 	search_button.disabled = false
-	print('found %d search result(s)' % videos.size())
 	
 	for video in videos:
 		var id = video['videoId']
@@ -70,3 +75,15 @@ func _on_ThumbnailRequestPool_request_complete(result, response_code, headers, b
 		results_list.set_item_icon(item_idx, img_tex)
 	else:
 		vr.log_error('received error code from thumbnail request' % response_code)
+
+
+func _on_SelectSongButton_pressed():
+	emit_signal("song_selected",selected_video_metadata)
+	self.hide()
+
+func _on_BackButton_pressed():
+	self.hide()
+
+func _on_ResultsList_item_selected(index):
+	selected_video_metadata = results_list.get_item_metadata(index)
+	select_song_button.disabled = false

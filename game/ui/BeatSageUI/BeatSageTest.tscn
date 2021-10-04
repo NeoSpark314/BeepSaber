@@ -237,6 +237,7 @@ __meta__ = {
 
 [node name="BeatSageRequest" parent="." instance=ExtResource( 2 )]
 
+[connection signal="pressed" from="YoutubeButton" to="." method="_on_YoutubeButton_pressed"]
 [connection signal="pressed" from="SubmitButton" to="." method="_on_SubmitButton_pressed"]
 [connection signal="download_complete" from="BeatSageRequest" to="." method="_on_BeatSageRequest_download_complete"]
 [connection signal="heartbeat" from="BeatSageRequest" to="." method="_on_BeatSageRequest_heartbeat"]

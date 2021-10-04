@@ -17,7 +17,7 @@ func search(search_text: String):
 	var res = search_request_.request(
 		'https://www.youtube.com/results?search_query=%s' % search_query)
 	if res == OK:
-		print('requested...')
+		pass
 	else:
 		vr.log_error('Failed to request YouTube search for text "%s"' % search_text)
 		emit_signal("failed_request")

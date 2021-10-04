@@ -1,5 +1,7 @@
 extends Panel
 
+export (NodePath) var youtube_ui
+
 onready var beatsage_request_ := $BeatSageRequest
 onready var song_url := $SongURL
 
@@ -24,6 +26,8 @@ const MODELS = {
 }
 
 func _ready():
+	youtube_ui = get_node(youtube_ui)
+	
 	model_select.clear()
 	for key in MODELS.keys():
 		model_select.add_item(key)
@@ -87,3 +91,7 @@ func _on_BeatSageRequest_heartbeat():
 func _on_BeatSageRequest_request_failed():
 	vr.log_error("BeatSage request failed!")
 	$SubmitButton.disabled = false
+
+func _on_YoutubeButton_pressed():
+	if is_instance_valid(youtube_ui):
+		youtube_ui.visible = true
