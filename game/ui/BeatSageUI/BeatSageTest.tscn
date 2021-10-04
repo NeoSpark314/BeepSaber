@@ -1,21 +1,235 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://game/ui/BeatSageUI/BeatSageTest.gd" type="Script" id=1]
 [ext_resource path="res://game/BeatSageRequest/BeatSageRequest.tscn" type="PackedScene" id=2]
+[ext_resource path="res://game/ui/BeatSageUI/beat_sage_icon.png" type="Texture" id=3]
+[ext_resource path="res://game/BlackWhiteThem.tres" type="Theme" id=4]
+[ext_resource path="res://game/YouTubeAPI/youtube_icon.png" type="Texture" id=5]
 
-[node name="BeatSageTest" type="Control"]
+[node name="BeatSageTest" type="Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_right = 576.0
+margin_bottom = 420.0
+theme = ExtResource( 4 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Icon" type="TextureRect" parent="."]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 490.0
+margin_bottom = 128.0
+texture = ExtResource( 3 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SongLabel" type="Label" parent="."]
+margin_left = 32.0
+margin_top = 144.0
+margin_right = 257.0
+margin_bottom = 192.0
+text = "Select Song:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SongURL" type="LineEdit" parent="."]
+margin_left = 32.0
+margin_top = 208.0
+margin_right = 872.0
+margin_bottom = 272.0
+placeholder_text = "Paste a link (Youtube, Soundcloud, etc.)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="YoutubeButton" type="TextureButton" parent="."]
+margin_left = 888.0
+margin_top = 216.0
+margin_right = 1104.0
+margin_bottom = 264.0
+texture_normal = ExtResource( 5 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DifficultyLabel" type="Label" parent="."]
+margin_left = 32.0
+margin_top = 312.0
+margin_right = 331.0
+margin_bottom = 360.0
+text = "Difficulty Levels:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ExperimentalLabel" type="Label" parent="."]
+margin_left = 16.0
+margin_top = 896.0
+margin_right = 487.0
+margin_bottom = 944.0
+text = "(*) = Experimental Feature"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DifficultyNormal" type="CheckBox" parent="."]
+margin_left = 32.0
+margin_top = 368.0
+margin_right = 200.0
+margin_bottom = 432.0
+pressed = true
+text = "Normal"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DifficultyHard" type="CheckBox" parent="."]
+margin_left = 32.0
+margin_top = 448.0
+margin_right = 200.0
+margin_bottom = 512.0
+pressed = true
+text = "Hard"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DifficultyExpert" type="CheckBox" parent="."]
+margin_left = 216.0
+margin_top = 368.0
+margin_right = 384.0
+margin_bottom = 432.0
+pressed = true
+text = "Expert"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DifficultyExpertPlus" type="CheckBox" parent="."]
+margin_left = 216.0
+margin_top = 448.0
+margin_right = 384.0
+margin_bottom = 512.0
+pressed = true
+text = "Expert+"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GameModeLabel" type="Label" parent="."]
+margin_left = 488.0
+margin_top = 312.0
+margin_right = 787.0
+margin_bottom = 360.0
+text = "Game Mode:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModeStandard" type="CheckBox" parent="."]
+margin_left = 488.0
+margin_top = 368.0
+margin_right = 712.0
+margin_bottom = 432.0
+pressed = true
+text = "Standard"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModeNoArrows" type="CheckBox" parent="."]
+margin_left = 488.0
+margin_top = 448.0
+margin_right = 712.0
+margin_bottom = 512.0
+text = "No Arrows"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModeOneSaber" type="CheckBox" parent="."]
+margin_left = 728.0
+margin_top = 368.0
+margin_right = 952.0
+margin_bottom = 432.0
+text = "One Saber (*)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SongEventsLabel" type="Label" parent="."]
+margin_left = 32.0
+margin_top = 552.0
+margin_right = 331.0
+margin_bottom = 600.0
+text = "Song Events:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EventsBombs" type="CheckBox" parent="."]
+margin_left = 32.0
+margin_top = 608.0
+margin_right = 256.0
+margin_bottom = 672.0
+text = "Bombs"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EventsDotBlocks" type="CheckBox" parent="."]
+margin_left = 32.0
+margin_top = 688.0
+margin_right = 256.0
+margin_bottom = 752.0
+pressed = true
+text = "Dot Blocks"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EventsObstacles" type="CheckBox" parent="."]
+margin_left = 272.0
+margin_top = 608.0
+margin_right = 496.0
+margin_bottom = 672.0
+text = "Obstacles (*)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModelLabel" type="Label" parent="."]
+margin_left = 592.0
+margin_top = 552.0
+margin_right = 891.0
+margin_bottom = 600.0
+text = "AI Model:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModelButton" type="OptionButton" parent="."]
+margin_left = 592.0
+margin_top = 608.0
+margin_right = 1128.0
+margin_bottom = 672.0
+text = "V2"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="SubmitButton" type="Button" parent="."]
-margin_left = 9.0
-margin_top = 9.0
-margin_right = 66.0
-margin_bottom = 29.0
+margin_left = 1320.0
+margin_top = 864.0
+margin_right = 1516.0
+margin_bottom = 944.0
 text = "Submit"
 __meta__ = {
 "_edit_use_anchors_": false

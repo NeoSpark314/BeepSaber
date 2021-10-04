@@ -1,15 +1,17 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://game/YouTubeAPI/YouTubeAPI_Test.gd" type="Script" id=1]
 [ext_resource path="res://game/YouTubeAPI/YouTubeAPI.tscn" type="PackedScene" id=2]
 [ext_resource path="res://game/scripts/HTTPRequestPool.tscn" type="PackedScene" id=3]
 [ext_resource path="res://game/YouTubeAPI/youtube_icon.png" type="Texture" id=4]
+[ext_resource path="res://game/BlackWhiteThem.tres" type="Theme" id=5]
 
-[node name="YouTubeAPI_Test" type="Control"]
+[node name="YouTubeAPI_Test" type="Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -1.0
-margin_right = -1.0
+margin_right = 576.0
+margin_bottom = 420.0
+theme = ExtResource( 5 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -18,10 +20,10 @@ __meta__ = {
 [node name="YouTubeAPI" parent="." instance=ExtResource( 2 )]
 
 [node name="YoutubeIcon" type="TextureRect" parent="."]
-margin_left = 9.0
-margin_top = 5.0
-margin_right = 153.0
-margin_bottom = 37.0
+margin_left = 32.0
+margin_top = 24.0
+margin_right = 212.0
+margin_bottom = 64.0
 texture = ExtResource( 4 )
 expand = true
 __meta__ = {
@@ -29,30 +31,32 @@ __meta__ = {
 }
 
 [node name="SearchLineEdit" type="LineEdit" parent="."]
-margin_left = 164.0
-margin_top = 10.0
-margin_right = 485.0
-margin_bottom = 34.0
+margin_left = 224.0
+margin_top = 16.0
+margin_right = 944.0
+margin_bottom = 72.0
 text = "heartbreak anthem"
+caret_blink = true
+caret_blink_speed = 0.5
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="SearchButton" type="Button" parent="."]
-margin_left = 494.0
-margin_top = 12.0
-margin_right = 548.0
-margin_bottom = 32.0
+margin_left = 952.0
+margin_top = 16.0
+margin_right = 1088.0
+margin_bottom = 72.0
 text = "Search"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ResultsList" type="ItemList" parent="."]
-margin_left = 7.0
-margin_top = 42.0
-margin_right = 654.0
-margin_bottom = 473.0
+margin_left = 16.0
+margin_top = 80.0
+margin_right = 1088.0
+margin_bottom = 944.0
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -1,4 +1,4 @@
-extends Control
+extends Panel
 
 onready var api := $YouTubeAPI
 onready var search_line_edit := $SearchLineEdit
