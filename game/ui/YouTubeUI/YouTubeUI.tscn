@@ -7,10 +7,8 @@
 [ext_resource path="res://game/ui/YouTubeUI/youtube_icon.png" type="Texture" id=5]
 
 [node name="YouTubeUI" type="Panel"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = 576.0
-margin_bottom = 420.0
+margin_right = 1536.0
+margin_bottom = 960.0
 theme = ExtResource( 1 )
 script = ExtResource( 2 )
 __meta__ = {
