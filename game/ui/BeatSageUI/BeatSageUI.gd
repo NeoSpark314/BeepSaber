@@ -26,7 +26,10 @@ const MODELS = {
 }
 
 func _ready():
+	# setup youtube search UI and connect signal handlers
 	youtube_ui = get_node(youtube_ui)
+	if is_instance_valid(youtube_ui):
+		youtube_ui.connect("song_selected",self,"_on_youtube_song_selected")
 	
 	model_select.clear()
 	for key in MODELS.keys():
@@ -94,4 +97,9 @@ func _on_BeatSageRequest_request_failed():
 
 func _on_YoutubeButton_pressed():
 	if is_instance_valid(youtube_ui):
-		youtube_ui.visible = true
+		youtube_ui.show()
+
+# emitted by the YouTube search dialog when the player selects a video
+func _on_youtube_song_selected(video_metadata):
+	var video_url = "https://www.youtube.com/watch?v=%d" % video_metadata['id']
+	song_url.text = video_url

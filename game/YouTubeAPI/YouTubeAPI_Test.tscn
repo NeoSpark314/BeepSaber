@@ -86,6 +86,7 @@ __meta__ = {
 
 [connection signal="failed_request" from="YouTubeAPI" to="." method="_on_YouTubeAPI_failed_request"]
 [connection signal="search_complete" from="YouTubeAPI" to="." method="_on_YouTubeAPI_search_complete"]
+[connection signal="focus_entered" from="SearchLineEdit" to="." method="_on_SearchLineEdit_focus_entered"]
 [connection signal="pressed" from="SearchButton" to="." method="_on_SearchButton_pressed"]
 [connection signal="item_selected" from="ResultsList" to="." method="_on_ResultsList_item_selected"]
 [connection signal="pressed" from="SelectSongButton" to="." method="_on_SelectSongButton_pressed"]

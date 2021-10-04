@@ -2,6 +2,9 @@ extends Panel
 
 signal song_selected(video_metadata)
 
+# path to a Oculus Quest toolkit keyboard (search for searching youtube)
+export (NodePath) var keyboard
+
 onready var api := $YouTubeAPI
 onready var search_line_edit := $SearchLineEdit
 onready var search_button := $SearchButton
@@ -12,6 +15,12 @@ onready var thumbnail_request_pool := $ThumbnailRequestPool
 var _video_idx_by_id = {}
 
 var selected_video_metadata = null
+
+func _ready():
+	# setup keybaord reference and text input signal handler
+	keyboard = get_node(keyboard)
+	if is_instance_valid(keyboard):
+		keyboard.connect("text_input_enter",self,"_on_keybaord_text_input_enter")
 
 func _on_SearchButton_pressed():
 	select_song_button.disabled = true
@@ -87,3 +96,14 @@ func _on_BackButton_pressed():
 func _on_ResultsList_item_selected(index):
 	selected_video_metadata = results_list.get_item_metadata(index)
 	select_song_button.disabled = false
+
+func _on_SearchLineEdit_focus_entered():
+	if is_instance_valid(keyboard):
+		keyboard.show()
+
+func _on_keybaord_text_input_enter(text):
+	# only handle text inputs while the UI is visible
+	# Note: we could be sharing the keyboard with other dialogs too. Should
+	# probably handle this a litte more ellegantly at some point...
+	if visible:
+		search_line_edit.text = text

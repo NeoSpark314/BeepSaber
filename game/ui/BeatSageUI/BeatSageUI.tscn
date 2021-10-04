@@ -1,18 +1,18 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://game/ui/BeatSageUI/BeatSageTest.gd" type="Script" id=1]
-[ext_resource path="res://game/BeatSageRequest/BeatSageRequest.tscn" type="PackedScene" id=2]
-[ext_resource path="res://game/ui/BeatSageUI/beat_sage_icon.png" type="Texture" id=3]
-[ext_resource path="res://game/BlackWhiteThem.tres" type="Theme" id=4]
-[ext_resource path="res://game/YouTubeAPI/youtube_icon.png" type="Texture" id=5]
+[ext_resource path="res://game/BlackWhiteThem.tres" type="Theme" id=1]
+[ext_resource path="res://game/ui/BeatSageUI/BeatSageUI.gd" type="Script" id=2]
+[ext_resource path="res://game/YouTubeAPI/youtube_icon.png" type="Texture" id=3]
+[ext_resource path="res://game/ui/BeatSageUI/beat_sage_icon.png" type="Texture" id=4]
+[ext_resource path="res://game/ui/BeatSageUI/BeatSageRequest/BeatSageRequest.tscn" type="PackedScene" id=5]
 
-[node name="BeatSageTest" type="Panel"]
+[node name="BeatSageUI" type="Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_right = 576.0
 margin_bottom = 420.0
-theme = ExtResource( 4 )
-script = ExtResource( 1 )
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -22,7 +22,7 @@ margin_left = 16.0
 margin_top = 16.0
 margin_right = 490.0
 margin_bottom = 128.0
-texture = ExtResource( 3 )
+texture = ExtResource( 4 )
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -53,7 +53,7 @@ margin_left = 888.0
 margin_top = 216.0
 margin_right = 1104.0
 margin_bottom = 264.0
-texture_normal = ExtResource( 5 )
+texture_normal = ExtResource( 3 )
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -235,7 +235,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="BeatSageRequest" parent="." instance=ExtResource( 2 )]
+[node name="BeatSageRequest" parent="." instance=ExtResource( 5 )]
 
 [connection signal="pressed" from="YoutubeButton" to="." method="_on_YoutubeButton_pressed"]
 [connection signal="pressed" from="SubmitButton" to="." method="_on_SubmitButton_pressed"]
