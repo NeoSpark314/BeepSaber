@@ -33,6 +33,11 @@ const HEARTBEAT_PERIOD = 3
 
 var state_ = State.eIdle
 var request_id_ = null
+var download_dir = ""
+
+# the name of the zip file for the current request
+# Note: cleared once return back to idle state
+var _zip_filename = ""
 
 func _ready():
 	_transition_state(State.eIdle)
@@ -41,6 +46,8 @@ func request(request_obj):
 	var okay = true
 	var data_to_send = _build_request_data(request_obj)
 	var headers = ["Content-Type: multipart/form-data; boundary=boundary"]
+	_zip_filename = _get_zipname(request_obj)
+	print('zip filename = %s' % _zip_filename)
 	
 	# initiate request
 	var res = create_request_.request(
@@ -64,6 +71,43 @@ func request(request_obj):
 	
 	return okay
 
+func _get_zipname(request_obj):
+	var filename = "BeatSage_"
+	filename += request_obj['audio_metadata_title'] + " - "
+	filename += request_obj['audio_metadata_artist'] + " ("
+	filename += request_obj['system_tag'] + " "
+	
+	for diff in request_obj['difficulties'].split(','):
+		if diff == "Hard":
+			filename += 'H'
+		elif diff == "Expert":
+			filename += 'E'
+		elif diff == "Normal":
+			filename += 'N'
+		elif diff == "ExpertPlus":
+			filename += 'E+'
+	filename += ','
+	
+	for mode in request_obj['modes'].split(','):
+		if mode == 'Standard':
+			filename += 'S'
+		elif mode == 'NoArrows':
+			filename += 'N'
+		elif mode == 'OneSaber':
+			filename += 'O'
+	filename += ','
+	
+	for event in request_obj['events'].split(','):
+		if event == 'DotBlocks':
+			filename += 'D'
+		elif event == 'Obstacles':
+			filename += 'O'
+		elif event == 'Bombs':
+			filename += 'B'
+	filename += ').zip'
+	
+	return filename
+
 func _build_request_data(request_obj):
 	var request_data = ""
 	for key in request_obj.keys():
@@ -81,6 +125,7 @@ func _transition_state(next_state):
 		State.eIdle:
 			heartbeat_timer_.stop()
 			request_id_ = null
+			_zip_filename = ""
 		State.eRequested:
 			heartbeat_timer_.stop()
 		State.ePending:
@@ -184,7 +229,7 @@ func _on_DownloadRequest_request_completed(result, response_code, headers, body)
 	
 	if response_code == HTTPClient.RESPONSE_OK:
 		# store downloaded song data
-		var zippath = "beatsage_download.zip"
+		var zippath = download_dir + _zip_filename
 		var file = File.new()
 		if file.open(zippath,File.WRITE) == OK:
 			file.store_buffer(body)

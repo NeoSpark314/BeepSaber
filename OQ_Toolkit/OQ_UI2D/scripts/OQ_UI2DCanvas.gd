@@ -1,5 +1,6 @@
 tool
 extends Spatial
+class_name OQ_UI2DCanvas
 
 var ui_control : Control = null;
 

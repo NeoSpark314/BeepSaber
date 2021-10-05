@@ -62,20 +62,21 @@ func _get_search_result_data_from_html(html_text: String):
 		search_results = json.result
 	else:
 		emit_signal("failed_request")
-		vr.log_error("failed to parse search result JSON")
+		vr.log_error('failed to parse search result JSON "%s"' % result_str)
 		
 	return search_results
 		
 func _get_videos_from_search_result(search_result):
 	var videos = []
-	for content in search_result['contents']['twoColumnSearchResultsRenderer']['primaryContents']['sectionListRenderer']['contents']:
-		if content.has('itemSectionRenderer'):
-			var videos_content = content['itemSectionRenderer']['contents']
-			for v_content in videos_content:
-				if ! v_content.has('videoRenderer'):
-					continue
-				videos.append(v_content['videoRenderer'])
-			break
+	if search_result.has('contents'):
+		for content in search_result['contents']['twoColumnSearchResultsRenderer']['primaryContents']['sectionListRenderer']['contents']:
+			if content.has('itemSectionRenderer'):
+				var videos_content = content['itemSectionRenderer']['contents']
+				for v_content in videos_content:
+					if ! v_content.has('videoRenderer'):
+						continue
+					videos.append(v_content['videoRenderer'])
+				break
 	return videos
 
 func _on_SearchRequest_request_completed(result, response_code, headers, body):

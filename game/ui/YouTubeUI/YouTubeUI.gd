@@ -22,6 +22,32 @@ func _ready():
 	if is_instance_valid(keyboard):
 		keyboard.connect("text_input_enter",self,"_on_keybaord_text_input_enter")
 
+# override hide() method to handle case where UI is inside a OQ_UI2DCanvas
+func hide():
+	var parent_canvas = self
+	while parent_canvas != null:
+		if parent_canvas is OQ_UI2DCanvas:
+			break
+		parent_canvas = parent_canvas.get_parent()
+		
+	if parent_canvas == null:
+		self.hide()
+	else:
+		parent_canvas.hide()
+
+# override show() method to handle case where UI is inside a OQ_UI2DCanvas
+func show():
+	var parent_canvas = self
+	while parent_canvas != null:
+		if parent_canvas is OQ_UI2DCanvas:
+			break
+		parent_canvas = parent_canvas.get_parent()
+		
+	if parent_canvas == null:
+		self.show()
+	else:
+		parent_canvas.show()
+
 func _on_SearchButton_pressed():
 	select_song_button.disabled = true
 	results_list.clear()

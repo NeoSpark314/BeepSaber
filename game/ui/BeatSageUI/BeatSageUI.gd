@@ -25,7 +25,13 @@ const MODELS = {
 	"V2-Flow (Better flow, less creative)" : "v2-flow"
 }
 
+# TODO move these to a shared constants location
+const BS_TEMP_DIR = "/sdcard/BeepSaber/temp/"
+const BS_SONG_DIR = "/sdcard/BeepSaber/Songs/"
+
 func _ready():
+	beatsage_request_.download_dir = BS_TEMP_DIR;
+	
 	# setup youtube search UI and connect signal handlers
 	youtube_ui = get_node(youtube_ui)
 	if is_instance_valid(youtube_ui):
@@ -34,6 +40,32 @@ func _ready():
 	model_select.clear()
 	for key in MODELS.keys():
 		model_select.add_item(key)
+
+# override hide() method to handle case where UI is inside a OQ_UI2DCanvas
+func hide():
+	var parent_canvas = self
+	while parent_canvas != null:
+		if parent_canvas is OQ_UI2DCanvas:
+			break
+		parent_canvas = parent_canvas.get_parent()
+		
+	if parent_canvas == null:
+		self.hide()
+	else:
+		parent_canvas.hide()
+		
+# override show() method to handle case where UI is inside a OQ_UI2DCanvas
+func show():
+	var parent_canvas = self
+	while parent_canvas != null:
+		if parent_canvas is OQ_UI2DCanvas:
+			break
+		parent_canvas = parent_canvas.get_parent()
+		
+	if parent_canvas == null:
+		self.show()
+	else:
+		parent_canvas.show()
 
 func _on_SubmitButton_pressed():
 	var difficulties = ""
@@ -85,8 +117,25 @@ func _on_SubmitButton_pressed():
 		$SubmitButton.disabled = true
 
 func _on_BeatSageRequest_download_complete(filepath):
+	var okay = true
 	print('download complete!')
 	$SubmitButton.disabled = false
+	
+	var dir = Directory.new()
+	var song_dir_name = filepath.get_basename().get_file()
+	var song_out_dir = BS_SONG_DIR + song_dir_name + '/'
+	var error = dir.make_dir_recursive(song_out_dir)
+	if error != OK: 
+		vr.log_error(
+			"_on_BeatSageRequest_download_complete - " +
+			"Failed to create song output dir '%s'" % song_out_dir)
+		okay = false
+	
+	var Unzip = load('res://addons/gdunzip/unzip.gd').new()
+	if okay:
+		error = Unzip.unzip(filepath,song_out_dir)
+		
+#	dir.remove(filepath)
 
 func _on_BeatSageRequest_heartbeat():
 	print('BeatSage heartbeat...')
@@ -103,3 +152,6 @@ func _on_YoutubeButton_pressed():
 func _on_youtube_song_selected(video_metadata):
 	var video_url = "https://www.youtube.com/watch?v=%d" % video_metadata['id']
 	song_url.text = video_url
+
+func _on_BackButton_pressed():
+	self.hide()
