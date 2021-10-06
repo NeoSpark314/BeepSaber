@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=13 format=2]
+[gd_resource type="Theme" load_steps=15 format=2]
 
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/Roboto-Medium.ttf" type="DynamicFontData" id=1]
 
@@ -74,6 +74,20 @@ border_width_right = 8
 border_width_bottom = 8
 border_color = Color( 1, 1, 1, 1 )
 
+[sub_resource type="StyleBoxFlat" id=12]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=13]
+border_width_left = 5
+border_width_top = 5
+border_width_bottom = 5
+border_color = Color( 1, 1, 1, 1 )
+
 [resource]
 Button/colors/font_color = Color( 1, 1, 1, 1 )
 Button/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
@@ -123,3 +137,8 @@ LineEdit/styles/focus = null
 LineEdit/styles/normal = SubResource( 10 )
 LineEdit/styles/read_only = null
 Panel/styles/panel = SubResource( 11 )
+ProgressBar/colors/font_color = Color( 0.94, 0.94, 0.94, 1 )
+ProgressBar/colors/font_color_shadow = Color( 0, 0, 0, 1 )
+ProgressBar/fonts/font = null
+ProgressBar/styles/bg = SubResource( 12 )
+ProgressBar/styles/fg = SubResource( 13 )

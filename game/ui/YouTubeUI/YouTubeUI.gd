@@ -31,7 +31,7 @@ func hide():
 		parent_canvas = parent_canvas.get_parent()
 		
 	if parent_canvas == null:
-		self.hide()
+		self.visible = false
 	else:
 		parent_canvas.hide()
 
@@ -44,7 +44,7 @@ func show():
 		parent_canvas = parent_canvas.get_parent()
 		
 	if parent_canvas == null:
-		self.show()
+		self.visible = true
 	else:
 		parent_canvas.show()
 

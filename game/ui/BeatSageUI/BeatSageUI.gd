@@ -20,6 +20,10 @@ onready var events_obstacles := $EventsObstacles
 
 onready var model_select := $ModelButton
 
+onready var progress_screen := $ProgressScreen
+onready var progress_bar := $ProgressScreen/ProgressBar
+onready var submit_button := $SubmitButton
+
 const MODELS = {
 	"V2" : "v2",
 	"V2-Flow (Better flow, less creative)" : "v2-flow"
@@ -50,7 +54,7 @@ func hide():
 		parent_canvas = parent_canvas.get_parent()
 		
 	if parent_canvas == null:
-		self.hide()
+		self.visible = false
 	else:
 		parent_canvas.hide()
 		
@@ -63,7 +67,7 @@ func show():
 		parent_canvas = parent_canvas.get_parent()
 		
 	if parent_canvas == null:
-		self.show()
+		self.visible = true
 	else:
 		parent_canvas.show()
 
@@ -114,12 +118,14 @@ func _on_SubmitButton_pressed():
 	
 	# initial beatsaber request
 	if beatsage_request_.request(request_data):
-		$SubmitButton.disabled = true
+		submit_button.disabled = true
+		progress_bar.value = 0
+		progress_screen.show()
 
 func _on_BeatSageRequest_download_complete(filepath):
 	var okay = true
-	print('download complete!')
-	$SubmitButton.disabled = false
+	submit_button.disabled = false
+	progress_screen.hide()
 	
 	var dir = Directory.new()
 	var song_dir_name = filepath.get_basename().get_file()
@@ -137,12 +143,14 @@ func _on_BeatSageRequest_download_complete(filepath):
 		
 #	dir.remove(filepath)
 
-func _on_BeatSageRequest_heartbeat():
-	print('BeatSage heartbeat...')
-
 func _on_BeatSageRequest_request_failed():
 	vr.log_error("BeatSage request failed!")
-	$SubmitButton.disabled = false
+	submit_button.disabled = false
+	progress_screen.hide()
+
+func _on_BeatSageRequest_progress_update(progress, max_progress):
+	progress_bar.value = progress
+	progress_bar.max_value = max_progress
 
 func _on_YoutubeButton_pressed():
 	if is_instance_valid(youtube_ui):
@@ -155,3 +163,8 @@ func _on_youtube_song_selected(video_metadata):
 
 func _on_BackButton_pressed():
 	self.hide()
+
+func _on_CancelButton_pressed():
+	beatsage_request_.cancel()
+	progress_screen.hide()
+	submit_button.disabled = false

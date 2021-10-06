@@ -223,9 +223,9 @@ __meta__ = {
 }
 
 [node name="SubmitButton" type="Button" parent="."]
-margin_left = 1110.7
-margin_top = 864.0
-margin_right = 1306.7
+margin_left = 1112.0
+margin_top = 880.0
+margin_right = 1308.0
 margin_bottom = 944.0
 text = "Submit"
 __meta__ = {
@@ -234,10 +234,52 @@ __meta__ = {
 
 [node name="BackButton" type="Button" parent="."]
 margin_left = 1320.0
-margin_top = 864.0
+margin_top = 880.0
 margin_right = 1516.0
 margin_bottom = 944.0
 text = "Back"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressScreen" type="ColorRect" parent="."]
+visible = false
+margin_left = 16.0
+margin_top = 128.0
+margin_right = 1520.0
+margin_bottom = 944.0
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressNoteLabel" type="Label" parent="ProgressScreen"]
+margin_left = 240.0
+margin_top = 352.0
+margin_right = 1264.0
+margin_bottom = 400.0
+text = "Beat Sage can take up to 2 mins to process some songs."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressBar" type="ProgressBar" parent="ProgressScreen"]
+margin_left = 368.0
+margin_top = 448.0
+margin_right = 1136.0
+margin_bottom = 504.0
+max_value = 120.0
+step = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CancelButton" type="Button" parent="ProgressScreen"]
+margin_left = 1304.0
+margin_top = 752.0
+margin_right = 1504.0
+margin_bottom = 816.0
+text = "Cancel"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -247,6 +289,7 @@ __meta__ = {
 [connection signal="pressed" from="YoutubeButton" to="." method="_on_YoutubeButton_pressed"]
 [connection signal="pressed" from="SubmitButton" to="." method="_on_SubmitButton_pressed"]
 [connection signal="pressed" from="BackButton" to="." method="_on_BackButton_pressed"]
+[connection signal="pressed" from="ProgressScreen/CancelButton" to="." method="_on_CancelButton_pressed"]
 [connection signal="download_complete" from="BeatSageRequest" to="." method="_on_BeatSageRequest_download_complete"]
-[connection signal="heartbeat" from="BeatSageRequest" to="." method="_on_BeatSageRequest_heartbeat"]
+[connection signal="progress_update" from="BeatSageRequest" to="." method="_on_BeatSageRequest_progress_update"]
 [connection signal="request_failed" from="BeatSageRequest" to="." method="_on_BeatSageRequest_request_failed"]

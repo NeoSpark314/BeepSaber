@@ -1,6 +1,6 @@
 extends Node
 
-signal heartbeat()
+signal progress_update(progress, max_progress)
 signal download_complete(filepath)
 signal request_failed()
 
@@ -39,6 +39,11 @@ var download_dir = ""
 # Note: cleared once return back to idle state
 var _zip_filename = ""
 
+# seconds into song processing
+var _progress = 0
+# for now assume 2mins max for processing time
+var _progress_max = 120
+
 func _ready():
 	_transition_state(State.eIdle)
 
@@ -70,6 +75,13 @@ func request(request_obj):
 		_transition_state(State.eIdle)
 	
 	return okay
+	
+func cancel():
+	create_request_.cancel_request()
+	heartbeat_request_.cancel_request()
+	download_request_.cancel_request()
+	heartbeat_timer_.stop()
+	_transition_state(State.eIdle)
 
 func _get_zipname(request_obj):
 	var filename = "BeatSage_"
@@ -126,6 +138,7 @@ func _transition_state(next_state):
 			heartbeat_timer_.stop()
 			request_id_ = null
 			_zip_filename = ""
+			_progress = 0
 		State.eRequested:
 			heartbeat_timer_.stop()
 		State.ePending:
@@ -255,7 +268,12 @@ func _on_DownloadRequest_request_completed(result, response_code, headers, body)
 func _on_HeartbeatTimer_timeout():
 	var okay = true
 	
-	emit_signal("heartbeat")
+	# notify caller of progress being made
+	_progress += HEARTBEAT_PERIOD
+	_progress = min(_progress, _progress_max)# saturate to max
+	emit_signal("progress_update", _progress, _progress_max)
+	
+	# request another heartbeat from server
 	var res = heartbeat_request_.request(
 		'http://beatsage.com/beatsaber_custom_level_heartbeat/%s' % request_id_)
 	
