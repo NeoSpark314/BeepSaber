@@ -3,6 +3,8 @@ extends Node
 signal progress_update(progress, max_progress)
 signal download_complete(filepath)
 signal request_failed()
+signal youtube_metadata_available(metadata)
+signal youtube_metadata_request_failed()
 
 enum State {
 	# Idle:
@@ -25,6 +27,7 @@ enum State {
 onready var create_request_ := $CreateRequest
 onready var heartbeat_request_ := $HeartbeatRequest
 onready var download_request_ := $DownloadRequest
+onready var youtube_metadata_request_ := $YouTubeMetadataRequest
 onready var heartbeat_timer_ := $HeartbeatTimer
 
 # request heartbeat from BeatSage every couple seconds when song is processing
@@ -47,12 +50,13 @@ var _progress_max = 120
 func _ready():
 	_transition_state(State.eIdle)
 
-func request(request_obj):
+func request_custom_level(request_obj):
 	var okay = true
 	var data_to_send = _build_request_data(request_obj)
 	var headers = ["Content-Type: multipart/form-data; boundary=boundary"]
 	_zip_filename = _get_zipname(request_obj)
-	print('zip filename = %s' % _zip_filename)
+	# sanatize filepath
+	_zip_filename = _zip_filename.replace('/','')
 	
 	# initiate request
 	var res = create_request_.request(
@@ -76,12 +80,38 @@ func request(request_obj):
 	
 	return okay
 	
-func cancel():
+func request_youtube_metadata(youtube_url):
+	var okay = true
+	var data_to_send = '{"youtube_url": "%s"}' % youtube_url
+	var headers = ["Content-Type: text/plain;charset=UTF-8"]
+	
+	# initiate request
+	var res = youtube_metadata_request_.request(
+		"https://beatsage.com/youtube_metadata",
+		headers,
+		false,# use ssl
+		HTTPClient.METHOD_POST,
+		data_to_send)
+		
+	# check response
+	if res != HTTPRequest.RESULT_SUCCESS:
+		vr.log_error("Failed to request youtube metadata")
+		okay = false
+	
+	if ! okay:
+		emit_signal("youtube_metadata_request_failed")
+	
+	return okay
+	
+func cancel_custom_level_request():
 	create_request_.cancel_request()
 	heartbeat_request_.cancel_request()
 	download_request_.cancel_request()
 	heartbeat_timer_.stop()
 	_transition_state(State.eIdle)
+	
+func cancel_youtube_metadata_request():
+	youtube_metadata_request_.cancel_request()
 
 func _get_zipname(request_obj):
 	var filename = "BeatSage_"
@@ -264,6 +294,31 @@ func _on_DownloadRequest_request_completed(result, response_code, headers, body)
 		emit_signal("request_failed")
 		
 	_transition_state(State.eIdle)
+
+func _on_YouTubeMetadataRequest_request_completed(result, response_code, headers, body):
+	var song_ready = false
+	var okay = true
+	
+	# handle results
+	if response_code == HTTPClient.RESPONSE_OK:
+		var res_str = body.get_string_from_utf8()
+		var json = JSON.parse(res_str)
+		if json.error == OK:
+			var json_res = json.result
+			emit_signal("youtube_metadata_available", json_res)
+		else:
+			vr.log_error("Received JSON error %s" % json.error)
+			okay = false;
+	else:
+		vr.log_error("Received server error from youtube metadata request!")
+		print('result = %s' % result)
+		print('response_code = %s' % response_code)
+		print('headers = %s' % headers)
+		print('body = %s' % body.get_string_from_utf8())
+		okay = false
+		
+	if ! okay:
+		emit_signal("youtube_metadata_request_failed")
 
 func _on_HeartbeatTimer_timeout():
 	var okay = true

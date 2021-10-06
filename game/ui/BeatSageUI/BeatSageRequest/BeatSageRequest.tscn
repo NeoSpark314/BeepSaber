@@ -11,10 +11,13 @@ script = ExtResource( 1 )
 
 [node name="DownloadRequest" type="HTTPRequest" parent="."]
 
+[node name="YouTubeMetadataRequest" type="HTTPRequest" parent="."]
+
 [node name="HeartbeatTimer" type="Timer" parent="."]
 one_shot = true
 
 [connection signal="request_completed" from="CreateRequest" to="." method="_on_CreateRequest_request_completed"]
 [connection signal="request_completed" from="HeartbeatRequest" to="." method="_on_HeartbeatRequest_request_completed"]
 [connection signal="request_completed" from="DownloadRequest" to="." method="_on_DownloadRequest_request_completed"]
+[connection signal="request_completed" from="YouTubeMetadataRequest" to="." method="_on_YouTubeMetadataRequest_request_completed"]
 [connection signal="timeout" from="HeartbeatTimer" to="." method="_on_HeartbeatTimer_timeout"]

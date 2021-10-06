@@ -46,6 +46,44 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="SongArtistLabel" type="Label" parent="."]
+margin_left = 32.0
+margin_top = 288.0
+margin_right = 257.0
+margin_bottom = 336.0
+text = "Song Artist:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SongArtist" type="LineEdit" parent="."]
+margin_left = 264.0
+margin_top = 280.0
+margin_right = 784.0
+margin_bottom = 344.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SongNameLabel" type="Label" parent="."]
+margin_left = 32.0
+margin_top = 360.0
+margin_right = 257.0
+margin_bottom = 408.0
+text = "Song Name:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SongName" type="LineEdit" parent="."]
+margin_left = 264.0
+margin_top = 352.0
+margin_right = 784.0
+margin_bottom = 416.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="YoutubeButton" type="Button" parent="."]
 margin_left = 888.0
 margin_top = 216.0
@@ -58,9 +96,9 @@ __meta__ = {
 
 [node name="DifficultyLabel" type="Label" parent="."]
 margin_left = 32.0
-margin_top = 312.0
+margin_top = 448.0
 margin_right = 331.0
-margin_bottom = 360.0
+margin_bottom = 496.0
 text = "Difficulty Levels:"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -78,9 +116,9 @@ __meta__ = {
 
 [node name="DifficultyNormal" type="CheckBox" parent="."]
 margin_left = 32.0
-margin_top = 368.0
+margin_top = 504.0
 margin_right = 200.0
-margin_bottom = 432.0
+margin_bottom = 568.0
 pressed = true
 text = "Normal"
 __meta__ = {
@@ -89,9 +127,9 @@ __meta__ = {
 
 [node name="DifficultyHard" type="CheckBox" parent="."]
 margin_left = 32.0
-margin_top = 448.0
+margin_top = 584.0
 margin_right = 200.0
-margin_bottom = 512.0
+margin_bottom = 648.0
 pressed = true
 text = "Hard"
 __meta__ = {
@@ -100,9 +138,9 @@ __meta__ = {
 
 [node name="DifficultyExpert" type="CheckBox" parent="."]
 margin_left = 216.0
-margin_top = 368.0
+margin_top = 504.0
 margin_right = 384.0
-margin_bottom = 432.0
+margin_bottom = 568.0
 pressed = true
 text = "Expert"
 __meta__ = {
@@ -111,9 +149,9 @@ __meta__ = {
 
 [node name="DifficultyExpertPlus" type="CheckBox" parent="."]
 margin_left = 216.0
-margin_top = 448.0
+margin_top = 584.0
 margin_right = 384.0
-margin_bottom = 512.0
+margin_bottom = 648.0
 pressed = true
 text = "Expert+"
 __meta__ = {
@@ -122,9 +160,9 @@ __meta__ = {
 
 [node name="GameModeLabel" type="Label" parent="."]
 margin_left = 488.0
-margin_top = 312.0
+margin_top = 448.0
 margin_right = 787.0
-margin_bottom = 360.0
+margin_bottom = 496.0
 text = "Game Mode:"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -132,9 +170,9 @@ __meta__ = {
 
 [node name="ModeStandard" type="CheckBox" parent="."]
 margin_left = 488.0
-margin_top = 368.0
+margin_top = 504.0
 margin_right = 712.0
-margin_bottom = 432.0
+margin_bottom = 568.0
 pressed = true
 text = "Standard"
 __meta__ = {
@@ -143,9 +181,9 @@ __meta__ = {
 
 [node name="ModeNoArrows" type="CheckBox" parent="."]
 margin_left = 488.0
-margin_top = 448.0
+margin_top = 584.0
 margin_right = 712.0
-margin_bottom = 512.0
+margin_bottom = 648.0
 text = "No Arrows"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -153,9 +191,9 @@ __meta__ = {
 
 [node name="ModeOneSaber" type="CheckBox" parent="."]
 margin_left = 728.0
-margin_top = 368.0
+margin_top = 504.0
 margin_right = 952.0
-margin_bottom = 432.0
+margin_bottom = 568.0
 text = "One Saber (*)"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -163,9 +201,9 @@ __meta__ = {
 
 [node name="SongEventsLabel" type="Label" parent="."]
 margin_left = 32.0
-margin_top = 552.0
+margin_top = 688.0
 margin_right = 331.0
-margin_bottom = 600.0
+margin_bottom = 736.0
 text = "Song Events:"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -173,9 +211,9 @@ __meta__ = {
 
 [node name="EventsBombs" type="CheckBox" parent="."]
 margin_left = 32.0
-margin_top = 608.0
+margin_top = 744.0
 margin_right = 256.0
-margin_bottom = 672.0
+margin_bottom = 808.0
 text = "Bombs"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -183,9 +221,9 @@ __meta__ = {
 
 [node name="EventsDotBlocks" type="CheckBox" parent="."]
 margin_left = 32.0
-margin_top = 688.0
+margin_top = 824.0
 margin_right = 256.0
-margin_bottom = 752.0
+margin_bottom = 888.0
 pressed = true
 text = "Dot Blocks"
 __meta__ = {
@@ -194,9 +232,9 @@ __meta__ = {
 
 [node name="EventsObstacles" type="CheckBox" parent="."]
 margin_left = 272.0
-margin_top = 608.0
+margin_top = 744.0
 margin_right = 496.0
-margin_bottom = 672.0
+margin_bottom = 808.0
 text = "Obstacles (*)"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -204,9 +242,9 @@ __meta__ = {
 
 [node name="ModelLabel" type="Label" parent="."]
 margin_left = 592.0
-margin_top = 552.0
+margin_top = 688.0
 margin_right = 891.0
-margin_bottom = 600.0
+margin_bottom = 736.0
 text = "AI Model:"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -214,9 +252,9 @@ __meta__ = {
 
 [node name="ModelButton" type="OptionButton" parent="."]
 margin_left = 592.0
-margin_top = 608.0
+margin_top = 744.0
 margin_right = 1128.0
-margin_bottom = 672.0
+margin_bottom = 808.0
 text = "V2"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -286,6 +324,9 @@ __meta__ = {
 
 [node name="BeatSageRequest" parent="." instance=ExtResource( 5 )]
 
+[connection signal="text_entered" from="SongURL" to="." method="_on_SongURL_text_entered"]
+[connection signal="text_entered" from="SongArtist" to="." method="_on_SongURL_text_entered"]
+[connection signal="text_entered" from="SongName" to="." method="_on_SongURL_text_entered"]
 [connection signal="pressed" from="YoutubeButton" to="." method="_on_YoutubeButton_pressed"]
 [connection signal="pressed" from="SubmitButton" to="." method="_on_SubmitButton_pressed"]
 [connection signal="pressed" from="BackButton" to="." method="_on_BackButton_pressed"]
@@ -293,3 +334,5 @@ __meta__ = {
 [connection signal="download_complete" from="BeatSageRequest" to="." method="_on_BeatSageRequest_download_complete"]
 [connection signal="progress_update" from="BeatSageRequest" to="." method="_on_BeatSageRequest_progress_update"]
 [connection signal="request_failed" from="BeatSageRequest" to="." method="_on_BeatSageRequest_request_failed"]
+[connection signal="youtube_metadata_available" from="BeatSageRequest" to="." method="_on_BeatSageRequest_youtube_metadata_available"]
+[connection signal="youtube_metadata_request_failed" from="BeatSageRequest" to="." method="_on_BeatSageRequest_youtube_metadata_request_failed"]

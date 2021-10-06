@@ -5,6 +5,9 @@ export (NodePath) var youtube_ui
 onready var beatsage_request_ := $BeatSageRequest
 onready var song_url := $SongURL
 
+onready var song_artist := $SongArtist
+onready var song_name := $SongName
+
 onready var difficulty_normal := $DifficultyNormal
 onready var difficulty_hard := $DifficultyHard
 onready var difficulty_expert := $DifficultyExpert
@@ -107,8 +110,8 @@ func _on_SubmitButton_pressed():
 	# build request dictionary
 	var request_data = {
 		"youtube_url": song_url.text,
-		"audio_metadata_title": "Test Song %d" % randi(),
-		"audio_metadata_artist": "Test Artist",
+		"audio_metadata_title": song_name.text,
+		"audio_metadata_artist": song_artist.text,
 		"difficulties": difficulties,
 		"modes": modes,
 		"events": events,
@@ -117,7 +120,7 @@ func _on_SubmitButton_pressed():
 	}
 	
 	# initial beatsaber request
-	if beatsage_request_.request(request_data):
+	if beatsage_request_.request_custom_level(request_data):
 		submit_button.disabled = true
 		progress_bar.value = 0
 		progress_screen.show()
@@ -141,7 +144,7 @@ func _on_BeatSageRequest_download_complete(filepath):
 	if okay:
 		error = Unzip.unzip(filepath,song_out_dir)
 		
-#	dir.remove(filepath)
+	dir.remove(filepath)
 
 func _on_BeatSageRequest_request_failed():
 	vr.log_error("BeatSage request failed!")
@@ -152,6 +155,20 @@ func _on_BeatSageRequest_progress_update(progress, max_progress):
 	progress_bar.value = progress
 	progress_bar.max_value = max_progress
 
+func _on_BeatSageRequest_youtube_metadata_available(metadata):
+	var artist = 'Unknown Artist'
+	if metadata.has('artist'):
+		artist = metadata['artist']
+	song_artist.text = artist
+	
+	var track = 'Unknown Title'
+	if metadata.has('track'):
+		track = metadata['track']
+	song_name.text = track
+
+func _on_BeatSageRequest_youtube_metadata_request_failed():
+	pass # Replace with function body.
+
 func _on_YoutubeButton_pressed():
 	if is_instance_valid(youtube_ui):
 		youtube_ui.show()
@@ -160,11 +177,16 @@ func _on_YoutubeButton_pressed():
 func _on_youtube_song_selected(video_metadata):
 	var video_url = "https://www.youtube.com/watch?v=%s" % video_metadata['id']
 	song_url.text = video_url
+	
+	beatsage_request_.request_youtube_metadata(video_url)
 
 func _on_BackButton_pressed():
 	self.hide()
 
 func _on_CancelButton_pressed():
-	beatsage_request_.cancel()
+	beatsage_request_.cancel_custom_level_request()
 	progress_screen.hide()
 	submit_button.disabled = false
+
+func _on_SongURL_text_entered(new_text):
+	beatsage_request_.request_youtube_metadata(new_text)
