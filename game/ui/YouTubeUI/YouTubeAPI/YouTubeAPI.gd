@@ -57,9 +57,26 @@ func _get_search_result_data_from_html(html_text: String):
 	var start_idx = init_data_idx + YT_INIT_DATA_TEXT.length()
 	var end_idx = html_text.find("</script>", init_data_idx) - 1
 	var result_str = html_text.substr(start_idx,(end_idx-start_idx))
+	
+	# when running on oculus, the javascript seems to escape a bunch of of the 
+	# non alphanumeric characters. this code deals with that
+	if result_str.find('\\x7b') >= 0:
+		# remove single quote and beginning and end
+		result_str = result_str.substr(1,result_str.length()-2)
+		# unescape non alphanumeric chars in JSON string
+		result_str = result_str.replace('\\x7b','{')
+		result_str = result_str.replace('\\x7d','}')
+		result_str = result_str.replace('\\x22','"')
+		result_str = result_str.replace('\\x5b','[')
+		result_str = result_str.replace('\\x5d',']')
+	
 	var json = JSON.parse(result_str)
 	if json.error == OK:
 		search_results = json.result
+		var file = File.new()
+		file.open('youtube_search.json', File.WRITE)
+		file.store_string(JSON.print(search_results,'  '))
+		file.close()
 	else:
 		emit_signal("failed_request")
 		vr.log_error('failed to parse search result JSON "%s"' % result_str)
@@ -69,13 +86,20 @@ func _get_search_result_data_from_html(html_text: String):
 func _get_videos_from_search_result(search_result):
 	var videos = []
 	if search_result.has('contents'):
-		for content in search_result['contents']['twoColumnSearchResultsRenderer']['primaryContents']['sectionListRenderer']['contents']:
+		var contents = []
+		if search_result['contents'].has('twoColumnSearchResultsRenderer'):
+			contents = search_result['contents']['twoColumnSearchResultsRenderer']['primaryContents']['sectionListRenderer']['contents']
+		elif search_result['contents'].has('sectionListRenderer'):
+			contents = search_result['contents']['sectionListRenderer']['contents']
+		
+		for content in contents:
 			if content.has('itemSectionRenderer'):
 				var videos_content = content['itemSectionRenderer']['contents']
 				for v_content in videos_content:
-					if ! v_content.has('videoRenderer'):
-						continue
-					videos.append(v_content['videoRenderer'])
+					if v_content.has('videoRenderer'):
+						videos.append(v_content['videoRenderer'])
+					elif v_content.has('compactVideoRenderer'):
+						videos.append(v_content['compactVideoRenderer'])
 				break
 	return videos
 

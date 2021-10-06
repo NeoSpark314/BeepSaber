@@ -150,7 +150,7 @@ func _on_YoutubeButton_pressed():
 
 # emitted by the YouTube search dialog when the player selects a video
 func _on_youtube_song_selected(video_metadata):
-	var video_url = "https://www.youtube.com/watch?v=%d" % video_metadata['id']
+	var video_url = "https://www.youtube.com/watch?v=%s" % video_metadata['id']
 	song_url.text = video_url
 
 func _on_BackButton_pressed():
