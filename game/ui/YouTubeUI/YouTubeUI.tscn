@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://game/BlackWhiteThem.tres" type="Theme" id=1]
 [ext_resource path="res://game/ui/YouTubeUI/YouTubeUI.gd" type="Script" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://game/scripts/HTTPRequestPool.tscn" type="PackedScene" id=4]
 [ext_resource path="res://game/ui/YouTubeUI/youtube_icon.png" type="Texture" id=5]
 [ext_resource path="res://game/ui/YouTubeUI/default_thumbnail.png" type="Texture" id=6]
+[ext_resource path="res://game/vr_slider.gd" type="Script" id=7]
 
 [node name="YouTubeUI" type="Panel"]
 margin_right = 1536.0
@@ -56,6 +57,7 @@ margin_left = 16.0
 margin_top = 80.0
 margin_right = 1088.0
 margin_bottom = 944.0
+script = ExtResource( 7 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
