@@ -73,10 +73,6 @@ func _get_search_result_data_from_html(html_text: String):
 		result_str = result_str.replace('\/','/')
 	
 	var json = JSON.parse(result_str)
-	var file = File.new()
-	file.open('/sdcard/BeepSaber/temp/youtube_search.json', File.WRITE)
-	file.store_string(result_str)
-	file.close()
 	if json.error == OK:
 		search_results = json.result
 	else:
@@ -110,12 +106,6 @@ func _on_SearchRequest_request_completed(result, response_code, headers, body):
 	
 	if response_code == HTTPClient.RESPONSE_OK:
 		var html_text = body.get_string_from_utf8()
-		
-		var file = File.new()
-		file.open("youtube_search.html", File.READ)
-		file.store_string(html_text)
-		file.close()
-		
 		var result_data = _get_search_result_data_from_html(html_text)
 		var videos = _get_videos_from_search_result(result_data)
 		emit_signal("search_complete",videos)
