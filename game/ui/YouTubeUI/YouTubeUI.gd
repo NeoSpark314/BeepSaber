@@ -81,6 +81,8 @@ func _on_YouTubeAPI_search_complete(videos):
 		var idx = results_list.get_item_count() - 1
 		_video_idx_by_id[id] = idx
 		results_list.set_item_metadata(idx, metadata)
+		results_list.set_item_icon(idx, $DefaultThumbnail.texture)
+		results_list.set_item_tooltip_enabled(idx, false)
 		
 		# request thumbnail for video
 		var thumbnail_url = null
@@ -97,13 +99,16 @@ func _on_YouTubeAPI_search_complete(videos):
 
 func _on_ThumbnailRequestPool_request_complete(result, response_code, headers, body, token, user_data):
 	if response_code == HTTPClient.RESPONSE_OK:
-		var img = Image.new()
-		if not img.load_jpg_from_buffer(body) == 0:
-			img.load_jpg_from_buffer(body)
+		var img = ImageUtils.get_img_from_buffer(body)
+		if img == null:
+			vr.log_error('failed to parse valid image data for video %s' % user_data['id'])
+			# leave default thumbnail
+			return
+		
 		var img_tex := ImageTexture.new()
 		img_tex.create_from_image(img)
 		var size = img.get_size()
-		size = size * 100.0 / img.get_height()
+		size = size * 100.0 / img.get_height()# resize to max height of 100px
 		img_tex.set_size_override(size)
 		
 		var item_idx = _video_idx_by_id[user_data['id']]

@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://game/BlackWhiteThem.tres" type="Theme" id=1]
 [ext_resource path="res://game/ui/YouTubeUI/YouTubeUI.gd" type="Script" id=2]
 [ext_resource path="res://game/ui/YouTubeUI/YouTubeAPI/YouTubeAPI.tscn" type="PackedScene" id=3]
 [ext_resource path="res://game/scripts/HTTPRequestPool.tscn" type="PackedScene" id=4]
 [ext_resource path="res://game/ui/YouTubeUI/youtube_icon.png" type="Texture" id=5]
+[ext_resource path="res://game/ui/YouTubeUI/default_thumbnail.png" type="Texture" id=6]
 
 [node name="YouTubeUI" type="Panel"]
 margin_right = 1536.0
@@ -81,6 +82,15 @@ __meta__ = {
 }
 
 [node name="ThumbnailRequestPool" parent="." instance=ExtResource( 4 )]
+
+[node name="DefaultThumbnail" type="TextureRect" parent="."]
+visible = false
+margin_right = 200.0
+margin_bottom = 100.0
+texture = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [connection signal="failed_request" from="YouTubeAPI" to="." method="_on_YouTubeAPI_failed_request"]
 [connection signal="search_complete" from="YouTubeAPI" to="." method="_on_YouTubeAPI_search_complete"]
