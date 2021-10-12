@@ -159,7 +159,7 @@ func _on_game_state_entered(state):
 		GameState.MapSelection:
 			$MainMenu_OQ_UI2DCanvas.visible = true;
 			$Settings_canvas.visible = false;
-			$Online_library.visible = true;
+			$BeatSaver_Canvas.visible = true;
 			$EndScore_canvas.visible = false;
 			$PauseMenu_canvas.visible = false;
 			highscore_canvas.visible = false;
@@ -176,7 +176,7 @@ func _on_game_state_entered(state):
 		GameState.Settings:
 			$MainMenu_OQ_UI2DCanvas.visible = false;
 			$Settings_canvas.visible = true;
-			$Online_library.visible = true;
+			$BeatSaver_Canvas.visible = true;
 			$EndScore_canvas.visible = false;
 			$PauseMenu_canvas.visible = false;
 			highscore_canvas.visible = false;
@@ -193,7 +193,7 @@ func _on_game_state_entered(state):
 		GameState.Playing:
 			$MainMenu_OQ_UI2DCanvas.visible = false;
 			$Settings_canvas.visible = false;
-			$Online_library.visible = false;
+			$BeatSaver_Canvas.visible = false;
 			$EndScore_canvas.visible = false;
 			$PauseMenu_canvas.visible = false;
 			highscore_canvas.visible = false;
@@ -210,7 +210,7 @@ func _on_game_state_entered(state):
 		GameState.Paused:
 			$MainMenu_OQ_UI2DCanvas.visible = false;
 			$Settings_canvas.visible = false;
-			$Online_library.visible = false;
+			$BeatSaver_Canvas.visible = false;
 			$EndScore_canvas.visible = false;
 			$PauseMenu_canvas.visible = true;
 			highscore_canvas.visible = false;
@@ -232,7 +232,7 @@ func _on_game_state_entered(state):
 			
 			$MainMenu_OQ_UI2DCanvas.visible = false;
 			$Settings_canvas.visible = false;
-			$Online_library.visible = false;
+			$BeatSaver_Canvas.visible = false;
 			$EndScore_canvas.visible = true;
 			$PauseMenu_canvas.visible = false;
 			highscore_canvas.visible = false;
@@ -265,7 +265,7 @@ func _on_game_state_entered(state):
 			
 			$MainMenu_OQ_UI2DCanvas.visible = false;
 			$Settings_canvas.visible = false;
-			$Online_library.visible = false;
+			$BeatSaver_Canvas.visible = false;
 			$EndScore_canvas.visible = true;
 			$PauseMenu_canvas.visible = false;
 			highscore_canvas.visible = true;
@@ -525,7 +525,7 @@ var _lpf = null;
 func _ready():
 	_main_menu = $MainMenu_OQ_UI2DCanvas.find_node("BeepSaberMainMenu", true, false);
 	_main_menu.initialize(self);
-	$Online_library.ui_control.main_menu_node = _main_menu
+	$BeatSaver_Canvas.ui_control.main_menu_node = _main_menu
 
 	cube_left = cube_template.duplicate();
 	cube_right = cube_template.duplicate();

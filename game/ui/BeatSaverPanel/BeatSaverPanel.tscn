@@ -1,7 +1,7 @@
 [gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/RobotoMono-Medium.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://game/ui/BeatSaverPanel/Online_library_Panel.gd" type="Script" id=2]
+[ext_resource path="res://game/ui/BeatSaverPanel/BeatSaverPanel.gd" type="Script" id=2]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/Roboto-Medium.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://game/vr_slider.gd" type="Script" id=4]
 [ext_resource path="res://game/data/beepsaber_logo.png" type="Texture" id=5]
@@ -71,7 +71,7 @@ font_data = ExtResource( 1 )
 [sub_resource type="Theme" id=12]
 default_font = SubResource( 11 )
 
-[node name="Online_library_Panel" type="Panel"]
+[node name="BeatSaverPanel" type="Panel"]
 margin_right = 1536.0
 margin_bottom = 960.0
 custom_styles/panel = SubResource( 1 )

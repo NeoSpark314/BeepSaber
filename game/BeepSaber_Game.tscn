@@ -19,7 +19,7 @@
 [ext_resource path="res://game/EndScore_panel.tscn" type="PackedScene" id=17]
 [ext_resource path="res://game/Pause_Panel.tscn" type="PackedScene" id=18]
 [ext_resource path="res://game/settings_Panel.tscn" type="PackedScene" id=19]
-[ext_resource path="res://game/ui/BeatSaverPanel/Online_library_Panel.tscn" type="PackedScene" id=20]
+[ext_resource path="res://game/ui/BeatSaverPanel/BeatSaverPanel.tscn" type="PackedScene" id=20]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DKeyboard.tscn" type="PackedScene" id=21]
 [ext_resource path="res://game/Points_label_driver.tscn" type="PackedScene" id=22]
 [ext_resource path="res://game/HighscorePanel.tscn" type="PackedScene" id=23]
@@ -139,10 +139,10 @@ visible = false
 [node name="settings_Panel" parent="Settings_canvas" instance=ExtResource( 19 )]
 game = NodePath("../..")
 
-[node name="Online_library" parent="." instance=ExtResource( 3 )]
+[node name="BeatSaver_Canvas" parent="." instance=ExtResource( 3 )]
 transform = Transform( 0.67553, 0, -1.82835, 0, 1.94915, 0, 1.82835, 0, 0.67553, 2.433, 1.49752, 0.468348 )
 
-[node name="Online_library_Panel" parent="Online_library" instance=ExtResource( 20 )]
+[node name="BeatSaverPanel" parent="BeatSaver_Canvas" instance=ExtResource( 20 )]
 game = NodePath("../..")
 keyboard = NodePath("../../Keyboard_online_search")
 
