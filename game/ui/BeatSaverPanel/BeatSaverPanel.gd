@@ -45,14 +45,9 @@ var prev_request = {
 export(NodePath) var game;
 export(NodePath) var keyboard;
 
-func enable():
-	update_list({"type":"list","page":0,"list":"plays"})
-	$ColorRect.visible = false
-
 func _ready():
 	game = get_node(game);
 	keyboard = get_node(keyboard);
-	$ColorRect.visible = true
 	$back.visible = false
 	v_scroll.connect("value_changed",self,"_on_ListV_Scroll_value_changed")
 	
@@ -78,6 +73,32 @@ func _ready():
 	if keyboard != null:
 		keyboard.connect("text_input_enter",self,"_text_input_enter")
 		keyboard.connect("text_input_cancel",self,"_text_input_cancel")
+
+# override hide() method to handle case where UI is inside a OQ_UI2DCanvas
+func hide():
+	var parent_canvas = self
+	while parent_canvas != null:
+		if parent_canvas is OQ_UI2DCanvas:
+			break
+		parent_canvas = parent_canvas.get_parent()
+		
+	if parent_canvas == null:
+		self.visible = false
+	else:
+		parent_canvas.hide()
+		
+# override show() method to handle case where UI is inside a OQ_UI2DCanvas
+func show():
+	var parent_canvas = self
+	while parent_canvas != null:
+		if parent_canvas is OQ_UI2DCanvas:
+			break
+		parent_canvas = parent_canvas.get_parent()
+		
+	if parent_canvas == null:
+		self.visible = true
+	else:
+		parent_canvas.show()
 
 func update_list(request):
 	var page = request.page
@@ -374,3 +395,13 @@ func _get_cover_url_from_song_data(song_data):
 		return null
 		
 	return version_data['coverURL']
+
+func _on_CloseButton_pressed():
+	self.hide()
+
+var _is_first_show = true
+func _on_BeatSaverPanel_visibility_changed():
+	if visible and _is_first_show:
+		# populate initial list of songs with most played on BeatSaver
+		update_list({"type":"list","page":0,"list":"plays"})
+		_is_first_show = false

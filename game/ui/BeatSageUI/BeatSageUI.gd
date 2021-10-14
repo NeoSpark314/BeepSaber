@@ -180,7 +180,7 @@ func _on_youtube_song_selected(video_metadata):
 	
 	beatsage_request_.request_youtube_metadata(video_url)
 
-func _on_BackButton_pressed():
+func _on_CloseButton_pressed():
 	self.hide()
 
 func _on_CancelButton_pressed():
