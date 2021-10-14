@@ -52,13 +52,14 @@ __meta__ = {
 margin_bottom = 858.0
 texture = ExtResource( 3 )
 image_margin = 50
-description = ""
+description = "Beat Saver is an online collection of custom Beat Saber levels. You can search and download songs based on song title, song artist, or by mapper (level artist)."
 
 [node name="BeatSageButton" parent="Margin/VBox/Grid" instance=ExtResource( 2 )]
 margin_left = 498.0
 margin_right = 992.0
 margin_bottom = 858.0
 texture = ExtResource( 5 )
+description = "Beat Sage is an AI that creates free custom levels for Beat Saber. Given a song on YouTube, the system will output a Beat Saber level that is matched with that song!"
 
 [connection signal="pressed" from="Margin/VBox/Grid/BeatSaverButton" to="." method="_on_BeatSaverButton_pressed"]
 [connection signal="pressed" from="Margin/VBox/Grid/BeatSageButton" to="." method="_on_BeatSageButton_pressed"]
