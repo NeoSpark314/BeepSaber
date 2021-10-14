@@ -7,9 +7,8 @@
 [ext_resource path="res://game/ui/BeatSageUI/beat_sage_icon.png" type="Texture" id=5]
 
 [node name="MapDownloadPanel" type="Panel"]
-anchor_right = 1.6
-anchor_bottom = 1.778
-margin_bottom = -0.120056
+margin_right = 1536.0
+margin_bottom = 960.0
 theme = ExtResource( 1 )
 script = ExtResource( 4 )
 __meta__ = {
@@ -31,7 +30,7 @@ __meta__ = {
 margin_left = 25.0
 margin_top = 25.0
 margin_right = 1511.0
-margin_bottom = 934.0
+margin_bottom = 935.0
 
 [node name="Title" type="Label" parent="Margin/VBox"]
 margin_right = 1486.0
@@ -41,7 +40,7 @@ text = "Online Map Sources"
 [node name="Grid" type="GridContainer" parent="Margin/VBox"]
 margin_top = 52.0
 margin_right = 1486.0
-margin_bottom = 909.0
+margin_bottom = 910.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 3
@@ -50,6 +49,7 @@ __meta__ = {
 }
 
 [node name="BeatSaverButton" parent="Margin/VBox/Grid" instance=ExtResource( 2 )]
+margin_bottom = 858.0
 texture = ExtResource( 3 )
 image_margin = 50
 description = ""
@@ -57,4 +57,8 @@ description = ""
 [node name="BeatSageButton" parent="Margin/VBox/Grid" instance=ExtResource( 2 )]
 margin_left = 498.0
 margin_right = 992.0
+margin_bottom = 858.0
 texture = ExtResource( 5 )
+
+[connection signal="pressed" from="Margin/VBox/Grid/BeatSaverButton" to="." method="_on_BeatSaverButton_pressed"]
+[connection signal="pressed" from="Margin/VBox/Grid/BeatSageButton" to="." method="_on_BeatSageButton_pressed"]
