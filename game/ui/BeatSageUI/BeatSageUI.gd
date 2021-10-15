@@ -7,6 +7,7 @@ onready var song_url := $SongURL
 
 onready var song_artist := $SongArtist
 onready var song_name := $SongName
+onready var song_cover := $SongCover
 
 onready var difficulty_normal := $DifficultyNormal
 onready var difficulty_hard := $DifficultyHard
@@ -155,7 +156,14 @@ func _on_BeatSageRequest_progress_update(progress, max_progress):
 	progress_bar.value = progress
 	progress_bar.max_value = max_progress
 
+const SAVE_YOUTUBE_METADATA = false # for debugging purposes
 func _on_BeatSageRequest_youtube_metadata_available(metadata):
+	if SAVE_YOUTUBE_METADATA:
+		var file = File.new()
+		file.open("youtube_metadata.json",File.WRITE)
+		file.store_string(JSON.print(metadata,'  '))
+		file.close()
+	
 	var artist = 'Unknown Artist'
 	if metadata.has('artist'):
 		artist = metadata['artist']
@@ -165,9 +173,24 @@ func _on_BeatSageRequest_youtube_metadata_available(metadata):
 	if metadata.has('track'):
 		track = metadata['track']
 	song_name.text = track
+	
+	# parse the thumbnail/cover image
+	var img_data = Marshalls.base64_to_raw(metadata['beatsage_thumbnail'])
+	var img = ImageUtils.get_img_from_buffer(img_data)
+	if img == null:
+		vr.log_error('failed to parse valid image data for beatsage_thumbnail')
+		# TODO leave default thumbnail
+		song_cover.texture = null
+	else:
+		var img_tex := ImageTexture.new()
+		img_tex.create_from_image(img)
+		song_cover.texture = img_tex
 
 func _on_BeatSageRequest_youtube_metadata_request_failed():
-	pass # Replace with function body.
+	# clear any values that may have existing already
+	song_artist.text = ""
+	song_name.text = ""
+	song_cover.texture = null
 
 func _on_YoutubeButton_pressed():
 	if is_instance_valid(youtube_ui):

@@ -96,6 +96,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="SongCover" type="TextureRect" parent="."]
+margin_left = 1160.0
+margin_top = 208.0
+margin_right = 1384.0
+margin_bottom = 432.0
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="DifficultyLabel" type="Label" parent="."]
 margin_left = 32.0
 margin_top = 448.0
