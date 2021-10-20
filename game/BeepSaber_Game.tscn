@@ -166,7 +166,7 @@ visible = false
 youtube_ui = NodePath("../../YouTube_Canvas/YouTubeUI")
 
 [node name="YouTube_Canvas" parent="MapSourceDialogs" instance=ExtResource( 3 )]
-transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 )
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0.01 )
 visible = false
 
 [node name="YouTubeUI" parent="MapSourceDialogs/YouTube_Canvas" instance=ExtResource( 26 )]
