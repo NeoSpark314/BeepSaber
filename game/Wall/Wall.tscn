@@ -7,7 +7,7 @@
 size = Vector3( 1, 3, 16 )
 
 [sub_resource type="BoxShape" id=2]
-extents = Vector3( 0.5, 1.5, 8 )
+extents = Vector3( 0.45, 1.45, 7.95 )
 
 [sub_resource type="Animation" id=3]
 tracks/0/type = "value"
@@ -23,24 +23,20 @@ tracks/0/keys = {
 "values": [ Vector3( 1, 0.1, 1 ), Vector3( 1, 1, 1 ) ]
 }
 
-[node name="Wall" type="Spatial" groups=[
-"wall",
-]]
+[node name="Wall" type="Spatial" groups=["wall"]]
 script = ExtResource( 2 )
 height = 3
 depth = 16
 
 [node name="WallMeshOrientation" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 0.999999, 0, 0, 0, 1, 0, 1.5, -8 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -8 )
 
 [node name="WallMesh" type="MeshInstance" parent="WallMeshOrientation"]
 material_override = ExtResource( 3 )
 mesh = SubResource( 1 )
 material/0 = null
 
-[node name="WallArea" type="Area" parent="WallMeshOrientation" groups=[
-"wall",
-]]
+[node name="WallArea" type="Area" parent="WallMeshOrientation" groups=["wall"]]
 collision_mask = 20
 
 [node name="CollisionShape" type="CollisionShape" parent="WallMeshOrientation/WallArea"]

@@ -192,9 +192,9 @@ margin_top = 64.0
 margin_right = 848.0
 margin_bottom = 560.0
 theme = SubResource( 7 )
-custom_styles/bg = SubResource( 8 )
 custom_colors/font_color_selected = Color( 1, 0.494118, 0.494118, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_styles/bg = SubResource( 8 )
 fixed_icon_size = Vector2( 60, 60 )
 script = ExtResource( 6 )
 __meta__ = {
@@ -221,16 +221,15 @@ margin_top = 64.0
 margin_right = 1040.0
 margin_bottom = 320.0
 theme = SubResource( 12 )
-custom_styles/bg = SubResource( 8 )
 custom_colors/font_color_selected = Color( 1, 0.494118, 0.494118, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_styles/bg = SubResource( 8 )
 script = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
-download_chunk_size = 65536
 timeout = 4
 
 [node name="Songs_Label2" type="Label" parent="."]
@@ -265,6 +264,7 @@ volume_db = -60.0
 
 [node name="stop_prev" type="Timer" parent="song_prev"]
 one_shot = true
+
 [connection signal="pressed" from="Play_Button" to="." method="_on_Play_Button_pressed"]
 [connection signal="button_up" from="Delete_Button" to="." method="_on_Delete_Button_button_up"]
 [connection signal="pressed" from="Exit_Button" to="." method="_on_Exit_Button_pressed"]

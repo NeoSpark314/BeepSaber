@@ -994,6 +994,7 @@ anims/out = SubResource( 22 )
 
 [node name="wall_material_holder" type="MeshInstance" parent="."]
 material_override = ExtResource( 4 )
+
 [connection signal="tween_step" from="Level/t0/Tween" to="." method="_on_Tween_tween_step" binds= [ 0 ]]
 [connection signal="tween_step" from="Level/t1/Tween" to="." method="_on_Tween_tween_step" binds= [ 1 ]]
 [connection signal="tween_step" from="Level/t2/Tween" to="." method="_on_Tween_tween_step" binds= [ 2 ]]

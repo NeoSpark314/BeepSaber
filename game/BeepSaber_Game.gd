@@ -769,6 +769,7 @@ func _on_PlayerHead_area_entered(area):
 	if area.is_in_group("wall"):
 		if not _in_wall:
 			_quiet_song();
+			_reset_combo();
 		
 		_in_wall = true;
 
