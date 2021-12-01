@@ -143,7 +143,6 @@ __meta__ = {
 }
 
 [node name="full_combo_label" type="RichTextLabel" parent="."]
-visible = false
 margin_left = 32.0
 margin_top = 408.0
 margin_right = 310.0
@@ -166,6 +165,19 @@ text = "A"
 align = 1
 valign = 1
 autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="new_record_label" type="RichTextLabel" parent="."]
+margin_left = 776.0
+margin_top = 264.0
+margin_right = 1054.0
+margin_bottom = 323.0
+theme = SubResource( 10 )
+bbcode_enabled = true
+bbcode_text = "[center][wave amp=30 freq=8][rainbow freq=0.5 sat=0.7 val=2]New Record!"
+text = "New Record!"
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -290,6 +290,7 @@ func _on_song_ended():
 	song_player.stop();
 	PlayCount.increment_play_count(_current_info,_current_diff_rank)
 	
+	var new_record = false
 	var highscore = Highscores.get_highscore(_current_info,_current_diff_rank)
 	if highscore == null:
 		# no highscores exist yet
@@ -297,6 +298,7 @@ func _on_song_ended():
 	elif _current_points > highscore:
 		# player's score is the new highscore!
 		highscore = _current_points;
+		new_record = true
 
 	var current_percent = int((_right_notes/(_right_notes+_wrong_notes))*100)
 	$EndScore_canvas.ui_control.show_score(
@@ -308,7 +310,8 @@ func _on_song_ended():
 			_current_info["_songAuthorName"],
 			menu._map_difficulty_name,
 			_current_info["_levelAuthorName"]],
-		_full_combo
+		_full_combo,
+		new_record
 		)
 	
 	if Highscores.is_new_highscore(_current_info,_current_diff_rank,_current_points):

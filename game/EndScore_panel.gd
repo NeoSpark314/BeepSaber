@@ -5,12 +5,14 @@ var animated_percent = 0
 signal repeat()
 signal goto_mainmenu()
 
-func show_score(score,record,percent,song_string="",is_full_combo=false):
+func show_score(score,record,percent,song_string="",is_full_combo=false,is_new_record=false):
 	$details.modulate = Color(1,1,1,0)
 	$char.modulate = Color(1,1,1,0)
 	$full_combo_label.modulate = Color(1,1,1,0)
+	$new_record_label.modulate = Color(1,1,1,0)
 	
 	$full_combo_label.visible = is_full_combo
+	$new_record_label.visible = is_new_record
 	
 	$name.text = song_string
 	
@@ -51,6 +53,7 @@ func _on_Tween_tween_completed(object, key):
 		$Tween.interpolate_property($details,"modulate",Color(1,1,1,0),Color(1,1,1,1),2,Tween.TRANS_QUAD,Tween.TRANS_LINEAR)
 		$Tween.interpolate_property($char,"modulate",Color(1,1,1,0),Color(1,1,1,1),2,Tween.TRANS_QUAD,Tween.TRANS_LINEAR)
 		$Tween.interpolate_property($full_combo_label,"modulate",Color(1,1,1,0),Color(1,1,1,1),2,Tween.TRANS_QUAD,Tween.TRANS_LINEAR)
+		$Tween.interpolate_property($new_record_label,"modulate",Color(1,1,1,0),Color(1,1,1,1),2,Tween.TRANS_QUAD,Tween.TRANS_LINEAR)
 		$Tween.start()
 
 
