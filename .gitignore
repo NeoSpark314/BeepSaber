@@ -1,3 +1,6 @@
 .import
 src_data
 .DS_STORE
+
+# ignore exported APKs
+*.apk
