@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://game/floor.tscn" type="PackedScene" id=1]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DLabel.tscn" type="PackedScene" id=2]
@@ -19,12 +19,15 @@
 [ext_resource path="res://game/EndScore_panel.tscn" type="PackedScene" id=17]
 [ext_resource path="res://game/Pause_Panel.tscn" type="PackedScene" id=18]
 [ext_resource path="res://game/settings_Panel.tscn" type="PackedScene" id=19]
-[ext_resource path="res://game/Online_library_Panel.tscn" type="PackedScene" id=20]
+[ext_resource path="res://game/ui/BeatSaverPanel/BeatSaverPanel.tscn" type="PackedScene" id=20]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DKeyboard.tscn" type="PackedScene" id=21]
 [ext_resource path="res://game/Points_label_driver.tscn" type="PackedScene" id=22]
 [ext_resource path="res://game/HighscorePanel.tscn" type="PackedScene" id=23]
 [ext_resource path="res://game/Bomb/Bomb.tscn" type="PackedScene" id=24]
 [ext_resource path="res://game/ui/NameSelector/NameSelector.tscn" type="PackedScene" id=25]
+[ext_resource path="res://game/ui/YouTubeUI/YouTubeUI.tscn" type="PackedScene" id=26]
+[ext_resource path="res://game/ui/MapDownloadPanel/MapDownloadPanel.tscn" type="PackedScene" id=28]
+[ext_resource path="res://game/ui/BeatSageUI/BeatSageUI.tscn" type="PackedScene" id=29]
 
 [sub_resource type="Environment" id=1]
 background_mode = 3
@@ -147,12 +150,37 @@ visible = false
 [node name="settings_Panel" parent="Settings_canvas" instance=ExtResource( 19 )]
 game = NodePath("../..")
 
-[node name="Online_library" parent="." instance=ExtResource( 3 )]
-transform = Transform( 0.67553, 0, -1.82835, 0, 1.94915, 0, 1.82835, 0, 0.67553, 2.433, 1.49752, 0.468348 )
+[node name="MapSourceDialogs" type="Spatial" parent="."]
+transform = Transform( 0.346575, 0, -0.938022, 0, 1, 0, 0.938022, 0, 0.346575, 2.43, 1.498, 0.468 )
 
-[node name="Online_library_Panel" parent="Online_library" instance=ExtResource( 20 )]
-game = NodePath("../..")
-keyboard = NodePath("../../Keyboard_online_search")
+[node name="MapDownload_Canvas" parent="MapSourceDialogs" instance=ExtResource( 3 )]
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 )
+
+[node name="MapDownloadPanel" parent="MapSourceDialogs/MapDownload_Canvas" instance=ExtResource( 28 )]
+beat_saver_canvas_path = NodePath("../../BeatSaver_Canvas")
+beat_sage_canvas_path = NodePath("../../BeatSage_Canvas")
+
+[node name="BeatSaver_Canvas" parent="MapSourceDialogs" instance=ExtResource( 3 )]
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 )
+visible = false
+
+[node name="BeatSaverPanel" parent="MapSourceDialogs/BeatSaver_Canvas" instance=ExtResource( 20 )]
+game = NodePath("../../..")
+keyboard = NodePath("../../../Keyboard_online_search")
+
+[node name="BeatSage_Canvas" parent="MapSourceDialogs" instance=ExtResource( 3 )]
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 )
+visible = false
+
+[node name="BeatSageUI" parent="MapSourceDialogs/BeatSage_Canvas" instance=ExtResource( 29 )]
+youtube_ui = NodePath("../../YouTube_Canvas/YouTubeUI")
+
+[node name="YouTube_Canvas" parent="MapSourceDialogs" instance=ExtResource( 3 )]
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0.01 )
+visible = false
+
+[node name="YouTubeUI" parent="MapSourceDialogs/YouTube_Canvas" instance=ExtResource( 26 )]
+keyboard = NodePath("../../../Keyboard_online_search")
 
 [node name="Keyboard_highscore" parent="." instance=ExtResource( 21 )]
 transform = Transform( 2.40442, 0, 0, 0, 2.37659, 0.364816, 0, -0.364816, 2.37659, -0.00735812, 0.350501, -0.67319 )
@@ -179,6 +207,7 @@ transparent = true
 
 [node name="NameSelector" parent="NameSelector_Canvas" instance=ExtResource( 25 )]
 mouse_filter = 1
+
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_entered"]
 [connection signal="area_exited" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_exited"]
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_LeftController/LeftLightSaber" to="." method="_on_LeftLightSaber_area_entered"]

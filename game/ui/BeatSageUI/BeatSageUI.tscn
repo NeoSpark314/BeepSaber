@@ -1,0 +1,351 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://game/BlackWhiteThem.tres" type="Theme" id=1]
+[ext_resource path="res://game/ui/BeatSageUI/BeatSageUI.gd" type="Script" id=2]
+[ext_resource path="res://game/ui/YouTubeUI/youtube_icon.png" type="Texture" id=3]
+[ext_resource path="res://game/ui/BeatSageUI/beat_sage_icon.png" type="Texture" id=4]
+[ext_resource path="res://game/ui/BeatSageUI/BeatSageRequest/BeatSageRequest.tscn" type="PackedScene" id=5]
+
+[node name="BeatSageUI" type="Panel"]
+margin_right = 1536.0
+margin_bottom = 960.0
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Icon" type="TextureRect" parent="."]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 490.0
+margin_bottom = 128.0
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SongLabel" type="Label" parent="."]
+margin_left = 32.0
+margin_top = 144.0
+margin_right = 257.0
+margin_bottom = 192.0
+text = "Select Song:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SongURL" type="LineEdit" parent="."]
+margin_left = 32.0
+margin_top = 208.0
+margin_right = 872.0
+margin_bottom = 272.0
+placeholder_text = "Paste a link (Youtube, Soundcloud, etc.)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SongArtistLabel" type="Label" parent="."]
+margin_left = 32.0
+margin_top = 288.0
+margin_right = 257.0
+margin_bottom = 336.0
+text = "Song Artist:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SongArtist" type="LineEdit" parent="."]
+margin_left = 264.0
+margin_top = 280.0
+margin_right = 784.0
+margin_bottom = 344.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SongNameLabel" type="Label" parent="."]
+margin_left = 32.0
+margin_top = 360.0
+margin_right = 257.0
+margin_bottom = 408.0
+text = "Song Name:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SongName" type="LineEdit" parent="."]
+margin_left = 264.0
+margin_top = 352.0
+margin_right = 784.0
+margin_bottom = 416.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="YoutubeButton" type="TextureButton" parent="."]
+margin_left = 888.0
+margin_top = 216.0
+margin_right = 1104.0
+margin_bottom = 264.0
+texture_normal = ExtResource( 3 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SongCover" type="TextureRect" parent="."]
+margin_left = 1160.0
+margin_top = 208.0
+margin_right = 1384.0
+margin_bottom = 432.0
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DifficultyLabel" type="Label" parent="."]
+margin_left = 32.0
+margin_top = 448.0
+margin_right = 331.0
+margin_bottom = 496.0
+text = "Difficulty Levels:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ExperimentalLabel" type="Label" parent="."]
+margin_left = 16.0
+margin_top = 896.0
+margin_right = 487.0
+margin_bottom = 944.0
+text = "(*) = Experimental Feature"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DifficultyNormal" type="CheckBox" parent="."]
+margin_left = 32.0
+margin_top = 504.0
+margin_right = 200.0
+margin_bottom = 568.0
+pressed = true
+text = "Normal"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DifficultyHard" type="CheckBox" parent="."]
+margin_left = 32.0
+margin_top = 584.0
+margin_right = 200.0
+margin_bottom = 648.0
+pressed = true
+text = "Hard"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DifficultyExpert" type="CheckBox" parent="."]
+margin_left = 216.0
+margin_top = 504.0
+margin_right = 384.0
+margin_bottom = 568.0
+pressed = true
+text = "Expert"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DifficultyExpertPlus" type="CheckBox" parent="."]
+margin_left = 216.0
+margin_top = 584.0
+margin_right = 384.0
+margin_bottom = 648.0
+pressed = true
+text = "Expert+"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GameModeLabel" type="Label" parent="."]
+margin_left = 488.0
+margin_top = 448.0
+margin_right = 787.0
+margin_bottom = 496.0
+text = "Game Mode:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModeStandard" type="CheckBox" parent="."]
+margin_left = 488.0
+margin_top = 504.0
+margin_right = 712.0
+margin_bottom = 568.0
+pressed = true
+text = "Standard"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModeNoArrows" type="CheckBox" parent="."]
+margin_left = 488.0
+margin_top = 584.0
+margin_right = 712.0
+margin_bottom = 648.0
+text = "No Arrows"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModeOneSaber" type="CheckBox" parent="."]
+margin_left = 728.0
+margin_top = 504.0
+margin_right = 952.0
+margin_bottom = 568.0
+text = "One Saber (*)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SongEventsLabel" type="Label" parent="."]
+margin_left = 32.0
+margin_top = 688.0
+margin_right = 331.0
+margin_bottom = 736.0
+text = "Song Events:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EventsBombs" type="CheckBox" parent="."]
+margin_left = 32.0
+margin_top = 744.0
+margin_right = 256.0
+margin_bottom = 808.0
+text = "Bombs"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EventsDotBlocks" type="CheckBox" parent="."]
+margin_left = 32.0
+margin_top = 824.0
+margin_right = 256.0
+margin_bottom = 888.0
+pressed = true
+text = "Dot Blocks"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EventsObstacles" type="CheckBox" parent="."]
+margin_left = 272.0
+margin_top = 744.0
+margin_right = 496.0
+margin_bottom = 808.0
+text = "Obstacles (*)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModelLabel" type="Label" parent="."]
+margin_left = 592.0
+margin_top = 688.0
+margin_right = 891.0
+margin_bottom = 736.0
+text = "AI Model:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModelButton" type="OptionButton" parent="."]
+margin_left = 592.0
+margin_top = 744.0
+margin_right = 1128.0
+margin_bottom = 808.0
+text = "V2"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SubmitButton" type="Button" parent="."]
+margin_left = 1112.0
+margin_top = 880.0
+margin_right = 1308.0
+margin_bottom = 944.0
+text = "Submit"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CloseButton" type="Button" parent="."]
+margin_left = 1320.0
+margin_top = 880.0
+margin_right = 1516.0
+margin_bottom = 944.0
+text = "Close"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressScreen" type="ColorRect" parent="."]
+visible = false
+margin_left = 16.0
+margin_top = 128.0
+margin_right = 1520.0
+margin_bottom = 944.0
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressNoteLabel" type="Label" parent="ProgressScreen"]
+margin_left = 240.0
+margin_top = 352.0
+margin_right = 1264.0
+margin_bottom = 400.0
+text = "Beat Sage can take up to 2 mins to process some songs."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressBar" type="ProgressBar" parent="ProgressScreen"]
+margin_left = 368.0
+margin_top = 448.0
+margin_right = 1136.0
+margin_bottom = 504.0
+max_value = 120.0
+step = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CancelButton" type="Button" parent="ProgressScreen"]
+margin_left = 1304.0
+margin_top = 752.0
+margin_right = 1504.0
+margin_bottom = 816.0
+text = "Cancel"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BeatSageRequest" parent="." instance=ExtResource( 5 )]
+
+[connection signal="text_entered" from="SongURL" to="." method="_on_SongURL_text_entered"]
+[connection signal="text_entered" from="SongArtist" to="." method="_on_SongURL_text_entered"]
+[connection signal="text_entered" from="SongName" to="." method="_on_SongURL_text_entered"]
+[connection signal="pressed" from="YoutubeButton" to="." method="_on_YoutubeButton_pressed"]
+[connection signal="pressed" from="SubmitButton" to="." method="_on_SubmitButton_pressed"]
+[connection signal="pressed" from="CloseButton" to="." method="_on_CloseButton_pressed"]
+[connection signal="pressed" from="ProgressScreen/CancelButton" to="." method="_on_CancelButton_pressed"]
+[connection signal="download_complete" from="BeatSageRequest" to="." method="_on_BeatSageRequest_download_complete"]
+[connection signal="progress_update" from="BeatSageRequest" to="." method="_on_BeatSageRequest_progress_update"]
+[connection signal="request_failed" from="BeatSageRequest" to="." method="_on_BeatSageRequest_request_failed"]
+[connection signal="youtube_metadata_available" from="BeatSageRequest" to="." method="_on_BeatSageRequest_youtube_metadata_available"]
+[connection signal="youtube_metadata_request_failed" from="BeatSageRequest" to="." method="_on_BeatSageRequest_youtube_metadata_request_failed"]
