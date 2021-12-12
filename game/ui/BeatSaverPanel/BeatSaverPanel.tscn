@@ -2,7 +2,7 @@
 
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/RobotoMono-Medium.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://game/ui/BeatSaverPanel/BeatSaverPanel.gd" type="Script" id=2]
-[ext_resource path="res://game/vr_slider.gd" type="Script" id=4]
+[ext_resource path="res://game/vr_slider.tscn" type="PackedScene" id=3]
 [ext_resource path="res://game/data/beepsaber_logo.png" type="Texture" id=5]
 [ext_resource path="res://game/BlackWhiteThem.tres" type="Theme" id=6]
 
@@ -234,6 +234,9 @@ text = "Close"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="list_slider" parent="." instance=ExtResource( 3 )]
+scroll_node = NodePath("../ItemList")
 
 [connection signal="visibility_changed" from="." to="." method="_on_BeatSaverPanel_visibility_changed"]
 [connection signal="item_selected" from="ItemList" to="." method="_on_ItemList_item_selected"]
