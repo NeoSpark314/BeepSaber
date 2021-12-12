@@ -16,7 +16,7 @@ func _ready():
 	
 	look_at_from_position(currentPosition, camPos, Vector3(0,1,0));
 	
-	pass # Replace with function body.
+	$DebugLabel.visible = OS.is_debug_build()
 
 var moving = false;
 var moveTimer = 0.0;
