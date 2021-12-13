@@ -24,10 +24,6 @@ func _ready():
 	
 	#separates cube collision layers to allow a diferent collider on right/wrong cuts
 	yield(get_tree(),"physics_frame")
-	$CubeMeshOrientation/BeepCube_Big.set_collision_mask_bit(4,!bool(_note._type))
-	$CubeMeshOrientation/BeepCube_Big.set_collision_mask_bit(14,bool(_note._type))
-	$CubeMeshOrientation/BeepCube_Small.set_collision_mask_bit(4,bool(_note._type))
-	$CubeMeshOrientation/BeepCube_Small.set_collision_mask_bit(14,!bool(_note._type))
 
 func duplicate_create(color : Color):
 	var mi = $CubeMeshOrientation/CubeMeshAnimation/BeepCube_Mesh;
