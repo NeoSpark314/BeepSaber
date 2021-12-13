@@ -5,11 +5,10 @@ extends Area
 
 # store the saber material in a variable so the main game can set the color on initialize
 onready var _anim := $AnimationPlayer;
-onready var _main_game = get_tree().get_nodes_in_group("main_game")[0];
+onready var _main_game = null;
 
 # the type of note this saber can cut (set in the game main)
 var type = 0;
-
 
 signal saber_show()
 signal saber_hide()
@@ -54,14 +53,14 @@ func set_trail(enabled=true):
 
 func _ready():
 #	set_saber("res://game/sabers/particles/particles_saber.tscn")
+	if get_tree().get_nodes_in_group("main_game"):
+		_main_game = get_tree().get_nodes_in_group("main_game")[0];
 	_anim.play("QuickHide");
 	emit_signal("saber_quickhide")
 	
 	#separates cube collision layers to allow a diferent collider on right/wrong cuts
 	yield(get_tree(),"physics_frame")
-	set_collision_layer_bit(4,!bool(type))
-	set_collision_layer_bit(14,bool(type))
-
+	
 func _process(delta):
 	if is_extended():
 		#check floor collision for burn mark
@@ -71,7 +70,7 @@ func _process(delta):
 			if raycoli in get_tree().get_nodes_in_group("floor"):
 				var colipoint = $RayCast.get_collision_point()
 				raycoli.burn_mark(colipoint,type)
-		
+				
 func set_saber(saber_path):
 	var prenewsaber = load(saber_path)
 	var newsaber = prenewsaber.instance()
