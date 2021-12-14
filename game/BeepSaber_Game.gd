@@ -597,8 +597,8 @@ func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distanc
 		
 	var rigid_body_half = RigidBody.new();
 	rigid_body_half.add_to_group("cutted_cube")
-	rigid_body_half.collision_layer = 8
-	rigid_body_half.collision_mask = 0
+	rigid_body_half.collision_layer = 0
+	rigid_body_half.collision_mask = CollisionLayerConstants.Floor_mask
 	rigid_body_half.gravity_scale = 1
 	
 	# the original cube mesh

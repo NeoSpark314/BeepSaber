@@ -67,11 +67,10 @@ func _process(delta):
 	if is_extended():
 		#check floor collision for burn mark
 		$RayCast.force_raycast_update()
-		if $RayCast.is_colliding():
-			var raycoli = $RayCast.get_collider()
-			if raycoli in get_tree().get_nodes_in_group("floor"):
-				var colipoint = $RayCast.get_collision_point()
-				raycoli.burn_mark(colipoint,type)
+		var raycoli = $RayCast.get_collider()
+		if raycoli != null and (raycoli.collision_layer & CollisionLayerConstants.Floor_mask):
+			var colipoint = $RayCast.get_collision_point()
+			raycoli.burn_mark(colipoint,type)
 				
 func set_saber(saber_path):
 	var prenewsaber = load(saber_path)
