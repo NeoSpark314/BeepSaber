@@ -55,7 +55,7 @@ func _physics_process(delta):
 			_debug_curr_balls[i].global_transform.origin = next_pos
 			
 		# cast a ray to the newest location and check for collisions
-		ray.cast_to = next_pos - _prev_ray_positions[i]
+		ray.cast_to = ray.to_local(_prev_ray_positions[i])
 		ray.force_raycast_update()
 		var coll = ray.get_collider()
 		if coll != null:
