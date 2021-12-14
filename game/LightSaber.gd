@@ -17,6 +17,8 @@ signal saber_set_thickness(value)
 signal saber_set_color(value)
 signal saber_set_trail(value)
 signal saber_hit(cube,time_offset)
+signal cube_collide(cube)
+signal bomb_collide(bomb)
 
 func show():
 	if (!is_extended()):
@@ -84,3 +86,9 @@ func hit(cube):
 		_main_game.song_player.get_playback_position()
 		)
 	emit_signal("saber_hit",cube,time_offset)
+
+func _on_SwingableRayCast_area_collided(area):
+	if area.collision_layer & CollisionLayerConstants.Notes_mask:
+		emit_signal("cube_collide",area.get_parent().get_parent())
+	elif area.collision_layer & CollisionLayerConstants.Bombs_mask:
+		emit_signal("bomb_collide",area.get_parent().get_parent())

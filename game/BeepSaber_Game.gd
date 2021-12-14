@@ -776,29 +776,6 @@ func _endscore_panel() -> EndScorePanel:
 # accessor method for the player name selector UI element
 func _name_selector() -> NameSelector:
 	return name_selector_canvas.ui_control
-	
-func _on_LeftLightSaber_area_entered(area : Area):
-	if song_player.playing:
-		if area.is_in_group("beepcube"):
-			_cut_cube(left_controller, left_saber, area.get_parent().get_parent());
-		elif area.is_in_group("bomb"):
-			_reset_combo()
-			# remove bomb
-			area.get_parent().get_parent().queue_free()
-			# perform haptic feedback for bomb explosion
-			left_controller.simple_rumble(1.0, 0.15);
-
-
-func _on_RightLightSaber_area_entered(area : Area):
-	if song_player.playing:
-		if area.is_in_group("beepcube"):
-			_cut_cube(right_controller, right_saber, area.get_parent().get_parent());
-		elif area.is_in_group("bomb"):
-			_reset_combo()
-			# remove bomb
-			area.get_parent().get_parent().queue_free()
-			# perform haptic feedback for bomb explosion
-			right_controller.simple_rumble(1.0, 0.15);
 
 func _on_PlayerHead_area_entered(area):
 	if area.is_in_group("wall"):
@@ -866,3 +843,35 @@ func _on_Keyboard_highscore_text_input_enter(text):
 func _on_NameSelector_name_selected(name):
 	if _current_game_state == GameState.NewHighscore:
 		_submit_highscore(name)
+
+func _on_LeftLightSaber_cube_collide(cube):
+	# check 'playing' to prevent cutting items while resuming from pause menu
+	# where items are visible at this point, but there a count down before the
+	# song starts to play again
+	if song_player.playing:
+		_cut_cube(left_controller, left_saber, cube);
+
+func _on_RightLightSaber_cube_collide(cube):
+	# check 'playing' to prevent cutting items while resuming from pause menu
+	# where items are visible at this point, but there a count down before the
+	# song starts to play again
+	if song_player.playing:
+		_cut_cube(right_controller, right_saber, cube);
+
+func _on_LeftLightSaber_bomb_collide(bomb):
+	# check 'playing' to prevent cutting items while resuming from pause menu
+	# where items are visible at this point, but there a count down before the
+	# song starts to play again
+	if song_player.playing:
+		_reset_combo()
+		bomb.queue_free()
+		left_controller.simple_rumble(1.0, 0.15);
+
+func _on_RightLightSaber_bomb_collide(bomb):
+	# check 'playing' to prevent cutting items while resuming from pause menu
+	# where items are visible at this point, but there a count down before the
+	# song starts to play again
+	if song_player.playing:
+		_reset_combo()
+		bomb.queue_free()
+		right_controller.simple_rumble(1.0, 0.15);

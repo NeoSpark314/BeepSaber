@@ -2,11 +2,11 @@
 # collisions with objects while swinging at high velocities.
 extends RayCast
 
-signal cube_collide(cube)
+signal area_collided(area)
 
 export (int,2,10) var num_collision_raycasts = 6
 
-const DEBUG = true;
+const DEBUG = false;
 
 # the type of note this saber can cut (set in the game main)
 var _prev_ray_positions = [];
@@ -39,6 +39,15 @@ func _ready():
 	remove_child($debug_ball)
 
 func _physics_process(delta):
+	# see if 'core' ray is colliding with anything
+	var coll = get_collider()
+	if coll is Area:
+		emit_signal("area_collided",coll)
+	
+	# ---------------------
+	
+	# update positions of segmented ray casts and check for collisions on them
+	
 	# generate new locations for ray casters
 	var saber_base = transform.origin
 	var saber_tip = saber_base + cast_to
@@ -57,9 +66,8 @@ func _physics_process(delta):
 		# cast a ray to the newest location and check for collisions
 		ray.cast_to = ray.to_local(_prev_ray_positions[i])
 		ray.force_raycast_update()
-		var coll = ray.get_collider()
-		if coll != null:
-			print("collision detected! %s" % coll)
-			emit_signal("cube_collide",coll.get_parent().get_parent())
+		coll = ray.get_collider()
+		if coll is Area:
+			emit_signal("area_collided",coll)
 		
 		_prev_ray_positions[i] = next_pos

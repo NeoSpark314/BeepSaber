@@ -193,3 +193,5 @@ collide_with_bodies = false
 [node name="saber_holder" type="Spatial" parent="."]
 
 [node name="default_saber" parent="saber_holder" instance=ExtResource( 1 )]
+
+[connection signal="area_collided" from="SwingableRayCast" to="." method="_on_SwingableRayCast_area_collided"]
