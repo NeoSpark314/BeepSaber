@@ -18,8 +18,6 @@ var _debug_raycast_trail := LinkedList.new();
 onready var _sw := StopwatchFactory.create(name, 10, true);
 
 func _ready():
-	_sw.enabled = true
-	
 	yield(get_tree(),"physics_frame")
 	
 	# use discrete RayCasts for continuous collision detection between _physics_process()
@@ -89,8 +87,6 @@ func _physics_process(delta):
 
 		_debug_raycast_trail.push_front(old_slice)
 	_sw.stop()
-	
-	_sw.print_stats()
 
 func _on_SwingableRayCast_tree_entered():
 	if DEBUG:
