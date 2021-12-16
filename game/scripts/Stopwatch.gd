@@ -1,4 +1,5 @@
 extends Reference
+class_name Stopwatch
 
 const MAX_INT : int = 2^63
 const MIN_INT : int = -2^63

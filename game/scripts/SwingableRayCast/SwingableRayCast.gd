@@ -9,16 +9,17 @@ export (int,2,10) var num_collision_raycasts = 6
 const DEBUG = false
 const DEBUG_TRAIL_SEGMENTS = 5
 const LinkedList = preload("res://game/scripts/LinkedList.gd")
-const Stopwatch = preload("res://game/scripts/Stopwatch.gd")
 
 # the type of note this saber can cut (set in the game main)
 var _prev_ray_positions = [];
 var _rays = [];
 var _debug_curr_balls = [];
 var _debug_raycast_trail := LinkedList.new();
-var _sw := Stopwatch.new(10, true);
+onready var _sw := StopwatchFactory.create(name, 10, true);
 
 func _ready():
+	_sw.enabled = true
+	
 	yield(get_tree(),"physics_frame")
 	
 	# use discrete RayCasts for continuous collision detection between _physics_process()
@@ -88,6 +89,8 @@ func _physics_process(delta):
 
 		_debug_raycast_trail.push_front(old_slice)
 	_sw.stop()
+	
+	_sw.print_stats()
 
 func _on_SwingableRayCast_tree_entered():
 	if DEBUG:
