@@ -167,7 +167,7 @@ tracks/3/keys = {
 ]]
 transform = Transform( 1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0 )
 collision_layer = 16
-collision_mask = 2147483697
+collision_mask = 2147483665
 script = ExtResource( 2 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
