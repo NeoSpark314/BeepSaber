@@ -13,3 +13,5 @@ transform = Transform( 0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 0, 0, 0 )
 visible = false
 mesh = SubResource( 1 )
 material/0 = null
+
+[connection signal="tree_entered" from="." to="." method="_on_SwingableRayCast_tree_entered"]

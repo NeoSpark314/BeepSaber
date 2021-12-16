@@ -6,12 +6,15 @@ signal area_collided(area)
 
 export (int,2,10) var num_collision_raycasts = 6
 
-const DEBUG = false;
+const DEBUG = false
+const DEBUG_TRAIL_SEGMENTS = 5
+const LinkedList = preload("res://game/scripts/LinkedList.gd")
 
 # the type of note this saber can cut (set in the game main)
 var _prev_ray_positions = [];
 var _rays = [];
 var _debug_curr_balls = [];
+var _debug_raycast_trail := LinkedList.new();
 
 func _ready():
 	#separates cube collision layers to allow a diferent collider on right/wrong cuts
@@ -34,7 +37,7 @@ func _ready():
 			new_ball.visible = true
 			add_child(new_ball)
 			_debug_curr_balls.append(new_ball)
-			
+	
 	# no longer need original instance
 	remove_child($debug_ball)
 
@@ -71,3 +74,27 @@ func _physics_process(delta):
 			emit_signal("area_collided",coll)
 		
 		_prev_ray_positions[i] = next_pos
+		
+	if DEBUG:
+		var old_slice = _debug_raycast_trail.pop_back()
+
+		# update oldest slide with newest ray casts
+		for i in range(num_collision_raycasts):
+			old_slice[i].global_transform = _rays[i].global_transform
+			old_slice[i].cast_to = _rays[i].cast_to
+
+		_debug_raycast_trail.push_front(old_slice)
+
+func _on_SwingableRayCast_tree_entered():
+	if DEBUG:
+		var root = get_tree().get_root()
+		var scene_root = root.get_child(root.get_child_count() - 1)
+		for t in range(DEBUG_TRAIL_SEGMENTS):
+			var trail_slice = []
+			for i in range(num_collision_raycasts):
+				var new_ray := RayCast.new()
+				new_ray.enabled = true
+				new_ray.collision_mask = collision_mask
+				scene_root.add_child(new_ray)
+				trail_slice.append(new_ray)
+			_debug_raycast_trail.push_front(trail_slice)
