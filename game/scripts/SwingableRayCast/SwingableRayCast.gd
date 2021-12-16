@@ -9,18 +9,19 @@ export (int,2,10) var num_collision_raycasts = 6
 const DEBUG = false
 const DEBUG_TRAIL_SEGMENTS = 5
 const LinkedList = preload("res://game/scripts/LinkedList.gd")
+const Stopwatch = preload("res://game/scripts/Stopwatch.gd")
 
 # the type of note this saber can cut (set in the game main)
 var _prev_ray_positions = [];
 var _rays = [];
 var _debug_curr_balls = [];
 var _debug_raycast_trail := LinkedList.new();
+var _sw := Stopwatch.new(10, true);
 
 func _ready():
-	#separates cube collision layers to allow a diferent collider on right/wrong cuts
 	yield(get_tree(),"physics_frame")
 	
-	# instantiate ray caster for doing continuous collision detection for cubes
+	# use discrete RayCasts for continuous collision detection between _physics_process()
 	for i in range(num_collision_raycasts):
 		var new_ray := RayCast.new()
 		# inherit properties of parent
@@ -42,6 +43,7 @@ func _ready():
 	remove_child($debug_ball)
 
 func _physics_process(delta):
+	_sw.start()
 	# see if 'core' ray is colliding with anything
 	var coll = get_collider()
 	if coll is Area:
@@ -56,15 +58,15 @@ func _physics_process(delta):
 	var saber_tip = saber_base + cast_to
 	var step_dist = (saber_tip - saber_base) / (num_collision_raycasts - 1)
 	
+	var next_local_pos = transform.origin
 	for i in range(num_collision_raycasts):
-		var next_pos = transform.origin + step_dist * i
-		next_pos = global_transform.xform(next_pos)
+		var next_global_pos = global_transform.xform(next_local_pos)
 			
 		# update ray's newest location for next physics frame processing
 		var ray : RayCast = _rays[i]
-		ray.global_transform.origin = next_pos
+		ray.global_transform.origin = next_global_pos
 		if DEBUG:
-			_debug_curr_balls[i].global_transform.origin = next_pos
+			_debug_curr_balls[i].global_transform.origin = next_global_pos
 			
 		# cast a ray to the newest location and check for collisions
 		ray.cast_to = ray.to_local(_prev_ray_positions[i])
@@ -73,7 +75,8 @@ func _physics_process(delta):
 		if coll is Area:
 			emit_signal("area_collided",coll)
 		
-		_prev_ray_positions[i] = next_pos
+		_prev_ray_positions[i] = next_global_pos
+		next_local_pos += step_dist
 		
 	if DEBUG:
 		var old_slice = _debug_raycast_trail.pop_back()
@@ -84,6 +87,7 @@ func _physics_process(delta):
 			old_slice[i].cast_to = _rays[i].cast_to
 
 		_debug_raycast_trail.push_front(old_slice)
+	_sw.stop()
 
 func _on_SwingableRayCast_tree_entered():
 	if DEBUG:
