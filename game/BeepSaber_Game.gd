@@ -440,7 +440,7 @@ func _process_map(dt):
 			depth = beat_distance * c._obstacle._duration
 		else:
 			# enable bomb/cube collision when it gets closer enough to player
-			if c.global_transform.origin.z > -2.5:
+			if c.global_transform.origin.z > -3.0:
 				c.collision_disabled = false
 
 		# remove children that go to far
