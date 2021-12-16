@@ -68,7 +68,7 @@ func stop():
 		_idx = 0
 	
 func print_stats():
-	print('intervals = %d' % _idx)
+	print('total_intervals = %d' % total_intervals)
 	print('ellapsed_duration = %dus' % ellapsed_duration)
 	print('min_duration = %dus' % min_duration)
 	print('max_duration = %dus' % max_duration)
