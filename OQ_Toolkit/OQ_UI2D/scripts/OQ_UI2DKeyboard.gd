@@ -4,6 +4,7 @@ export var show_text_input := true;
 # if 'show_text_input' is enabled and this flag is set ture, then
 # the text input box will aquire focus when then keyboard gains visibilty
 export var focus_on_visible := true;
+export var cancelable := true setget _set_cancelable
 
 var _text_edit : TextEdit = null;
 var _keyboard = null;
@@ -35,6 +36,11 @@ func _ready():
 		_text_edit.grab_focus();
 	else:
 		$OQ_UI2DCanvas_TextInput.visible = false; # ?? maybe delte the node if not used
+
+func _set_cancelable(value):
+	cancelable = value
+	if _keyboard != null:
+		_keyboard.set_cancelable(cancelable)
 
 func _on_OQ_UI2DKeyboard_visibility_changed():
 	if visible and show_text_input and focus_on_visible:

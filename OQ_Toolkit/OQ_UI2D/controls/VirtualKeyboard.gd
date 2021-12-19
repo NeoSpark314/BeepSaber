@@ -185,7 +185,9 @@ func _create_keyboard_buttons():
 	_refrence_button.visible = false;
 	_toggle_symbols(_toggle_symbols_button.pressed);
 
-
+func set_cancelable(cancelable):
+	if _cancel_button != null:
+		_cancel_button.visible = cancelable
 
 func _ready():
 	_create_keyboard_buttons();

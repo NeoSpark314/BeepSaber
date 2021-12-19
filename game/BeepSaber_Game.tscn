@@ -185,6 +185,7 @@ keyboard = NodePath("../../../Keyboard_online_search")
 [node name="Keyboard_highscore" parent="." instance=ExtResource( 21 )]
 transform = Transform( 2.40442, 0, 0, 0, 2.37659, 0.364816, 0, -0.364816, 2.37659, -0.00735812, 0.350501, -0.67319 )
 visible = false
+cancelable = false
 
 [node name="Keyboard_online_search" parent="." instance=ExtResource( 21 )]
 transform = Transform( 0.838233, 0.349429, -2.22632, 0, 2.37535, 0.372819, 2.25358, -0.129972, 0.828095, 2.09772, 0.833935, 0.302276 )
