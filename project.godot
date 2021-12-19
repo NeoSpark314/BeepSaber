@@ -143,12 +143,16 @@ config/icon="res://icon.png"
 vr="*res://OQ_Toolkit/vr_autoload.gd"
 Highscores="*res://game/scripts/HighscoreTable/HighscoreTable.gd"
 PlayCount="*res://game/scripts/PlayCountTable.gd"
-StopwatchFactory="*res://game/scripts/StopwatchFactory.gd"
+StopwatchFactory="*res://addons/stopwatch/public/StopwatchFactory.gd"
 
 [display]
 
 window/size/width=960
 window/size/height=540
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/stopwatch/plugin.cfg" )
 
 [gdnative]
 
