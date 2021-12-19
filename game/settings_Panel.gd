@@ -28,6 +28,7 @@ onready var d_background = $ScrollContainer/VBox/d_background
 onready var left_saber_col = $ScrollContainer/VBox/SaberColorsRow/left_saber_col
 onready var right_saber_col = $ScrollContainer/VBox/SaberColorsRow/right_saber_col
 onready var show_fps = $ScrollContainer/VBox/show_fps
+onready var show_collisions = $ScrollContainer/VBox/show_collisions
 onready var bombs_enabled = $ScrollContainer/VBox/bombs_enabled
 
 var sabers = [
@@ -47,6 +48,9 @@ func _ready():
 	saber.clear()
 	for s in sabers:
 		saber.add_item(s[0])
+	
+	show_collisions.pressed = get_tree().debug_collisions_hint
+	show_collisions.visible = OS.is_debug_build()
 	
 	#correct controls
 	yield(get_tree(),"idle_frame")
@@ -194,7 +198,10 @@ func _on_bombs_enabled_toggled(button_pressed,overwrite=true):
 		save_current_settings()
 	else:
 		bombs_enabled.pressed = button_pressed
-	
+
+func _on_show_collisions_toggled(button_pressed):
+	get_tree().debug_collisions_hint = button_pressed
+
 #check if A, B and right thumbstick buttons are pressed at the same time to delete settings
 func _on_wipe_check_timeout():
 	if (game.menu.visible
