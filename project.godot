@@ -102,7 +102,7 @@ _global_script_classes=[ {
 "base": "Reference",
 "class": "Stopwatch",
 "language": "GDScript",
-"path": "res://game/scripts/Stopwatch.gd"
+"path": "res://addons/stopwatch/public/Stopwatch.gd"
 }, {
 "base": "Spatial",
 "class": "Wall",
