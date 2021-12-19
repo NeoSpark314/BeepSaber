@@ -24,3 +24,4 @@ __meta__ = {
 }
 
 [connection signal="visibility_changed" from="." to="." method="_on_OQ_UI2DKeyboard_visibility_changed"]
+[connection signal="text_changed" from="OQ_UI2DCanvas_TextInput/TextEdit" to="." method="_on_TextEdit_text_changed"]

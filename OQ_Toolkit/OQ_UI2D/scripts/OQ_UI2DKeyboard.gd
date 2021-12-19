@@ -5,6 +5,13 @@ export var show_text_input := true;
 # the text input box will aquire focus when then keyboard gains visibilty
 export var focus_on_visible := true;
 export var cancelable := true setget _set_cancelable
+# the minimum number of characters needed to be entered before the enter button
+# will be enabled
+export var min_chars_to_enable_enter := 0
+
+# if 'true' then the keyboard will make sure the first letter of each word is
+# capitalized
+export var is_name_input := false
 
 var _text_edit : TextEdit = null;
 var _keyboard = null;
@@ -26,6 +33,12 @@ func _on_enter():
 func _ready():
 	_text_edit = $OQ_UI2DCanvas_TextInput.find_node("TextEdit", true, false);
 	_keyboard = $OQ_UI2DCanvas_Keyboard.find_node("VirtualKeyboard", true, false);
+	_keyboard.set_cancelable(cancelable)
+	
+	# force update of things that based on the text input
+	#  * enable/disable enter key based on min char length
+	#  * name input capitalization
+	_on_TextEdit_text_changed()
 	
 	if (show_text_input):
 		_keyboard.connect("cancel_pressed", self, "_on_cancel");
@@ -45,3 +58,15 @@ func _set_cancelable(value):
 func _on_OQ_UI2DKeyboard_visibility_changed():
 	if visible and show_text_input and focus_on_visible:
 		_text_edit.grab_focus()
+
+func _on_TextEdit_text_changed():
+	var text_len = _text_edit.text.length()
+	var disable_enter = text_len < min_chars_to_enable_enter
+	_keyboard.enter_button_disabled(disable_enter)
+	
+	if is_name_input:
+		# default first letter of each 'word' to a capital
+		var upper_case = text_len == 0
+		if text_len > 0:
+			upper_case = _text_edit.text[-1] == ' '
+		_keyboard.set_upper_case(upper_case)
