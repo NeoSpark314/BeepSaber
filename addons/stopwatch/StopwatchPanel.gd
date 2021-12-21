@@ -31,6 +31,7 @@ func _add_sw_to_grid(sw_id, sw_summary):
 	new_row[GRID_COL_ENABLED].connect("toggled",self,"_on_sw_checkbox_toggled",[sw_id])
 	new_row[GRID_COL_RESET].connect("pressed",self,"_on_sw_reset_pressed",[sw_id])
 	new_row[GRID_COL_NAME].text = sw_summary['name']
+	new_row[GRID_COL_NAME].hint_tooltip = sw_summary['name']
 	_sw_rows[sw_id] = new_row
 	for ctrl in new_row:
 		_grid.add_child(ctrl)
@@ -44,7 +45,9 @@ func _create_new_row():
 	reset_button.text = "Reset"
 	reset_button.hint_tooltip = "resets the stopwatch on the remote side"
 	new_row.append(reset_button)
-	new_row.append(Label.new())# name
+	var name_label := Label.new()
+	name_label.mouse_filter = Control.MOUSE_FILTER_PASS
+	new_row.append(name_label)
 	var le = LineEdit.new()
 	le.editable = false
 	new_row.append(le.duplicate())# min

@@ -68,9 +68,9 @@ func connect_to_host(hostname, port = DEFAULT_PORT):
 	if connected():
 		print('CLIENT: [WARN] already connected to server')
 	else:
-		_udp.connect_to_host(_hostname, _port) == OK
 		_hostname = hostname
 		_port = port
+		_udp.connect_to_host(_hostname, _port) == OK
 		_reconnect_timer.start(RECONNECT_DELAY)
 		
 func reset():
