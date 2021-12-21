@@ -14,6 +14,7 @@ enum GameState {
 	NewHighscore
 }
 
+
 onready var left_controller := $OQ_ARVROrigin/OQ_LeftController;
 onready var right_controller := $OQ_ARVROrigin/OQ_RightController;
 
@@ -33,9 +34,7 @@ onready var fps_label = $OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead/FPS_Label
 
 onready var cube_template = preload("res://game/BeepCube.tscn").instance();
 onready var wall_template = preload("res://game/Wall/Wall.tscn").instance();
-onready var cube_material_template = preload("res://game/BeepCube_new_material.material");
-onready var cube_half_template = preload("res://game/BeepCube_CutFadeout.gd");
-onready var cube_particles_template = preload("res://game/BeepCube_SliceParticles.tscn");
+onready var LinkedList := preload("res://game/scripts/LinkedList.gd")
 export(PackedScene) var bomb_template : PackedScene
 
 var cube_left = null
@@ -96,9 +95,44 @@ var _wrong_notes = 0;
 
 #settings
 var cube_cuts_falloff = true
-var max_cutted_cubes = 32
 var bombs_enabled = true
 
+# structure of nodes that represent a cut piece of a cube (ie. one half)
+class CutPieceNodes:
+	extends Reference
+	
+	var rigid_body := RigidBody.new()
+	var mesh := MeshInstance.new()
+	var coll := CollisionShape.new()
+	
+	func _init():
+		rigid_body.add_to_group("cutted_cube")
+		rigid_body.collision_layer = 0
+		rigid_body.collision_mask = CollisionLayerConstants.Floor_mask
+		rigid_body.gravity_scale = 1
+		# set a phyiscs material for some more bouncy behaviour
+		rigid_body.physics_material_override = preload("res://game/BeepCube_Cut.phymat")
+		
+		coll.shape = BoxShape.new()
+		
+		rigid_body.add_child(coll)
+		rigid_body.add_child(mesh)
+		
+		rigid_body.set_script(preload("res://game/BeepCube_CutFadeout.gd"))
+
+# structure of nodes that are used to produce effects when cutting a cube
+class CutCubeResources:
+	extends Reference
+	
+	var particles : BeepCubeSliceParticles = null
+	var piece1 := CutPieceNodes.new()
+	var piece2 := CutPieceNodes.new()
+	
+	func _init():
+		particles = preload("res://game/BeepCube_SliceParticles.tscn").instance()
+
+const MAX_CUT_CUBE_RESOURCES = 32
+onready var _cut_cube_resources := LinkedList.new()
 
 func restart_map():
 	_audio_synced_after_restart = false
@@ -571,6 +605,14 @@ func _ready():
 		right_saber.rotation_degrees.x = -90;
 		ui_raycast.rotation_degrees.x = 0;
 
+	# initialize list of cut cube resources
+	for _i in range(MAX_CUT_CUBE_RESOURCES):
+		var new_res := CutCubeResources.new()
+		add_child(new_res.particles)
+		add_child(new_res.piece1.rigid_body)
+		add_child(new_res.piece2.rigid_body)
+		_cut_cube_resources.push_back(new_res)
+
 	_transition_game_state(GameState.MapSelection)
 
 func update_cube_colors():
@@ -596,74 +638,60 @@ func disable_events(disabled):
 
 # cut the cube by creating two rigid bodies and using a CSGBox to create
 # the cut plane
-func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distance, controller_speed, saber_ends):
+func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distance, controller_speed, saber_ends, cut_res: CutCubeResources):
 	if not cube_cuts_falloff: 
 		return
-	#remove cutted cubes when there are more than max_cutted_cubes
-	var cutted_cubes_group = get_tree().get_nodes_in_group("cutted_cube")
-	if cutted_cubes_group.size() >= max_cutted_cubes:
-		cutted_cubes_group[0].remove_from_group("cutted_cube")
-		cutted_cubes_group[0].queue_free()
-		
-	var rigid_body_half = RigidBody.new();
-	rigid_body_half.add_to_group("cutted_cube")
-	rigid_body_half.collision_layer = 0
-	rigid_body_half.collision_mask = CollisionLayerConstants.Floor_mask
-	rigid_body_half.gravity_scale = 1
+	
+	# This function gets run twice so we don't want two particle effects
+	var piece : CutPieceNodes = cut_res.piece1
+	if is_equal_approx(_sign,1):
+		piece = cut_res.piece2
+	
+	# make piece invisible and stop it's processing while we're updating it
+	piece.rigid_body.reset()
 	
 	# the original cube mesh
-	var cutted_cube = MeshInstance.new();
-	cutted_cube.mesh = cube._mesh;
-	cutted_cube.transform = cube._cube_mesh_orientation.transform;
-	cutted_cube.material_override = cube._mat.duplicate()
+	piece.mesh.mesh = cube._mesh;
+	piece.mesh.transform = cube._cube_mesh_orientation.transform;
+	piece.mesh.material_override = cube._mat.duplicate()
 	
 	# calculate angle and position of the cut
-	cutted_cube.material_override.set_shader_param("cutted",true)
-	cutted_cube.material_override.set_shader_param("inverted_cut",!bool((_sign+1)/2))
+	piece.mesh.material_override.set_shader_param("cutted",true)
+	piece.mesh.material_override.set_shader_param("inverted_cut",!bool((_sign+1)/2))
 	# TODO: cutplane is unused and replaced by this? what
 	var saber_end_mov = saber_ends[0]-saber_ends[1]
 	var saber_end_angle = rad2deg(Vector2(saber_end_mov.x,saber_end_mov.y).angle())
-	var saber_end_angle_rel = (int(((saber_end_angle+90)+(360-cutted_cube.rotation_degrees.z))+180)%360)-180
+	var saber_end_angle_rel = (int(((saber_end_angle+90)+(360-piece.mesh.rotation_degrees.z))+180)%360)-180
 	
 	var rot_dir = saber_end_angle_rel > 90 or saber_end_angle_rel < -90
 	var rot_dir_flt = (float(rot_dir)*2)-1
-	cutted_cube.material_override.set_shader_param("cut_pos",cut_distance*rot_dir_flt)
-	cutted_cube.material_override.set_shader_param("cut_angle",deg2rad(saber_end_angle_rel))
+	piece.mesh.material_override.set_shader_param("cut_pos",cut_distance*rot_dir_flt)
+	piece.mesh.material_override.set_shader_param("cut_angle",deg2rad(saber_end_angle_rel))
 
 	# transform the normal into the orientation of the actual cube mesh
-	var normal = cutted_cube.transform.basis.inverse() * cutplane.normal;
+	var normal = piece.mesh.transform.basis.inverse() * cutplane.normal;
 	
 	# Next we are adding a simple collision cube to the rigid body. Note that
 	# his is really just a very crude approximation of the actual cut geometry
 	# but for now it's enough to give them some physics behaviour
-	var coll = CollisionShape.new()
-	coll.shape = BoxShape.new()
-	coll.shape.extents = Vector3(0.25, 0.25, 0.125)
-	coll.look_at_from_position(-cutplane.normal*_sign*0.125, cutplane.normal, Vector3(0,1,0))
-	rigid_body_half.add_child(coll)
+	piece.coll.shape.extents = Vector3(0.25, 0.25, 0.125)
+	piece.coll.look_at_from_position(-cutplane.normal*_sign*0.125, cutplane.normal, Vector3(0,1,0))
 
-	# set a phyiscs material for some more bouncy behaviour
-	rigid_body_half.physics_material_override = load("res://game/BeepCube_Cut.phymat")
-
-	rigid_body_half.add_child(cutted_cube)
-	rigid_body_half.set_script(cube_half_template)
-	add_child(rigid_body_half)
-	rigid_body_half.global_transform = cube.global_transform
+	piece.rigid_body.global_transform = cube.global_transform
+	# make piece visible and stop it's simulation
+	piece.rigid_body.fire()
 	
 	# some impulse so the cube half moves
 	var cutplane_2d = Vector3(saber_end_mov.x,saber_end_mov.y,0.0)
-	var splitplane_2d = cutplane_2d.cross(cutted_cube.transform.basis.z)
+	var splitplane_2d = cutplane_2d.cross(piece.mesh.transform.basis.z)
 #	_sign *= rot_dir_flt
-	rigid_body_half.apply_central_impulse((_sign * splitplane_2d * 15) + (cutplane_2d*10))
-	rigid_body_half.apply_torque_impulse((_sign) * Vector3.FORWARD * 0.15)
+	piece.rigid_body.apply_central_impulse((_sign * splitplane_2d * 15) + (cutplane_2d*10))
+	piece.rigid_body.apply_torque_impulse((_sign) * Vector3.FORWARD * 0.15)
 	
-	# This function gets run twice so we don't want two particle effects
 	if is_equal_approx(_sign,1):
-		var particles = cube_particles_template.instance()
-		particles.transform.origin = cutted_cube.global_transform.origin
-		particles.rotation_degrees.z = saber_end_angle+90
-		add_child(particles)
-		particles.fire()
+		cut_res.particles.transform.origin = cube.global_transform.origin
+		cut_res.particles.rotation_degrees.z = saber_end_angle+90
+		cut_res.particles.fire()
 
 func _reset_combo():
 	_current_multiplier = 1;
@@ -757,8 +785,13 @@ func _cut_cube(controller : ARVRController, saber : Area, cube : Spatial):
 	travel_distance_factor = clamp((travel_distance_factor-0.5)/0.5, 0.0, 1.0);
 
 	_create_cut_pieces_sw.start()
-	_create_cut_rigid_body(-1, cube, cutplane, cut_distance, controller_speed, [saber_end,saber_end_past]);
-	_create_cut_rigid_body( 1, cube, cutplane, cut_distance, controller_speed, [saber_end,saber_end_past]);
+	# acquire oldest CutCubeResources to use for this event. we reused these
+	# resource for performance reasons. it gets placed onto the back of the
+	# list so that it won't get used again for a couple more cycles.
+	var cut_res : CutCubeResources = _cut_cube_resources.pop_front()
+	_cut_cube_resources.push_back(cut_res)
+	_create_cut_rigid_body(-1, cube, cutplane, cut_distance, controller_speed, [saber_end,saber_end_past], cut_res);
+	_create_cut_rigid_body( 1, cube, cutplane, cut_distance, controller_speed, [saber_end,saber_end_past], cut_res);
 	_create_cut_pieces_sw.stop()
 	
 	# allows a bit of save margin where the beat is considered 100% correct

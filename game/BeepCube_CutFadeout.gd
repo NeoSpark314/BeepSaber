@@ -7,13 +7,29 @@ const timer_length = 0.3
 const timer_rcp = 1.0/timer_length
 var lifetime = 0.0
 
+func _ready():
+	reset()
+
+func reset():
+	lifetime = 0.0
+	visible = false
+	linear_velocity = Vector3()
+	angular_velocity = Vector3()
+	set_process(false)
+	set_physics_process(false)
+
+func fire():
+	visible = true
+	set_process(true)
+	set_physics_process(true)
+
 func _process(delta):
 	lifetime += delta;
 	if lifetime > timer_length:
-		queue_free()
+		reset()
 		return
 	var f = lifetime*timer_rcp
-	_mat.set_shader_param("cut_vanish",ease(f,2)*0.5)
+	_meshinstance.material_override.set_shader_param("cut_vanish",ease(f,2)*0.5)
 	
 #	f = ease(f,0.1)
 #	_meshinstance.scale = Vector3(f, f, f)
