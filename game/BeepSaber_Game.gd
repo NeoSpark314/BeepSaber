@@ -62,6 +62,11 @@ var _current_note = 0;
 var _current_obstacle = 0;
 var _current_event = 0;
 
+var _proc_map_sw := StopwatchFactory.create("process_map",10,true)
+var _cut_cube_sw := StopwatchFactory.create("cute_cube",10,true)
+var _update_points_sw := StopwatchFactory.create("update_points",10,true)
+var _create_cut_pieces_sw := StopwatchFactory.create("create_cut_pieces",10,true)
+
 # There's an interesting issue where the AudioStreamPlayer's playback_position
 # doesn't immediately return to 0.0 after restarting the song_player. This
 # causes issues with restarting a map because the process_physics routine will
@@ -93,6 +98,7 @@ var _wrong_notes = 0;
 var cube_cuts_falloff = true
 var max_cutted_cubes = 32
 var bombs_enabled = true
+
 
 func restart_map():
 	_audio_synced_after_restart = false
@@ -412,7 +418,9 @@ func _spawn_wall(obstacle, current_beat):
 func _process_map(dt):
 	if (_current_map == null):
 		return;
-
+	
+	_proc_map_sw.start()
+	
 	var current_time = song_player.get_playback_position();
 	
 	var current_beat = current_time * _current_info._beatsPerMinute / 60.0;
@@ -456,6 +464,8 @@ func _process_map(dt):
 
 	if (song_player.get_playback_position() >= song_player.stream.get_length()-1):
 		_on_song_ended();
+		
+	_proc_map_sw.stop()
 
 func _spawn_event(data,beat):
 	$event_driver.procces_event(data,beat)
@@ -653,6 +663,7 @@ func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distanc
 		particles.transform.origin = cutted_cube.global_transform.origin
 		particles.rotation_degrees.z = saber_end_angle+90
 		add_child(particles)
+		particles.fire()
 
 func _reset_combo():
 	_current_multiplier = 1;
@@ -716,6 +727,8 @@ func _display_points():
 
 # perform the necessay computations to cut a cube with the saber
 func _cut_cube(controller : ARVRController, saber : Area, cube : Spatial):
+	_cut_cube_sw.start()
+	
 	# perform haptic feedback for the cut
 	controller.simple_rumble(0.75, 0.1);
 	var o = controller.global_transform.origin;
@@ -743,13 +756,17 @@ func _cut_cube(controller : ARVRController, saber : Area, cube : Spatial):
 	var travel_distance_factor = _controller_movement_aabb[controller.controller_id].get_longest_axis_size();
 	travel_distance_factor = clamp((travel_distance_factor-0.5)/0.5, 0.0, 1.0);
 
+	_create_cut_pieces_sw.start()
 	_create_cut_rigid_body(-1, cube, cutplane, cut_distance, controller_speed, [saber_end,saber_end_past]);
 	_create_cut_rigid_body( 1, cube, cutplane, cut_distance, controller_speed, [saber_end,saber_end_past]);
+	_create_cut_pieces_sw.stop()
 	
 	# allows a bit of save margin where the beat is considered 100% correct
 	var beat_accuracy = clamp((1.0 - abs(cube.global_transform.origin.z)) / 0.5, 0.0, 1.0);
 
+	_update_points_sw.start()
 	_update_points_from_cut(saber, cube, beat_accuracy, cut_angle_accuracy, cut_distance_accuracy, travel_distance_factor);
+	_update_points_sw.stop()
 
 	# reset the movement tracking volume for the next cut
 	_controller_movement_aabb[controller.controller_id] = AABB(controller.global_transform.origin, Vector3(0,0,0));
@@ -757,6 +774,8 @@ func _cut_cube(controller : ARVRController, saber : Area, cube : Spatial):
 	#vr.show_dbg_info("cut_accuracy", str(beat_accuracy) + ", " + str(cut_angle_accuracy) + ", " + str(cut_distance_accuracy) + ", " + str(travel_distance_factor));
 	# delete the original cube; we have two new halfs created above
 	cube.queue_free();
+	
+	_cut_cube_sw.stop()
 
 # quiets song when player enters into a wall
 func _quiet_song():
