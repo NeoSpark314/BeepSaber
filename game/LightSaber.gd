@@ -3,12 +3,13 @@
 # trigger the necessary animations
 extends Area
 
+# the type of note this saber can cut (0 -> left, 1 -> right)
+export(int, 0, 1) var type = 0
+
 # store the saber material in a variable so the main game can set the color on initialize
 onready var _anim := $AnimationPlayer;
+onready var _swing_cast := $SwingableRayCast
 onready var _main_game = null;
-
-# the type of note this saber can cut (set in the game main)
-var type = 0;
 
 signal saber_show()
 signal saber_hide()
@@ -62,6 +63,10 @@ func _ready():
 	
 	#separates cube collision layers to allow a diferent collider on right/wrong cuts
 	yield(get_tree(),"physics_frame")
+	if type == 0:
+		_swing_cast.set_collision_mask_bit(CollisionLayerConstants.LeftNote_bit, true)
+	else:
+		_swing_cast.set_collision_mask_bit(CollisionLayerConstants.RightNote_bit, true)
 	
 func _process(delta):
 	if is_extended():
@@ -87,7 +92,7 @@ func hit(cube):
 	emit_signal("saber_hit",cube,time_offset)
 
 func _on_SwingableRayCast_area_collided(area):
-	if area.collision_layer & CollisionLayerConstants.Notes_mask:
+	if area.collision_layer & CollisionLayerConstants.AllNotes_mask:
 		emit_signal("cube_collide",area.get_parent().get_parent())
 	elif area.collision_layer & CollisionLayerConstants.Bombs_mask:
 		emit_signal("bomb_collide",area.get_parent().get_parent())

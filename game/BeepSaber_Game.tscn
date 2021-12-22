@@ -81,6 +81,7 @@ autoload_model = false
 autoload_model = false
 
 [node name="RightLightSaber" parent="OQ_ARVROrigin/OQ_RightController" instance=ExtResource( 10 )]
+type = 1
 
 [node name="Feature_UIRayCast" parent="OQ_ARVROrigin/OQ_RightController" instance=ExtResource( 12 )]
 transform = Transform( 1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0 )

@@ -621,9 +621,7 @@ func update_cube_colors():
 
 func update_saber_colors():
 	left_saber.set_color(COLOR_LEFT)
-	left_saber.type = 0;
 	right_saber.set_color(COLOR_RIGHT)
-	right_saber.type = 1;
 	#also updates map colors
 	$event_driver.update_colors()
 	$StandingGround.update_colors(COLOR_LEFT,COLOR_RIGHT)
@@ -642,7 +640,7 @@ func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distanc
 	if not cube_cuts_falloff: 
 		return
 	
-	# This function gets run twice so we don't want two particle effects
+	# this function gets run twice, one for each piece of the cube
 	var piece : CutPieceNodes = cut_res.piece1
 	if is_equal_approx(_sign,1):
 		piece = cut_res.piece2
@@ -678,7 +676,7 @@ func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distanc
 	piece.coll.look_at_from_position(-cutplane.normal*_sign*0.125, cutplane.normal, Vector3(0,1,0))
 
 	piece.rigid_body.global_transform = cube.global_transform
-	# make piece visible and stop it's simulation
+	# make piece visible and start its simulation
 	piece.rigid_body.fire()
 	
 	# some impulse so the cube half moves
@@ -688,6 +686,7 @@ func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distanc
 	piece.rigid_body.apply_central_impulse((_sign * splitplane_2d * 15) + (cutplane_2d*10))
 	piece.rigid_body.apply_torque_impulse((_sign) * Vector3.FORWARD * 0.15)
 	
+	# This function gets run twice so we don't want two particle effects
 	if is_equal_approx(_sign,1):
 		cut_res.particles.transform.origin = cube.global_transform.origin
 		cut_res.particles.rotation_degrees.z = saber_end_angle+90
