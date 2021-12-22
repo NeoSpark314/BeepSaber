@@ -199,8 +199,23 @@ func _on_bombs_enabled_toggled(button_pressed,overwrite=true):
 	else:
 		bombs_enabled.pressed = button_pressed
 
-func _on_show_collisions_toggled(button_pressed):
+func _force_update_show_coll_shapes(node):
+	# toggle enable to make engine show collision shapes
+	if node is CollisionShape:
+		node.disabled = ! node.disabled
+		node.disabled = ! node.disabled
+			
+	elif node is RayCast:
+		node.enabled = ! node.enabled
+		node.enabled = ! node.enabled
+		
+	for c in node.get_children():
+		_force_update_show_coll_shapes(c)
+
+func _on_show_collisions_toggled(button_pressed, show):
 	get_tree().debug_collisions_hint = button_pressed
+	# must toggle 
+	_force_update_show_coll_shapes(get_tree().root)
 
 #check if A, B and right thumbstick buttons are pressed at the same time to delete settings
 func _on_wipe_check_timeout():
