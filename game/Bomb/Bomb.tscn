@@ -1,24 +1,12 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://game/Bomb/BombMaterial.tres" type="Material" id=1]
+[ext_resource path="res://game/Bomb/BombMesh.tscn" type="PackedScene" id=1]
 [ext_resource path="res://game/Bomb/Bomb.gd" type="Script" id=2]
 
-[sub_resource type="SphereMesh" id=1]
-radius = 0.8
-height = 1.6
-radial_segments = 16
-rings = 16
-
-[sub_resource type="CylinderMesh" id=2]
-top_radius = 0.1
-bottom_radius = 0.1
-radial_segments = 10
-rings = 1
-
-[sub_resource type="SphereShape" id=3]
+[sub_resource type="SphereShape" id=1]
 radius = 0.224242
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=2]
 resource_name = "Spawn"
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:translation")
@@ -62,46 +50,8 @@ script = ExtResource( 2 )
 
 [node name="BombAnimation" type="Spatial" parent="."]
 
-[node name="Meshes" type="Spatial" parent="BombAnimation"]
-transform = Transform( 0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0 )
-
-[node name="CoreMesh" type="MeshInstance" parent="BombAnimation/Meshes"]
-mesh = SubResource( 1 )
-material/0 = ExtResource( 1 )
-
-[node name="Spike" type="MeshInstance" parent="BombAnimation/Meshes"]
-mesh = SubResource( 2 )
-material/0 = ExtResource( 1 )
-
-[node name="Spike2" type="MeshInstance" parent="BombAnimation/Meshes"]
-transform = Transform( -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0 )
-mesh = SubResource( 2 )
-material/0 = ExtResource( 1 )
-
-[node name="Spike3" type="MeshInstance" parent="BombAnimation/Meshes"]
-transform = Transform( 1.91069e-15, -4.37114e-08, -1, -1, -4.37114e-08, 0, -4.37114e-08, 1, -4.37114e-08, 0, 0, 0 )
-mesh = SubResource( 2 )
-material/0 = ExtResource( 1 )
-
-[node name="Spike10" type="MeshInstance" parent="BombAnimation/Meshes"]
-transform = Transform( -0.5, 0.5, 0.707107, -0.707107, -0.707107, 0, 0.5, -0.5, 0.707107, 0, 0, 0 )
-mesh = SubResource( 2 )
-material/0 = ExtResource( 1 )
-
-[node name="Spike11" type="MeshInstance" parent="BombAnimation/Meshes"]
-transform = Transform( 0.5, -0.5, 0.707107, -0.707107, -0.707107, 0, 0.5, -0.5, -0.707107, 0, 0, 0 )
-mesh = SubResource( 2 )
-material/0 = ExtResource( 1 )
-
-[node name="Spike12" type="MeshInstance" parent="BombAnimation/Meshes"]
-transform = Transform( 0.5, -0.5, -0.707107, -0.707107, -0.707107, 0, -0.5, 0.5, -0.707107, 0, 0, 0 )
-mesh = SubResource( 2 )
-material/0 = ExtResource( 1 )
-
-[node name="Spike13" type="MeshInstance" parent="BombAnimation/Meshes"]
-transform = Transform( -0.5, 0.5, -0.707107, -0.707107, -0.707107, 0, -0.5, 0.5, 0.707107, 0, 0, 0 )
-mesh = SubResource( 2 )
-material/0 = ExtResource( 1 )
+[node name="Mesh" parent="BombAnimation" instance=ExtResource( 1 )]
+transform = Transform( 0.18, 0, 0, 0, 0.18, 0, 0, 0, 0.18, 0, 0, 0 )
 
 [node name="Area" type="Area" parent="BombAnimation" groups=[
 "bomb",
@@ -111,7 +61,7 @@ collision_layer = 32
 collision_mask = 16
 
 [node name="CollisionShape" type="CollisionShape" parent="BombAnimation/Area"]
-shape = SubResource( 3 )
+shape = SubResource( 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="BombAnimation"]
-anims/Spawn = SubResource( 4 )
+anims/Spawn = SubResource( 2 )
