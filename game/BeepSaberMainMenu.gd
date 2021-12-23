@@ -18,6 +18,7 @@ var _cover_file_load_sw := StopwatchFactory.create("cover_file_load",10,true)
 var _cover_texture_create_sw := StopwatchFactory.create("cover_texture_create",10,true)
 
 onready var playlist_selector := $PlaylistSelector
+onready var _bg_img_loader := preload("res://game/scripts/BackgroundImgLoader.gd").new()
 
 enum PlaylistOptions {
 	AllSongs,
@@ -152,11 +153,11 @@ func _set_cur_playlist(songs):
 	for dat in songs:
 		_wire_song_dat(dat);
 			
-	# wait a frame between every cover load to prevent freezing
-	yield(get_tree(),"idle_frame")
+	# load song covers in background thread to avoid freezing UI
 	for b in range(0,$SongsMenu.get_item_count()):
-		$SongsMenu.set_item_icon(b,_load_cover(_song_path($SongsMenu.get_item_metadata(b)["id"]), $SongsMenu.get_item_metadata(b)["info"]._coverImageFilename))
-		yield(get_tree(),"idle_frame")
+		var song_md = $SongsMenu.get_item_metadata(b)
+		var filepath = _song_path(song_md['id']) + song_md["info"]._coverImageFilename
+		_bg_img_loader.load_texture(filepath, self, "_on_cover_loaded", [false, b])
 	
 	if current_id.size() > 0:
 		var selected_id = current_id[0]
@@ -198,7 +199,16 @@ func _load_song_info(load_path):
 		return false;
 	map_info._path=load_path
 	return map_info;
-	
+
+# callback from ImageUtils when background image loading is complete. if image
+# failed to load, tex will be null
+func _on_cover_loaded(img_tex, filepath, is_main_cover, list_idx):
+	if img_tex != null:
+		if is_main_cover:
+			$cover.texture = img_tex
+		else:
+			$SongsMenu.set_item_icon(list_idx,img_tex)
+
 func _load_cover(cover_path, filename):
 	# read cover image data from file into a buffer
 	_cover_file_load_sw.start()
@@ -303,7 +313,9 @@ func _select_song(id):
 	Beatmap Author: %s
 	Play Count: %d""" %[_map_info._songAuthorName, _map_info._songName, _map_info._levelAuthorName,play_count]
 
-	$cover.texture = _load_cover(_song_path(id), _map_info._coverImageFilename);
+	# load cover in background to avoid freezing UI
+	var filepath = _song_path(id) + _map_info._coverImageFilename
+	_bg_img_loader.load_texture(filepath, self, "_on_cover_loaded", [true,-1])
 	
 	$DifficultyMenu.clear()
 	for ii_dif in range(_map_info._difficultyBeatmapSets[0]._difficultyBeatmaps.size()):
