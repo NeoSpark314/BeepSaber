@@ -14,7 +14,8 @@ var savedata = {
 	show_fps = false,
 	bombs_enabled = true,
 	events = true,
-	saber = 0
+	saber = 0,
+	ui_volume = 10.0
 }
 var defaults
 const config_path = "user://config.dat"
@@ -30,11 +31,13 @@ onready var right_saber_col = $ScrollContainer/VBox/SaberColorsRow/right_saber_c
 onready var show_fps = $ScrollContainer/VBox/show_fps
 onready var show_collisions = $ScrollContainer/VBox/show_collisions
 onready var bombs_enabled = $ScrollContainer/VBox/bombs_enabled
+onready var ui_volume_slider = $ScrollContainer/VBox/UI_VolumeRow/ui_volume_slider
 
 var sabers = [
 	["Default saber","res://game/sabers/default/default_saber.tscn"],
 	["Particle sword","res://game/sabers/particles/particles_saber.tscn"]
 ]
+var _play_ui_sound_demo = false
 
 func _ready():
 	UI_AudioEngine.attach_children(self)
@@ -70,6 +73,10 @@ func _ready():
 		_on_show_fps_toggled(savedata.show_fps,false)
 	if savedata.has("bombs_enabled"):
 		_on_bombs_enabled_toggled(savedata.bombs_enabled,false)
+	if savedata.has("ui_volume"):
+		_on_ui_volume_slider_value_changed(savedata.ui_volume,false)
+		
+	_play_ui_sound_demo = true
 
 func save_current_settings():
 	file.open(config_path,File.WRITE)
@@ -170,7 +177,8 @@ func _on_saber_item_selected(index,overwrite=true):
 	for ls in get_tree().get_nodes_in_group("lightsaber"):
 		ls.set_saber(sabers[index][1])
 	yield(get_tree(),"idle_frame")
-	game.update_saber_colors()
+	if game != null:
+		game.update_saber_colors()
 	_on_saber_tail_toggled(savedata.saber_tail,false)
 		
 	if overwrite:
@@ -200,6 +208,17 @@ func _on_bombs_enabled_toggled(button_pressed,overwrite=true):
 	else:
 		bombs_enabled.pressed = button_pressed
 
+func _on_ui_volume_slider_value_changed(value,overwrite=true):
+	UI_AudioEngine.set_volume(linear2db(float(value)/10.0))
+	if _play_ui_sound_demo:
+		UI_AudioEngine.play_click()
+	
+	if overwrite:
+		savedata.ui_volume = value
+		save_current_settings()
+	else:
+		ui_volume_slider.value = value
+
 func _force_update_show_coll_shapes(node):
 	# toggle enable to make engine show collision shapes
 	if node is CollisionShape:
@@ -220,6 +239,9 @@ func _on_show_collisions_toggled(button_pressed, show):
 
 #check if A, B and right thumbstick buttons are pressed at the same time to delete settings
 func _on_wipe_check_timeout():
+	if game == null:
+		return
+	
 	if (game.menu.visible
 		and ((vr.button_pressed(vr.BUTTON.A) 
 		and vr.button_pressed(vr.BUTTON.B)

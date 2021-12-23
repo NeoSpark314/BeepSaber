@@ -16,6 +16,13 @@ func attach_button(button: BaseButton):
 	button.connect("mouse_entered",self,"_on_button_hovered",[button])
 	button.connect("pressed",self,"_on_button_pressed")
 
+func play_click():
+	click_stream.play()
+	
+func set_volume(value_db):
+	var bus_idx = AudioServer.get_bus_index("UI")
+	AudioServer.set_bus_volume_db(bus_idx, value_db)
+
 # prevent spuratic clicking when mouse enters/exits a control quickly
 const HOVER_DEBOUNCE_TIME_MS = 200
 var _prev_hovered_ctrl = null

@@ -96,7 +96,7 @@ __meta__ = {
 
 [node name="VBox" type="VBoxContainer" parent="ScrollContainer"]
 margin_right = 828.0
-margin_bottom = 522.0
+margin_bottom = 569.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -270,6 +270,29 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="UI_VolumeRow" type="HBoxContainer" parent="ScrollContainer/VBox"]
+margin_top = 526.0
+margin_right = 828.0
+margin_bottom = 569.0
+
+[node name="ui_volume_label" type="Label" parent="ScrollContainer/VBox/UI_VolumeRow"]
+margin_right = 190.0
+margin_bottom = 43.0
+theme = SubResource( 3 )
+text = "UI Volume:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ui_volume_slider" type="HSlider" parent="ScrollContainer/VBox/UI_VolumeRow"]
+margin_left = 194.0
+margin_right = 828.0
+margin_bottom = 43.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+max_value = 10.0
+value = 10.0
+
 [node name="defaults" type="Button" parent="."]
 margin_left = 546.283
 margin_top = 496.0
@@ -316,6 +339,7 @@ autostart = true
 [connection signal="item_selected" from="ScrollContainer/VBox/SaberTypeRow/saber" to="." method="_on_saber_item_selected"]
 [connection signal="color_changed" from="ScrollContainer/VBox/SaberColorsRow/left_saber_col" to="." method="_on_left_saber_col_color_changed"]
 [connection signal="color_changed" from="ScrollContainer/VBox/SaberColorsRow/right_saber_col" to="." method="_on_right_saber_col_color_changed"]
+[connection signal="value_changed" from="ScrollContainer/VBox/UI_VolumeRow/ui_volume_slider" to="." method="_on_ui_volume_slider_value_changed"]
 [connection signal="button_up" from="defaults" to="." method="_on_Button_button_up"]
 [connection signal="pressed" from="apply" to="." method="_on_apply_pressed"]
 [connection signal="timeout" from="wipe_check" to="." method="_on_wipe_check_timeout"]
