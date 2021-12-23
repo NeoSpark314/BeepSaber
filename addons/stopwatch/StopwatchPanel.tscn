@@ -13,13 +13,13 @@ __meta__ = {
 }
 
 [node name="VBox" type="VBoxContainer" parent="."]
-margin_right = 1024.0
-margin_bottom = 300.0
+margin_right = 960.0
+margin_bottom = 240.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="TopBar" type="HBoxContainer" parent="VBox"]
-margin_right = 1024.0
+margin_right = 960.0
 margin_bottom = 31.0
 size_flags_horizontal = 3
 
@@ -38,7 +38,7 @@ margin_right = 190.0
 margin_bottom = 31.0
 rect_min_size = Vector2( 100, 0 )
 size_flags_vertical = 3
-text = "localhost"
+text = "127.0.0.1"
 
 [node name="connect_button" type="Button" parent="VBox/TopBar"]
 margin_left = 194.0
@@ -52,63 +52,70 @@ __meta__ = {
 
 [node name="HSplit" type="HSplitContainer" parent="VBox"]
 margin_top = 35.0
-margin_right = 1024.0
-margin_bottom = 300.0
+margin_right = 960.0
+margin_bottom = 240.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Grid" type="GridContainer" parent="VBox/HSplit"]
-margin_right = 645.0
-margin_bottom = 265.0
+[node name="GridScroll" type="ScrollContainer" parent="VBox/HSplit"]
+margin_right = 679.0
+margin_bottom = 205.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+scroll_horizontal_enabled = false
+
+[node name="Grid" type="GridContainer" parent="VBox/HSplit/GridScroll"]
+margin_right = 679.0
+margin_bottom = 205.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.7
 columns = 7
 
-[node name="EnableLabel" type="Label" parent="VBox/HSplit/Grid"]
+[node name="EnableLabel" type="Label" parent="VBox/HSplit/GridScroll/Grid"]
 margin_right = 50.0
 margin_bottom = 14.0
 text = "Enabled"
 
-[node name="ResetLabel" type="Label" parent="VBox/HSplit/Grid"]
+[node name="ResetLabel" type="Label" parent="VBox/HSplit/GridScroll/Grid"]
 margin_left = 54.0
 margin_right = 54.0
 margin_bottom = 14.0
 
-[node name="NameLabel" type="Label" parent="VBox/HSplit/Grid"]
+[node name="NameLabel" type="Label" parent="VBox/HSplit/GridScroll/Grid"]
 margin_left = 58.0
 margin_right = 96.0
 margin_bottom = 14.0
 text = "Name"
 
-[node name="MinLabel" type="Label" parent="VBox/HSplit/Grid"]
+[node name="MinLabel" type="Label" parent="VBox/HSplit/GridScroll/Grid"]
 margin_left = 100.0
 margin_right = 151.0
 margin_bottom = 14.0
 text = "Min (us)"
 
-[node name="MaxLabel" type="Label" parent="VBox/HSplit/Grid"]
+[node name="MaxLabel" type="Label" parent="VBox/HSplit/GridScroll/Grid"]
 margin_left = 155.0
 margin_right = 208.0
 margin_bottom = 14.0
 text = "Max (us)"
 
-[node name="MeanLabel" type="Label" parent="VBox/HSplit/Grid"]
+[node name="MeanLabel" type="Label" parent="VBox/HSplit/GridScroll/Grid"]
 margin_left = 212.0
 margin_right = 274.0
 margin_bottom = 14.0
 text = "Mean (us)"
 
-[node name="Intervals" type="Label" parent="VBox/HSplit/Grid"]
+[node name="Intervals" type="Label" parent="VBox/HSplit/GridScroll/Grid"]
 margin_left = 278.0
 margin_right = 334.0
 margin_bottom = 14.0
 text = "Intervals"
 
 [node name="ViewportContainer" type="ViewportContainer" parent="VBox/HSplit"]
-margin_left = 657.0
-margin_right = 1024.0
-margin_bottom = 265.0
+margin_left = 691.0
+margin_right = 960.0
+margin_bottom = 205.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.4

@@ -14,7 +14,7 @@ onready var _collect_timer := $CollectionTimer
 onready var _connection_label := $VBox/TopBar/connection_label
 onready var _hostname_edit := $VBox/TopBar/hostname_edit
 onready var _connect_button := $VBox/TopBar/connect_button
-onready var _grid := $VBox/HSplit/Grid
+onready var _grid := $VBox/HSplit/GridScroll/Grid
 
 var _sw_rows = {}
 
