@@ -3,14 +3,16 @@ extends Node
 onready var hover_stream := $HoverStream
 onready var click_stream := $ClickStream
 
-func attach_children(node: Node, include_buttons = true):
+func attach_children(node: Node, include_buttons = true, include_texture_buttons = true):
 	for child in node.get_children():
 		if include_buttons and child is Button:
+			attach_button(child)
+		elif include_texture_buttons and child is TextureButton:
 			attach_button(child)
 		
 		attach_children(child, include_buttons)
 
-func attach_button(button: Button):
+func attach_button(button: BaseButton):
 	button.connect("mouse_entered",self,"_on_button_hovered",[button])
 	button.connect("pressed",self,"_on_button_pressed")
 
