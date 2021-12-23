@@ -14,6 +14,8 @@ signal settings_requested()
 
 # we need the main game class here to trigger game start/restart/continue
 var _beepsaber = null;
+var _cover_file_load_sw := StopwatchFactory.create("cover_file_load",10,true)
+var _cover_texture_create_sw := StopwatchFactory.create("cover_texture_create",10,true)
 
 onready var playlist_selector := $PlaylistSelector
 
@@ -199,18 +201,23 @@ func _load_song_info(load_path):
 	
 func _load_cover(cover_path, filename):
 	# read cover image data from file into a buffer
+	_cover_file_load_sw.start()
 	var file = File.new()
 	var img_data = null
 	if file.open(cover_path+filename, File.READ) == OK:
 		img_data = file.get_buffer(file.get_len())
 		file.close()
+		_cover_file_load_sw.stop()
 	else:
 		vr.log_error('Failed to open cover image file "%s"' % cover_path+filename)
+		_cover_file_load_sw.stop()
 		return
 		
 	# parse buffer into an ImageTexture
+	_cover_texture_create_sw.start()
 	var tex = ImageTexture.new();
 	tex.create_from_image(ImageUtils.get_img_from_buffer(img_data));
+	_cover_texture_create_sw.stop()
 	return tex;
 
 func play_preview(filepath_or_buffer, start_time = 0, duration = -1, buffer_data_type_hint = 'ogg'):
