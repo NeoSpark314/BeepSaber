@@ -37,6 +37,7 @@ var sabers = [
 ]
 
 func _ready():
+	UI_AudioEngine.attach_children(self)
 	if game is NodePath:
 		game = get_node(game);
 	defaults = savedata.duplicate()

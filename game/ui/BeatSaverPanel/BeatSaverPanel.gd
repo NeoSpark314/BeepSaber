@@ -46,6 +46,7 @@ export(NodePath) var game;
 export(NodePath) var keyboard;
 
 func _ready():
+	UI_AudioEngine.attach_children(self)
 	game = get_node(game);
 	keyboard = get_node(keyboard);
 	$back.visible = false

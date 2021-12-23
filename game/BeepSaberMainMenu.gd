@@ -414,6 +414,7 @@ func _delete_map():
 		_on_LoadPlaylists_Button_pressed()
 
 func _ready():
+	UI_AudioEngine.attach_children(self)
 	if OS.get_name() != "Android":
 		bspath = dlpath+"BeepSaber/";
 	vr.log_info("BeepSaber search path is " + bspath);

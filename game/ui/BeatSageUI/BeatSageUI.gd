@@ -38,6 +38,7 @@ const BS_TEMP_DIR = "/sdcard/BeepSaber/temp/"
 const BS_SONG_DIR = "/sdcard/BeepSaber/Songs/"
 
 func _ready():
+	UI_AudioEngine.attach_children(self)
 	beatsage_request_.download_dir = BS_TEMP_DIR;
 	
 	# setup youtube search UI and connect signal handlers

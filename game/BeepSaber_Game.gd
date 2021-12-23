@@ -613,6 +613,9 @@ func _ready():
 		add_child(new_res.piece2.rigid_body)
 		_cut_cube_resources.push_back(new_res)
 
+	UI_AudioEngine.attach_children(highscore_keyboard)
+	UI_AudioEngine.attach_children(online_search_keyboard)
+
 	_transition_game_state(GameState.MapSelection)
 
 func update_cube_colors():

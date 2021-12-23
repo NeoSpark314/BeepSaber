@@ -144,12 +144,17 @@ config/name="Beep Saber"
 run/main_scene="res://GameMain.tscn"
 config/icon="res://icon.png"
 
+[audio]
+
+default_bus_layout="res://audiobuslayout.tres"
+
 [autoload]
 
 vr="*res://OQ_Toolkit/vr_autoload.gd"
 Highscores="*res://game/scripts/HighscoreTable/HighscoreTable.gd"
 PlayCount="*res://game/scripts/PlayCountTable.gd"
 StopwatchFactory="*res://addons/stopwatch/public/StopwatchFactory.gd"
+UI_AudioEngine="*res://game/ui/UI_AudioEngine/UI_AudioEngine.tscn"
 
 [display]
 

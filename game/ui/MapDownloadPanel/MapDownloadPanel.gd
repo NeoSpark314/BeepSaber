@@ -10,6 +10,7 @@ var _beat_saver_canvas = null
 var _beat_sage_canvas = null
 
 func _ready():
+	UI_AudioEngine.attach_children(self)
 	# initialize items related to Beat Saver UI Dialog
 	_beat_saver_canvas = get_node(beat_saver_canvas_path)
 	if is_instance_valid(_beat_saver_canvas):

@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://game/assets/sounds/click_002.ogg" type="AudioStream" id=1]
+[ext_resource path="res://game/ui/UI_AudioEngine/UI_AudioEngine.gd" type="Script" id=2]
+
+[node name="UI_AudioEngine" type="Node"]
+script = ExtResource( 2 )
+
+[node name="HoverStream" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 1 )
+volume_db = -7.0
+pitch_scale = 1.5
+bus = "UI"
+
+[node name="ClickStream" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 1 )
+bus = "UI"

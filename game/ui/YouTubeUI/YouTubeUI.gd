@@ -17,6 +17,7 @@ var _video_idx_by_id = {}
 var selected_video_metadata = null
 
 func _ready():
+	UI_AudioEngine.attach_children(self)
 	# setup keybaord reference and text input signal handler
 	keyboard = get_node(keyboard)
 	if is_instance_valid(keyboard):
