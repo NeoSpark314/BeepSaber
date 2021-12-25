@@ -232,7 +232,7 @@ func _force_update_show_coll_shapes(node):
 	for c in node.get_children():
 		_force_update_show_coll_shapes(c)
 
-func _on_show_collisions_toggled(button_pressed, show):
+func _on_show_collisions_toggled(button_pressed):
 	get_tree().debug_collisions_hint = button_pressed
 	# must toggle 
 	_force_update_show_coll_shapes(get_tree().root)
