@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://game/floor.tscn" type="PackedScene" id=1]
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DLabel.tscn" type="PackedScene" id=2]
@@ -26,8 +26,10 @@
 [ext_resource path="res://game/Bomb/Bomb.tscn" type="PackedScene" id=24]
 [ext_resource path="res://game/ui/NameSelector/NameSelector.tscn" type="PackedScene" id=25]
 [ext_resource path="res://game/ui/YouTubeUI/YouTubeUI.tscn" type="PackedScene" id=26]
+[ext_resource path="res://game/scripts/ScenePool/ScenePool.tscn" type="PackedScene" id=27]
 [ext_resource path="res://game/ui/MapDownloadPanel/MapDownloadPanel.tscn" type="PackedScene" id=28]
 [ext_resource path="res://game/ui/BeatSageUI/BeatSageUI.tscn" type="PackedScene" id=29]
+[ext_resource path="res://game/BeepCube.tscn" type="PackedScene" id=30]
 
 [sub_resource type="Environment" id=1]
 background_mode = 3
@@ -212,6 +214,10 @@ transparent = true
 [node name="NameSelector" parent="NameSelector_Canvas" instance=ExtResource( 25 )]
 mouse_filter = 1
 
+[node name="BeepCubePool" parent="." instance=ExtResource( 27 )]
+Scene = ExtResource( 30 )
+pool_size = 100
+
 [connection signal="area_entered" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_entered"]
 [connection signal="area_exited" from="OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead" to="." method="_on_PlayerHead_area_exited"]
 [connection signal="bomb_collide" from="OQ_ARVROrigin/OQ_LeftController/LeftLightSaber" to="." method="_on_LeftLightSaber_bomb_collide"]
@@ -229,3 +235,4 @@ mouse_filter = 1
 [connection signal="text_input_enter" from="Keyboard_highscore" to="." method="_on_Keyboard_highscore_text_input_enter"]
 [connection signal="text_input_enter" from="Keyboard_online_search" to="." method="_on_OQ_UI2DKeyboard_text_input_enter"]
 [connection signal="name_selected" from="NameSelector_Canvas/NameSelector" to="." method="_on_NameSelector_name_selected"]
+[connection signal="scene_instanced" from="BeepCubePool" to="." method="_on_BeepCubePool_scene_instanced"]

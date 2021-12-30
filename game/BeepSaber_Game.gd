@@ -37,8 +37,7 @@ onready var wall_template = preload("res://game/Wall/Wall.tscn").instance();
 onready var LinkedList := preload("res://game/scripts/LinkedList.gd")
 export(PackedScene) var bomb_template : PackedScene
 
-var cube_left = null
-var cube_right = null
+onready var _cube_pool := $BeepCubePool
 
 onready var track = $Track;
 
@@ -65,6 +64,8 @@ var _proc_map_sw := StopwatchFactory.create("process_map",10,true)
 var _cut_cube_sw := StopwatchFactory.create("cute_cube",10,true)
 var _update_points_sw := StopwatchFactory.create("update_points",10,true)
 var _create_cut_pieces_sw := StopwatchFactory.create("create_cut_pieces",10,true)
+var _instance_cube_sw := StopwatchFactory.create("instance_cube",10,true)
+var _add_cube_to_scene_sw := StopwatchFactory.create("add_cube_to_scene",10,true)
 
 # There's an interesting issue where the AudioStreamPlayer's playback_position
 # doesn't immediately return to 0.0 after restarting the song_player. This
@@ -376,22 +377,32 @@ const CUBE_ROTATIONS = [180, 0, 270, 90, -135, 135, -45, 45, 0];
 func _spawn_note(note, current_beat):
 	var note_node = null;
 	var is_cube = true
+	var color := COLOR_LEFT
 	if (note._type == 0):
-		note_node = cube_left.duplicate();
+		_instance_cube_sw.start()
+		note_node = _cube_pool.acquire()
+		color = COLOR_LEFT
+		_instance_cube_sw.stop()
 	elif (note._type == 1):
-		note_node = cube_right.duplicate();
+		_instance_cube_sw.start()
+		note_node = _cube_pool.acquire()
+		color = COLOR_RIGHT
+		_instance_cube_sw.stop()
 	elif (note._type == 3) and bombs_enabled:
 		is_cube = false
 		note_node = bomb_template.instance()
 	else:
 		return;
-		
+	
+	if note_node == null:
+		print("Failed to acquire a new note from scene pool")
+		return
+	
 	# disable collision until it gets nearer to player (helps with performance)
 	note_node.collision_disabled = true
 
 	if menu._map_difficulty_noteJumpMovementSpeed > 0:
 		note_node.speed = float(menu._map_difficulty_noteJumpMovementSpeed)/9
-	track.add_child(note_node);
 
 	var line = -(CUBE_DISTANCE * 3.0 / 2.0) + note._lineIndex * CUBE_DISTANCE;
 	var layer = CUBE_DISTANCE + note._lineLayer * CUBE_DISTANCE;
@@ -406,11 +417,19 @@ func _spawn_note(note, current_beat):
 		-distance * beat_distance);
 
 	if is_cube:
+		var is_dot = note._cutDirection == 8
 		note_node._cube_mesh_orientation.rotation.z = rotation_z;
-		if note._cutDirection==8:
-			note_node._cube_mesh_orientation.rotation.y = deg2rad(180);
+		note_node._cube_mesh_orientation.rotation.y = (PI if is_dot else 0)
 
 	note_node._note = note;
+	
+	if note_node is BeepCube:
+		_add_cube_to_scene_sw.start()
+		note_node.spawn(note._type, color)
+		_add_cube_to_scene_sw.stop()
+	else:
+		# spawn bombs by adding to track
+		track.add_child(note_node);
 
 # constants used to interpret the '_type' field in map obstacles
 const WALL_TYPE_FULL_HEIGHT = 0;
@@ -474,6 +493,9 @@ func _process_map(dt):
 	var speed = Vector3(0.0, 0.0, beat_distance * _current_info._beatsPerMinute / 60.0) * dt;
 
 	for c in track.get_children():
+		if ! c.visible:
+			continue
+		
 		c.translate(speed);
 
 		var depth = CUBE_DISTANCE
@@ -489,7 +511,11 @@ func _process_map(dt):
 		if ((c.global_transform.origin.z - depth) > 2.0):
 			if c is BeepCube:
 				_reset_combo();
-			c.queue_free();
+				# cubes must be released() instead of queue_free() because they
+				# are part of a pool.
+				c.release()
+			else:
+				c.queue_free();
 
 	var e = _current_map._events;
 	while (_current_event < e.size() && e[_current_event]._time <= current_beat):#+beats_ahead):
@@ -591,12 +617,6 @@ func _ready():
 	_main_menu.initialize(self);
 	$MapSourceDialogs/BeatSaver_Canvas.ui_control.main_menu_node = _main_menu
 
-	cube_left = cube_template.duplicate();
-	cube_right = cube_template.duplicate();
-	cube_left.duplicate_create(COLOR_LEFT);
-	cube_right.duplicate_create(COLOR_RIGHT);
-	update_cube_colors()
-
 	update_saber_colors()
 	
 	# This is a workaround for now to orient correctly for the Vive controllers
@@ -617,10 +637,6 @@ func _ready():
 	UI_AudioEngine.attach_children(online_search_keyboard)
 
 	_transition_game_state(GameState.MapSelection)
-
-func update_cube_colors():
-	cube_left.update_color_only(COLOR_LEFT);
-	cube_right.update_color_only(COLOR_RIGHT);
 
 func update_saber_colors():
 	left_saber.set_color(COLOR_LEFT)
@@ -703,9 +719,13 @@ func _reset_combo():
 	
 func _clear_track():
 	for c in track.get_children():
-		c.visible = false;
-		track.remove_child(c);
-		c.queue_free();
+		if c is BeepCube:
+			if c.visible:
+				c.release()
+		else:
+			c.visible = false;
+			track.remove_child(c);
+			c.queue_free();
 
 func _update_points_from_cut(saber, cube, beat_accuracy, cut_angle_accuracy, cut_distance_accuracy, travel_distance_factor):
 	#if (beat_accuracy == 0.0 || cut_angle_accuracy == 0.0 || cut_distance_accuracy == 0.0):
@@ -807,8 +827,7 @@ func _cut_cube(controller : ARVRController, saber : Area, cube : Spatial):
 	_controller_movement_aabb[controller.controller_id] = AABB(controller.global_transform.origin, Vector3(0,0,0));
 
 	#vr.show_dbg_info("cut_accuracy", str(beat_accuracy) + ", " + str(cut_angle_accuracy) + ", " + str(cut_distance_accuracy) + ", " + str(travel_distance_factor));
-	# delete the original cube; we have two new halfs created above
-	cube.queue_free();
+	cube.release();
 	
 	_cut_cube_sw.stop()
 
@@ -929,3 +948,7 @@ func _on_RightLightSaber_bomb_collide(bomb):
 		_reset_combo()
 		bomb.queue_free()
 		right_controller.simple_rumble(1.0, 0.15);
+
+func _on_BeepCubePool_scene_instanced(cube):
+	cube.visible = false
+	$Track.add_child(cube)

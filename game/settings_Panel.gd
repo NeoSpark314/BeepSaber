@@ -118,7 +118,6 @@ func _on_left_saber_col_color_changed(color,overwrite=true):
 	if game:
 		game.COLOR_LEFT = color
 		game.update_saber_colors()
-		game.update_cube_colors()
 	
 	if overwrite:
 		savedata.COLOR_LEFT = color
@@ -131,7 +130,6 @@ func _on_right_saber_col_color_changed(color,overwrite=true):
 	if game:
 		game.COLOR_RIGHT = color
 		game.update_saber_colors()
-		game.update_cube_colors()
 	
 	if overwrite:
 		savedata.COLOR_RIGHT = color
