@@ -17,7 +17,9 @@ const LinkedList = preload("res://game/scripts/LinkedList.gd")
 # minimum length when using the node in-game.
 const MIN_SWEPT_LENGTH_THRESHOLD = 0.035
 
-# the type of note this saber can cut (set in the game main)
+var core_ray_collision_count = 0;
+var aux_ray_collision_count = 0;
+
 var _prev_ray_positions = [];
 var _rays = [];
 var _debug_curr_balls = [];
@@ -53,12 +55,17 @@ func set_collision_mask_bit(bit: int, value: bool):
 	collision_mask = collision_mask | (int(value) << bit)
 	for ray in _rays:
 		ray.set_collision_mask_bit(bit,value)
+		
+func reset_counters():
+	core_ray_collision_count = 0
+	aux_ray_collision_count = 0
 
 func _physics_process(_delta):
 	_sw.start()
 	# see if 'core' ray is colliding with anything
 	var coll = get_collider()
 	if coll is Area:
+		core_ray_collision_count += 1
 		emit_signal("area_collided",coll)
 	
 	# ---------------------
@@ -86,6 +93,7 @@ func _physics_process(_delta):
 			ray.force_raycast_update()
 			coll = ray.get_collider()
 			if coll is Area:
+				aux_ray_collision_count += 1
 				emit_signal("area_collided",coll)
 		
 		_prev_ray_positions[i] = next_global_pos
