@@ -96,3 +96,9 @@ func _on_SwingableRayCast_area_collided(area):
 		emit_signal("cube_collide",area.get_parent().get_parent())
 	elif area.collision_layer & CollisionLayerConstants.Bombs_mask:
 		emit_signal("bomb_collide",area.get_parent().get_parent())
+
+func _on_AnimationPlayer_animation_started(anim_name):
+	_swing_cast.adjust_segments = true
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	_swing_cast.adjust_segments = false

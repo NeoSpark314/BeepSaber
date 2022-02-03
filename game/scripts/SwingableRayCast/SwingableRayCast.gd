@@ -19,6 +19,7 @@ const MIN_SWEPT_LENGTH_THRESHOLD = 0.035
 
 var core_ray_collision_count = 0;
 var aux_ray_collision_count = 0;
+var adjust_segments = true;
 
 var _prev_ray_positions = [];
 var _rays = [];
@@ -60,18 +61,7 @@ func reset_counters():
 	core_ray_collision_count = 0
 	aux_ray_collision_count = 0
 
-func _physics_process(_delta):
-	_sw.start()
-	# see if 'core' ray is colliding with anything
-	var coll = get_collider()
-	if coll is Area:
-		core_ray_collision_count += 1
-		emit_signal("area_collided",coll)
-	
-	# ---------------------
-	
-	# update positions of segmented ray casts and check for collisions on them
-	
+func _update_element_positions():
 	# generate new locations for ray casters
 	var saber_base = transform.origin
 	var saber_tip = saber_base + cast_to
@@ -87,6 +77,25 @@ func _physics_process(_delta):
 		if DEBUG:
 			_debug_curr_balls[i].global_transform.origin = next_global_pos
 			
+		next_local_pos += step_dist
+
+func _physics_process(_delta):
+	_sw.start()
+	# see if 'core' ray is colliding with anything
+	var coll = get_collider()
+	if coll is Area:
+		core_ray_collision_count += 1
+		emit_signal("area_collided",coll)
+	
+	# ---------------------
+	
+	# update positions of segmented ray casts and check for collisions on them
+	if adjust_segments:
+		_update_element_positions()
+	
+	for i in range(num_collision_raycasts):
+		var ray : RayCast = _rays[i]
+			
 		# cast a ray to the newest location and check for collisions
 		ray.cast_to = ray.to_local(_prev_ray_positions[i])
 		if ray.cast_to.length() > MIN_SWEPT_LENGTH_THRESHOLD:
@@ -96,8 +105,7 @@ func _physics_process(_delta):
 				aux_ray_collision_count += 1
 				emit_signal("area_collided",coll)
 		
-		_prev_ray_positions[i] = next_global_pos
-		next_local_pos += step_dist
+		_prev_ray_positions[i] = ray.global_transform.origin
 		
 	if DEBUG:
 		var old_slice = _debug_raycast_trail.pop_back()

@@ -173,6 +173,7 @@ script = ExtResource( 2 )
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65133, 0 )
 shape = SubResource( 1 )
+disabled = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Hide = SubResource( 2 )
@@ -180,12 +181,13 @@ anims/QuickHide = SubResource( 3 )
 anims/Show = SubResource( 4 )
 
 [node name="RayCast" type="RayCast" parent="."]
-cast_to = Vector3( 0, 0, 0 )
+cast_to = Vector3( 0, 1.26, 0 )
 collision_mask = 8
 
 [node name="SwingableRayCast" parent="." instance=ExtResource( 3 )]
 enabled = true
 exclude_parent = false
+cast_to = Vector3( 0, 1.26, 0 )
 collision_mask = 32
 collide_with_areas = true
 collide_with_bodies = false
@@ -194,4 +196,6 @@ collide_with_bodies = false
 
 [node name="default_saber" parent="saber_holder" instance=ExtResource( 1 )]
 
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="animation_started" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_started"]
 [connection signal="area_collided" from="SwingableRayCast" to="." method="_on_SwingableRayCast_area_collided"]
