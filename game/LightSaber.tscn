@@ -196,6 +196,7 @@ collide_with_bodies = false
 
 [node name="default_saber" parent="saber_holder" instance=ExtResource( 1 )]
 
+[connection signal="area_entered" from="." to="." method="_on_LightSaber_area_entered"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="animation_started" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_started"]
 [connection signal="area_collided" from="SwingableRayCast" to="." method="_on_SwingableRayCast_area_collided"]
