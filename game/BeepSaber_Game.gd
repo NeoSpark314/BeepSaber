@@ -492,7 +492,8 @@ func _process_map(dt):
 
 	var speed = Vector3(0.0, 0.0, beat_distance * _current_info._beatsPerMinute / 60.0) * dt;
 
-	for c in track.get_children():
+	for c_idx in track.get_child_count():
+		var c = track.get_child(c_idx)
 		if ! c.visible:
 			continue
 		
