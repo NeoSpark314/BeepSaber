@@ -4,6 +4,9 @@ signal continue_button()
 signal restart_button()
 signal mainmenu_button()
 
+func _ready():
+	UI_AudioEngine.attach_children(self)
+
 func set_pause_text(song_name,dificulty=""):
 	$Label.text = "Current song:\n%s\n%s" % [song_name,dificulty]
 

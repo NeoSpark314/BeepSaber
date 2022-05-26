@@ -11,18 +11,36 @@ var savedata = {
 	COLOR_RIGHT = Color("1a1aff"),
 	saber_tail = true,
 	glare = false,
+	show_fps = false,
+	bombs_enabled = true,
 	events = true,
-	saber = 0
+	saber = 0,
+	ui_volume = 10.0
 }
 var defaults
 const config_path = "user://config.dat"
+
+onready var saber = $ScrollContainer/VBox/SaberTypeRow/saber
+onready var glare = $ScrollContainer/VBox/glare
+onready var sabe_tail = $ScrollContainer/VBox/saber_tail
+onready var saber_thickness = $ScrollContainer/VBox/SaberThicknessRow/saber_thickness
+onready var cut_blocks = $ScrollContainer/VBox/cut_blocks
+onready var d_background = $ScrollContainer/VBox/d_background
+onready var left_saber_col = $ScrollContainer/VBox/SaberColorsRow/left_saber_col
+onready var right_saber_col = $ScrollContainer/VBox/SaberColorsRow/right_saber_col
+onready var show_fps = $ScrollContainer/VBox/show_fps
+onready var show_collisions = $ScrollContainer/VBox/show_collisions
+onready var bombs_enabled = $ScrollContainer/VBox/bombs_enabled
+onready var ui_volume_slider = $ScrollContainer/VBox/UI_VolumeRow/ui_volume_slider
 
 var sabers = [
 	["Default saber","res://game/sabers/default/default_saber.tscn"],
 	["Particle sword","res://game/sabers/particles/particles_saber.tscn"]
 ]
+var _play_ui_sound_demo = false
 
 func _ready():
+	UI_AudioEngine.attach_children(self)
 	if game is NodePath:
 		game = get_node(game);
 	defaults = savedata.duplicate()
@@ -31,16 +49,19 @@ func _ready():
 		savedata = file.get_var(true)
 		file.close()
 	
-	$saber.clear()
+	saber.clear()
 	for s in sabers:
-		$saber.add_item(s[0])
+		saber.add_item(s[0])
+	
+	show_collisions.pressed = get_tree().debug_collisions_hint
+	show_collisions.visible = OS.is_debug_build()
 	
 	#correct controls
 	yield(get_tree(),"idle_frame")
 	_on_HSlider_value_changed(savedata.thickness,false)
-	_on_cuttedBlocks_toggled(savedata.cube_cuts_falloff,false)
-	_on_left_sable_col_color_changed(savedata.COLOR_LEFT,false)
-	_on_right_sable_col_color_changed(savedata.COLOR_RIGHT,false)
+	_on_cut_blocks_toggled(savedata.cube_cuts_falloff,false)
+	_on_left_saber_col_color_changed(savedata.COLOR_LEFT,false)
+	_on_right_saber_col_color_changed(savedata.COLOR_RIGHT,false)
 	_on_saber_tail_toggled(savedata.saber_tail,false)
 	if savedata.has("glare"):
 		_on_glare_toggled(savedata.glare,false)
@@ -48,6 +69,14 @@ func _ready():
 		_on_d_background_toggled(savedata.events,false)
 	if savedata.has("saber"):
 		_on_saber_item_selected(savedata.saber,false)
+	if savedata.has("show_fps"):
+		_on_show_fps_toggled(savedata.show_fps,false)
+	if savedata.has("bombs_enabled"):
+		_on_bombs_enabled_toggled(savedata.bombs_enabled,false)
+	if savedata.has("ui_volume"):
+		_on_ui_volume_slider_value_changed(savedata.ui_volume,false)
+		
+	_play_ui_sound_demo = true
 
 func save_current_settings():
 	file.open(config_path,File.WRITE)
@@ -62,49 +91,51 @@ func _on_Button_button_up():
 
 #settings down here
 func _on_HSlider_value_changed(value,overwrite=true):
-	game.left_saber.set_thickness(float(value)/100);
-	game.right_saber.set_thickness(float(value)/100);
+	if game:
+		game.left_saber.set_thickness(float(value)/100);
+		game.right_saber.set_thickness(float(value)/100);
 	
 	if overwrite:
 		savedata.thickness = value
 		save_current_settings()
 	else:
-		$saber_thicknes.value = value
+		saber_thickness.value = value
 
 
 
-func _on_cuttedBlocks_toggled(button_pressed,overwrite=true):
-	game.cube_cuts_falloff = button_pressed;
+func _on_cut_blocks_toggled(button_pressed,overwrite=true):
+	if game:
+		game.cube_cuts_falloff = button_pressed;
 	
 	if overwrite:
 		savedata.cube_cuts_falloff = button_pressed
 		save_current_settings()
 	else:
-		$cuttedBlocks.pressed = button_pressed
+		cut_blocks.pressed = button_pressed
 
 
-func _on_left_sable_col_color_changed(color,overwrite=true):
-	game.COLOR_LEFT = color
-	game.update_saber_colors()
-	game.update_cube_colors()
+func _on_left_saber_col_color_changed(color,overwrite=true):
+	if game:
+		game.COLOR_LEFT = color
+		game.update_saber_colors()
 	
 	if overwrite:
 		savedata.COLOR_LEFT = color
 		save_current_settings()
 	else:
-		$left_sable_col.color = color
+		left_saber_col.color = color
 
 
-func _on_right_sable_col_color_changed(color,overwrite=true):
-	game.COLOR_RIGHT = color
-	game.update_saber_colors()
-	game.update_cube_colors()
+func _on_right_saber_col_color_changed(color,overwrite=true):
+	if game:
+		game.COLOR_RIGHT = color
+		game.update_saber_colors()
 	
 	if overwrite:
 		savedata.COLOR_RIGHT = color
 		save_current_settings()
 	else:
-		$right_sable_col.color = color
+		right_saber_col.color = color
 
 
 func _on_saber_tail_toggled(button_pressed,overwrite=true):
@@ -115,45 +146,100 @@ func _on_saber_tail_toggled(button_pressed,overwrite=true):
 		savedata.saber_tail = button_pressed
 		save_current_settings()
 	else:
-		$saber_tail.pressed = button_pressed
+		sabe_tail.pressed = button_pressed
 
 
 func _on_glare_toggled(button_pressed,overwrite=true):
-	var env = get_tree().get_nodes_in_group("enviroment")[0]
-	env.environment.glow_enabled = button_pressed
+	var env_nodes = get_tree().get_nodes_in_group("enviroment")
+	for node in env_nodes:
+		node.environment.glow_enabled = button_pressed
 	
 	if overwrite:
 		savedata.glare = button_pressed
 		save_current_settings()
 	else:
-		$glare.pressed = button_pressed
+		glare.pressed = button_pressed
 
 
 func _on_d_background_toggled(button_pressed,overwrite=true):
-	game.disable_events(!button_pressed)
+	if game:
+		game.disable_events(!button_pressed)
 	
 	if overwrite:
 		savedata.events = button_pressed
 		save_current_settings()
 	else:
-		$d_background.pressed = button_pressed
+		d_background.pressed = button_pressed
 
 func _on_saber_item_selected(index,overwrite=true):
 	for ls in get_tree().get_nodes_in_group("lightsaber"):
 		ls.set_saber(sabers[index][1])
 	yield(get_tree(),"idle_frame")
-	game.update_saber_colors()
+	if game != null:
+		game.update_saber_colors()
 	_on_saber_tail_toggled(savedata.saber_tail,false)
 		
 	if overwrite:
 		savedata.saber = index
 		save_current_settings()
 	else:
-		$saber.select(index)
+		saber.select(index)
+
+func _on_show_fps_toggled(button_pressed,overwrite=true):
+	if game:
+		game.fps_label.visible = button_pressed
 	
+	if overwrite:
+		savedata.show_fps = button_pressed
+		save_current_settings()
+	else:
+		show_fps.pressed = button_pressed
+
+
+func _on_bombs_enabled_toggled(button_pressed,overwrite=true):
+	if game:
+		game.bombs_enabled = button_pressed
 	
+	if overwrite:
+		savedata.bombs_enabled = button_pressed
+		save_current_settings()
+	else:
+		bombs_enabled.pressed = button_pressed
+
+func _on_ui_volume_slider_value_changed(value,overwrite=true):
+	UI_AudioEngine.set_volume(linear2db(float(value)/10.0))
+	if _play_ui_sound_demo:
+		UI_AudioEngine.play_click()
+	
+	if overwrite:
+		savedata.ui_volume = value
+		save_current_settings()
+	else:
+		ui_volume_slider.value = value
+
+func _force_update_show_coll_shapes(node):
+	# toggle enable to make engine show collision shapes
+	if node is CollisionShape:
+		node.disabled = ! node.disabled
+		node.disabled = ! node.disabled
+			
+	elif node is RayCast:
+		node.enabled = ! node.enabled
+		node.enabled = ! node.enabled
+		
+	for c in node.get_children():
+		_force_update_show_coll_shapes(c)
+
+func _on_show_collisions_toggled(button_pressed):
+	get_tree().debug_collisions_hint = button_pressed
+	# must toggle 
+	_force_update_show_coll_shapes(get_tree().root)
+
 #check if A, B and right thumbstick buttons are pressed at the same time to delete settings
 func _on_wipe_check_timeout():
+	if game == null:
+		return
+	
 	if (game.menu.visible
 		and ((vr.button_pressed(vr.BUTTON.A) 
 		and vr.button_pressed(vr.BUTTON.B)

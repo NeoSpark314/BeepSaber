@@ -1,4 +1,4 @@
-extends ItemList
+extends Node
 
 export(NodePath) var scroll_node
 export var enable_joystick_scrolling = true
@@ -32,13 +32,28 @@ const JOYSTICK_FAST_SCROLL_SPEED = 2000
 func _ready():
 	scroll_node = get_node(scroll_node)
 	if scroll_node == null:
-		scroll_node = self
+		vr.log_error("vr_slider._ready() scroll_node must be set to a valid node")
+		set_process(false)
+		return
+	
+	if scroll_node is ItemList:
+		v_scroll = scroll_node.get_v_scroll()
+	elif scroll_node is ScrollContainer:
+		v_scroll = scroll_node.get_v_scrollbar()
+	else:
+		vr.log_error("vr_slider._ready() scroll_node must be set ScrollContainer or ItemList")
+		set_process(false)
+		return
+	
 	scroll_node.connect("mouse_entered",self,"_mouse_entered")
 	scroll_node.connect("mouse_exited",self,"_mouse_exited")
-	v_scroll = scroll_node.get_v_scroll()
+		
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if vr.rightController == null:
+		return
+	
 	var newpos = -vr.rightController.rotation_degrees.x-(vr.rightController.transform.origin.y*20)
 	if is_mouse_in:
 		if vr.button_pressed(vr.BUTTON.RIGHT_INDEX_TRIGGER):

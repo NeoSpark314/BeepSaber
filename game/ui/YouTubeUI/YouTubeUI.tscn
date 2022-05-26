@@ -1,0 +1,104 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://game/BlackWhiteThem.tres" type="Theme" id=1]
+[ext_resource path="res://game/ui/YouTubeUI/YouTubeUI.gd" type="Script" id=2]
+[ext_resource path="res://game/ui/YouTubeUI/YouTubeAPI/YouTubeAPI.tscn" type="PackedScene" id=3]
+[ext_resource path="res://game/scripts/HTTPRequestPool.tscn" type="PackedScene" id=4]
+[ext_resource path="res://game/ui/YouTubeUI/youtube_icon.png" type="Texture" id=5]
+[ext_resource path="res://game/ui/YouTubeUI/default_thumbnail.png" type="Texture" id=6]
+[ext_resource path="res://game/vr_slider.gd" type="Script" id=7]
+
+[node name="YouTubeUI" type="Panel"]
+margin_right = 1536.0
+margin_bottom = 960.0
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="YouTubeAPI" parent="." instance=ExtResource( 3 )]
+
+[node name="YoutubeIcon" type="TextureRect" parent="."]
+margin_left = 32.0
+margin_top = 24.0
+margin_right = 212.0
+margin_bottom = 64.0
+texture = ExtResource( 5 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SearchLineEdit" type="LineEdit" parent="."]
+margin_left = 224.0
+margin_top = 16.0
+margin_right = 944.0
+margin_bottom = 72.0
+text = "heartbreak anthem"
+caret_blink = true
+caret_blink_speed = 0.5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SearchButton" type="Button" parent="."]
+margin_left = 952.0
+margin_top = 16.0
+margin_right = 1088.0
+margin_bottom = 72.0
+text = "Search"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ResultsList" type="ItemList" parent="."]
+margin_left = 16.0
+margin_top = 80.0
+margin_right = 1088.0
+margin_bottom = 944.0
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SelectSongButton" type="Button" parent="."]
+margin_left = 1096.0
+margin_top = 880.0
+margin_right = 1304.0
+margin_bottom = 944.0
+disabled = true
+text = "Select Song"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BackButton" type="Button" parent="."]
+margin_left = 1312.0
+margin_top = 880.0
+margin_right = 1520.0
+margin_bottom = 944.0
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ThumbnailRequestPool" parent="." instance=ExtResource( 4 )]
+
+[node name="DefaultThumbnail" type="TextureRect" parent="."]
+visible = false
+margin_right = 200.0
+margin_bottom = 100.0
+texture = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="failed_request" from="YouTubeAPI" to="." method="_on_YouTubeAPI_failed_request"]
+[connection signal="search_complete" from="YouTubeAPI" to="." method="_on_YouTubeAPI_search_complete"]
+[connection signal="focus_entered" from="SearchLineEdit" to="." method="_on_SearchLineEdit_focus_entered"]
+[connection signal="pressed" from="SearchButton" to="." method="_on_SearchButton_pressed"]
+[connection signal="item_selected" from="ResultsList" to="." method="_on_ResultsList_item_selected"]
+[connection signal="pressed" from="SelectSongButton" to="." method="_on_SelectSongButton_pressed"]
+[connection signal="pressed" from="BackButton" to="." method="_on_BackButton_pressed"]
+[connection signal="request_complete" from="ThumbnailRequestPool" to="." method="_on_ThumbnailRequestPool_request_complete"]

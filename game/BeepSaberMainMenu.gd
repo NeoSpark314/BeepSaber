@@ -14,8 +14,11 @@ signal settings_requested()
 
 # we need the main game class here to trigger game start/restart/continue
 var _beepsaber = null;
+var _cover_file_load_sw := StopwatchFactory.create("cover_file_load",10,true)
+var _cover_texture_create_sw := StopwatchFactory.create("cover_texture_create",10,true)
 
 onready var playlist_selector := $PlaylistSelector
+onready var _bg_img_loader := preload("res://game/scripts/BackgroundImgLoader.gd").new()
 
 enum PlaylistOptions {
 	AllSongs,
@@ -150,11 +153,11 @@ func _set_cur_playlist(songs):
 	for dat in songs:
 		_wire_song_dat(dat);
 			
-	# wait a frame between every cover load to prevent freezing
-	yield(get_tree(),"idle_frame")
+	# load song covers in background thread to avoid freezing UI
 	for b in range(0,$SongsMenu.get_item_count()):
-		$SongsMenu.set_item_icon(b,_load_cover(_song_path($SongsMenu.get_item_metadata(b)["id"]), $SongsMenu.get_item_metadata(b)["info"]._coverImageFilename))
-		yield(get_tree(),"idle_frame")
+		var song_md = $SongsMenu.get_item_metadata(b)
+		var filepath = _song_path(song_md['id']) + song_md["info"]._coverImageFilename
+		_bg_img_loader.load_texture(filepath, self, "_on_cover_loaded", [false, b])
 	
 	if current_id.size() > 0:
 		var selected_id = current_id[0]
@@ -196,18 +199,89 @@ func _load_song_info(load_path):
 		return false;
 	map_info._path=load_path
 	return map_info;
-	
+
+# callback from ImageUtils when background image loading is complete. if image
+# failed to load, tex will be null
+func _on_cover_loaded(img_tex, filepath, is_main_cover, list_idx):
+	if img_tex != null:
+		if is_main_cover:
+			$cover.texture = img_tex
+		else:
+			$SongsMenu.set_item_icon(list_idx,img_tex)
+
 func _load_cover(cover_path, filename):
-	if not (filename.ends_with(".jpg") or filename.ends_with(".png")):
-		print("wrong format");
-		return;
+	# read cover image data from file into a buffer
+	_cover_file_load_sw.start()
+	var file = File.new()
+	var img_data = null
+	if file.open(cover_path+filename, File.READ) == OK:
+		img_data = file.get_buffer(file.get_len())
+		file.close()
+		_cover_file_load_sw.stop()
+	else:
+		vr.log_error('Failed to open cover image file "%s"' % cover_path+filename)
+		_cover_file_load_sw.stop()
+		return
+		
+	# parse buffer into an ImageTexture
+	_cover_texture_create_sw.start()
 	var tex = ImageTexture.new();
-	var img = Image.new();
-	
-	img.load(cover_path+filename);
-	tex.create_from_image(img); #instead of loading from resources, load form file
+	tex.create_from_image(ImageUtils.get_img_from_buffer(img_data));
+	_cover_texture_create_sw.stop()
 	return tex;
 
+func play_preview(filepath_or_buffer, start_time = 0, duration = -1, buffer_data_type_hint = 'ogg'):
+	var data := PoolByteArray()
+	
+	if filepath_or_buffer is String:
+		# get song preview data from file
+		var snd_file = File.new()
+		snd_file.open(filepath_or_buffer, File.READ)
+		data = snd_file.get_buffer(snd_file.get_len())
+		snd_file.close()
+		buffer_data_type_hint = filepath_or_buffer.get_extension()
+	elif filepath_or_buffer is PoolByteArray:
+		# take song preview data from buffer as-is. trust passed type hint
+		data = filepath_or_buffer
+	else:
+		vr.log_error('_play_preview() - Unsupported song preview data type %s' % typeof(filepath_or_buffer))
+		return
+		
+	# load song data into audio stream based on type hint
+	var stream = null
+	if buffer_data_type_hint == 'ogg' or buffer_data_type_hint == 'egg':
+		stream = AudioStreamOGGVorbis.new()
+	elif buffer_data_type_hint == 'mp3':
+		stream = AudioStreamMP3.new()
+	else:
+		vr.log_error('_play_preview() - Unsupported buffer_data_type_hint %s' % buffer_data_type_hint)
+		return
+	
+	stream.data = data
+	if duration == -1:
+		# assume preview duration based on parsed audio length
+		duration = stream.get_length()
+	
+	# fade out preview if ones already running
+	if song_prev.playing:
+		song_prev_Tween.stop_all()
+		song_prev_Tween.interpolate_property(song_prev,"volume_db",
+			song_prev.volume_db, -50, song_prev_transition_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+		song_prev_Tween.start()
+		yield(get_tree().create_timer(song_prev_transition_time),"timeout")
+		song_prev.stop()
+	
+	# start the requested preview
+	if not _beepsaber.song_player.playing:
+		song_prev.stream = stream;
+		
+		song_prev_Tween.stop_all()
+		song_prev_Tween.interpolate_property(song_prev,"volume_db",
+			song_prev.volume_db, 0, song_prev_transition_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+		song_prev_Tween.start()
+		
+		song_prev.play(float(start_time))
+		$song_prev/stop_prev.start(float(duration))
 
 # a loaded beat map will have an info dictionary; this is a global variable here
 # to later extend it to load different maps
@@ -239,7 +313,9 @@ func _select_song(id):
 	Beatmap Author: %s
 	Play Count: %d""" %[_map_info._songAuthorName, _map_info._songName, _map_info._levelAuthorName,play_count]
 
-	$cover.texture = _load_cover(_song_path(id), _map_info._coverImageFilename);
+	# load cover in background to avoid freezing UI
+	var filepath = _song_path(id) + _map_info._coverImageFilename
+	_bg_img_loader.load_texture(filepath, self, "_on_cover_loaded", [true,-1])
 	
 	$DifficultyMenu.clear()
 	for ii_dif in range(_map_info._difficultyBeatmapSets[0]._difficultyBeatmaps.size()):
@@ -253,29 +329,9 @@ func _select_song(id):
 	
 	_select_difficulty(0)
 	
-	#preview song
-	if song_prev.playing:
-		song_prev_Tween.stop_all()
-		song_prev_Tween.interpolate_property(song_prev,"volume_db",
-			song_prev.volume_db, -50, song_prev_transition_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
-		song_prev_Tween.start()
-		yield(get_tree().create_timer(song_prev_transition_time),"timeout")
-		song_prev.stop()
-	if not _beepsaber.song_player.playing:
-		var snd_file = File.new()
-		snd_file.open(_map_info._path + _map_info._songFilename, File.READ)
-		var stream = AudioStreamOGGVorbis.new()
-		stream.data = snd_file.get_buffer(snd_file.get_len())
-		snd_file.close()
-		song_prev.stream = stream;
-		
-		song_prev_Tween.stop_all()
-		song_prev_Tween.interpolate_property(song_prev,"volume_db",
-			song_prev.volume_db, 0, song_prev_transition_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
-		song_prev_Tween.start()
-		
-		song_prev.play(float(_map_info._previewStartTime))
-		$song_prev/stop_prev.start(float(_map_info._previewDuration))
+	# preview song
+	var song_filepath = _map_info._path + _map_info._songFilename
+	play_preview(song_filepath,_map_info._previewStartTime,_map_info._previewDuration)
 
 func _on_stop_prev_timeout():
 	song_prev_Tween.stop_all()
@@ -358,6 +414,7 @@ func _delete_map():
 		_on_LoadPlaylists_Button_pressed()
 
 func _ready():
+	UI_AudioEngine.attach_children(self)
 	if OS.get_name() != "Android":
 		bspath = dlpath+"BeepSaber/";
 	vr.log_info("BeepSaber search path is " + bspath);

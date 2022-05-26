@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://game/sabers/default/default_saber.tscn" type="PackedScene" id=1]
 [ext_resource path="res://game/LightSaber.gd" type="Script" id=2]
+[ext_resource path="res://game/scripts/SwingableRayCast/SwingableRayCast.tscn" type="PackedScene" id=3]
 
 [sub_resource type="CylinderShape" id=1]
 radius = 0.0208633
@@ -40,6 +41,18 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 1.26, 0 ), Vector3( 0, 0, 0 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("SwingableRayCast:cast_to")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
 "times": PoolRealArray( 0, 1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
@@ -85,6 +98,18 @@ tracks/2/keys = {
 "update": 0,
 "values": [ Vector3( 0, 0, 0 ) ]
 }
+tracks/3/type = "value"
+tracks/3/path = NodePath("SwingableRayCast:cast_to")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 0 ) ]
+}
 
 [sub_resource type="Animation" id=4]
 length = 1.5
@@ -124,18 +149,31 @@ tracks/2/keys = {
 "update": 0,
 "values": [ Vector3( 0, 0, 0 ), Vector3( 0, 1.26, 0 ) ]
 }
+tracks/3/type = "value"
+tracks/3/path = NodePath("SwingableRayCast:cast_to")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 0 ), Vector3( 0, 1.26, 0 ) ]
+}
 
 [node name="LightSaber" type="Area" groups=[
 "lightsaber",
 ]]
 transform = Transform( 1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0 )
-collision_layer = 16400
-collision_mask = 2147500049
+collision_layer = 16
+collision_mask = 2147483665
 script = ExtResource( 2 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65133, 0 )
 shape = SubResource( 1 )
+disabled = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Hide = SubResource( 2 )
@@ -146,6 +184,19 @@ anims/Show = SubResource( 4 )
 cast_to = Vector3( 0, 1.26, 0 )
 collision_mask = 8
 
+[node name="SwingableRayCast" parent="." instance=ExtResource( 3 )]
+enabled = true
+exclude_parent = false
+cast_to = Vector3( 0, 1.26, 0 )
+collision_mask = 32
+collide_with_areas = true
+collide_with_bodies = false
+
 [node name="saber_holder" type="Spatial" parent="."]
 
 [node name="default_saber" parent="saber_holder" instance=ExtResource( 1 )]
+
+[connection signal="area_entered" from="." to="." method="_on_LightSaber_area_entered"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="animation_started" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_started"]
+[connection signal="area_collided" from="SwingableRayCast" to="." method="_on_SwingableRayCast_area_collided"]

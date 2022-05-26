@@ -57,8 +57,9 @@ script = ExtResource( 2 )
 [node name="BeepCube_Big" type="Area" parent="CubeMeshOrientation" groups=[
 "beepcube",
 ]]
-collision_layer = 2
-collision_mask = 16400
+monitoring = false
+collision_layer = 0
+collision_mask = 0
 
 [node name="CollisionBig" type="CollisionShape" parent="CubeMeshOrientation/BeepCube_Big"]
 shape = SubResource( 1 )
@@ -66,8 +67,9 @@ shape = SubResource( 1 )
 [node name="BeepCube_Small" type="Area" parent="CubeMeshOrientation" groups=[
 "beepcube",
 ]]
-collision_layer = 2
-collision_mask = 16400
+monitoring = false
+collision_layer = 0
+collision_mask = 0
 
 [node name="CollisionSmall" type="CollisionShape" parent="CubeMeshOrientation/BeepCube_Small"]
 shape = SubResource( 2 )

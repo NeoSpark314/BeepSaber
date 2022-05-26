@@ -9,6 +9,21 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Note",
+"class": "BeepCube",
+"language": "GDScript",
+"path": "res://game/BeepCube.gd"
+}, {
+"base": "Spatial",
+"class": "BeepCubeSliceParticles",
+"language": "GDScript",
+"path": "res://game/BeepCube_SliceParticles.gd"
+}, {
+"base": "Object",
+"class": "CollisionLayerConstants",
+"language": "GDScript",
+"path": "res://game/scripts/CollisionLayerConstants.gd"
+}, {
 "base": "Panel",
 "class": "EndScorePanel",
 "language": "GDScript",
@@ -34,10 +49,20 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://game/scripts/HighscoreTable/HighscoreTable.gd"
 }, {
+"base": "Object",
+"class": "ImageUtils",
+"language": "GDScript",
+"path": "res://game/scripts/ImageUtils.gd"
+}, {
 "base": "Control",
 "class": "NameSelector",
 "language": "GDScript",
 "path": "res://game/ui/NameSelector/NameSelector.gd"
+}, {
+"base": "Spatial",
+"class": "Note",
+"language": "GDScript",
+"path": "res://game/Note.gd"
 }, {
 "base": "RigidBody",
 "class": "OQClass_GrabbableRigidBody",
@@ -64,6 +89,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://OQ_Toolkit/OQ_Classes/OQClass_ToolGrabLinearController.gd"
 }, {
+"base": "Spatial",
+"class": "OQ_UI2DCanvas",
+"language": "GDScript",
+"path": "res://OQ_Toolkit/OQ_UI2D/scripts/OQ_UI2DCanvas.gd"
+}, {
 "base": "Node",
 "class": "PlayCountTable",
 "language": "GDScript",
@@ -74,25 +104,37 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://game/scripts/SongUtils.gd"
 }, {
+"base": "Reference",
+"class": "Stopwatch",
+"language": "GDScript",
+"path": "res://addons/stopwatch/public/Stopwatch.gd"
+}, {
 "base": "Spatial",
 "class": "Wall",
 "language": "GDScript",
 "path": "res://game/Wall/Wall.gd"
 } ]
 _global_script_class_icons={
+"BeepCube": "",
+"BeepCubeSliceParticles": "",
+"CollisionLayerConstants": "",
 "EndScorePanel": "",
 "Feature_RigidBodyGrab": "",
 "Feature_ToolGrab": "",
 "HighscorePanel": "",
 "HighscoreTable": "",
+"ImageUtils": "",
 "NameSelector": "",
+"Note": "",
 "OQClass_GrabbableRigidBody": "",
 "OQClass_GrabbableToolPart": "",
 "OQClass_Tool": "",
 "OQClass_ToolGrabController": "",
 "OQClass_ToolGrabLinearController": "",
+"OQ_UI2DCanvas": "",
 "PlayCountTable": "",
 "SongUtils": "",
+"Stopwatch": "",
 "Wall": ""
 }
 
@@ -102,16 +144,26 @@ config/name="Beep Saber"
 run/main_scene="res://GameMain.tscn"
 config/icon="res://icon.png"
 
+[audio]
+
+default_bus_layout="res://audiobuslayout.tres"
+
 [autoload]
 
 vr="*res://OQ_Toolkit/vr_autoload.gd"
 Highscores="*res://game/scripts/HighscoreTable/HighscoreTable.gd"
 PlayCount="*res://game/scripts/PlayCountTable.gd"
+StopwatchFactory="*res://addons/stopwatch/public/StopwatchFactory.gd"
+UI_AudioEngine="*res://game/ui/UI_AudioEngine/UI_AudioEngine.tscn"
 
 [display]
 
 window/size/width=960
 window/size/height=540
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/stopwatch/plugin.cfg" )
 
 [gdnative]
 
@@ -171,10 +223,12 @@ ui_end={
 [layer_names]
 
 3d_physics/layer_1="Obstacles"
-3d_physics/layer_2="Notes"
 3d_physics/layer_3="Player"
 3d_physics/layer_4="Floor"
 3d_physics/layer_5="Saber"
+3d_physics/layer_6="Bombs"
+3d_physics/layer_10="LeftNote"
+3d_physics/layer_11="RightNote"
 
 [physics]
 

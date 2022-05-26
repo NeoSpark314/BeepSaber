@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://OQ_Toolkit/OQ_UI2D/theme/godot_splash_512.png" type="Texture" id=1]
 [ext_resource path="res://OQ_Toolkit/OQ_Helpers/scripts/OQ_SplashScreen.gd" type="Script" id=2]
+[ext_resource path="res://OQ_Toolkit/OQ_UI2D/OQ_UI2DLabel.tscn" type="PackedScene" id=3]
 
 [sub_resource type="PlaneMesh" id=1]
 
@@ -18,3 +19,9 @@ script = ExtResource( 2 )
 transform = Transform( -1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, 0, 0, 0 )
 mesh = SubResource( 1 )
 material/0 = SubResource( 2 )
+
+[node name="DebugLabel" parent="." instance=ExtResource( 3 )]
+transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, -0.731892, -0.0113653 )
+text = "DEBUG"
+font_size_multiplier = 4.0
+font_color = Color( 0, 0.25098, 1, 1 )

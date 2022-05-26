@@ -185,7 +185,16 @@ func _create_keyboard_buttons():
 	_refrence_button.visible = false;
 	_toggle_symbols(_toggle_symbols_button.pressed);
 
+func set_cancelable(cancelable):
+	if _cancel_button != null:
+		_cancel_button.visible = cancelable
 
+func enter_button_disabled(disabled):
+	if _enter_button != null:
+		_enter_button.disabled = disabled
+		
+func set_upper_case(upper_case):
+	_toggle_case(upper_case)
 
 func _ready():
 	_create_keyboard_buttons();

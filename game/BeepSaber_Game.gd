@@ -14,6 +14,7 @@ enum GameState {
 	NewHighscore
 }
 
+
 onready var left_controller := $OQ_ARVROrigin/OQ_LeftController;
 onready var right_controller := $OQ_ARVROrigin/OQ_RightController;
 
@@ -26,16 +27,17 @@ onready var highscore_canvas := $Highscores_Canvas
 onready var name_selector_canvas := $NameSelector_Canvas
 onready var highscore_keyboard := $Keyboard_highscore
 
+onready var map_source_dialogs := $MapSourceDialogs
 onready var online_search_keyboard := $Keyboard_online_search
+
+onready var fps_label = $OQ_ARVROrigin/OQ_ARVRCamera/PlayerHead/FPS_Label
 
 onready var cube_template = preload("res://game/BeepCube.tscn").instance();
 onready var wall_template = preload("res://game/Wall/Wall.tscn").instance();
-onready var cube_material_template = preload("res://game/BeepCube_new_material.material");
-onready var cube_half_template = preload("res://game/BeepCube_CutFadeout.gd");
-onready var cube_particles_template = preload("res://game/BeepCube_SliceParticles.tscn");
+onready var LinkedList := preload("res://game/scripts/LinkedList.gd")
+export(PackedScene) var bomb_template : PackedScene
 
-var cube_left = null
-var cube_right = null
+onready var _cube_pool := $BeepCubePool
 
 onready var track = $Track;
 
@@ -57,6 +59,13 @@ var _current_info = null;
 var _current_note = 0;
 var _current_obstacle = 0;
 var _current_event = 0;
+
+var _proc_map_sw := StopwatchFactory.create("process_map",10,true)
+var _cut_cube_sw := StopwatchFactory.create("cute_cube",10,true)
+var _update_points_sw := StopwatchFactory.create("update_points",10,true)
+var _create_cut_pieces_sw := StopwatchFactory.create("create_cut_pieces",10,true)
+var _instance_cube_sw := StopwatchFactory.create("instance_cube",10,true)
+var _add_cube_to_scene_sw := StopwatchFactory.create("add_cube_to_scene",10,true)
 
 # There's an interesting issue where the AudioStreamPlayer's playback_position
 # doesn't immediately return to 0.0 after restarting the song_player. This
@@ -87,7 +96,44 @@ var _wrong_notes = 0;
 
 #settings
 var cube_cuts_falloff = true
-var max_cutted_cubes = 32
+var bombs_enabled = true
+
+# structure of nodes that represent a cut piece of a cube (ie. one half)
+class CutPieceNodes:
+	extends Reference
+	
+	var rigid_body := RigidBody.new()
+	var mesh := MeshInstance.new()
+	var coll := CollisionShape.new()
+	
+	func _init():
+		rigid_body.add_to_group("cutted_cube")
+		rigid_body.collision_layer = 0
+		rigid_body.collision_mask = CollisionLayerConstants.Floor_mask
+		rigid_body.gravity_scale = 1
+		# set a phyiscs material for some more bouncy behaviour
+		rigid_body.physics_material_override = preload("res://game/BeepCube_Cut.phymat")
+		
+		coll.shape = BoxShape.new()
+		
+		rigid_body.add_child(coll)
+		rigid_body.add_child(mesh)
+		
+		rigid_body.set_script(preload("res://game/BeepCube_CutFadeout.gd"))
+
+# structure of nodes that are used to produce effects when cutting a cube
+class CutCubeResources:
+	extends Reference
+	
+	var particles : BeepCubeSliceParticles = null
+	var piece1 := CutPieceNodes.new()
+	var piece2 := CutPieceNodes.new()
+	
+	func _init():
+		particles = preload("res://game/BeepCube_SliceParticles.tscn").instance()
+
+const MAX_CUT_CUBE_RESOURCES = 32
+onready var _cut_cube_resources := LinkedList.new()
 
 func restart_map():
 	_audio_synced_after_restart = false
@@ -159,7 +205,7 @@ func _on_game_state_entered(state):
 		GameState.MapSelection:
 			$MainMenu_OQ_UI2DCanvas.visible = true;
 			$Settings_canvas.visible = false;
-			$Online_library.visible = true;
+			map_source_dialogs.visible = true;
 			$EndScore_canvas.visible = false;
 			$PauseMenu_canvas.visible = false;
 			highscore_canvas.visible = false;
@@ -176,7 +222,7 @@ func _on_game_state_entered(state):
 		GameState.Settings:
 			$MainMenu_OQ_UI2DCanvas.visible = false;
 			$Settings_canvas.visible = true;
-			$Online_library.visible = true;
+			map_source_dialogs.visible = true;
 			$EndScore_canvas.visible = false;
 			$PauseMenu_canvas.visible = false;
 			highscore_canvas.visible = false;
@@ -193,7 +239,7 @@ func _on_game_state_entered(state):
 		GameState.Playing:
 			$MainMenu_OQ_UI2DCanvas.visible = false;
 			$Settings_canvas.visible = false;
-			$Online_library.visible = false;
+			map_source_dialogs.visible = false;
 			$EndScore_canvas.visible = false;
 			$PauseMenu_canvas.visible = false;
 			highscore_canvas.visible = false;
@@ -210,7 +256,7 @@ func _on_game_state_entered(state):
 		GameState.Paused:
 			$MainMenu_OQ_UI2DCanvas.visible = false;
 			$Settings_canvas.visible = false;
-			$Online_library.visible = false;
+			map_source_dialogs.visible = false;
 			$EndScore_canvas.visible = false;
 			$PauseMenu_canvas.visible = true;
 			highscore_canvas.visible = false;
@@ -232,7 +278,7 @@ func _on_game_state_entered(state):
 			
 			$MainMenu_OQ_UI2DCanvas.visible = false;
 			$Settings_canvas.visible = false;
-			$Online_library.visible = false;
+			map_source_dialogs.visible = false;
 			$EndScore_canvas.visible = true;
 			$PauseMenu_canvas.visible = false;
 			highscore_canvas.visible = false;
@@ -265,7 +311,7 @@ func _on_game_state_entered(state):
 			
 			$MainMenu_OQ_UI2DCanvas.visible = false;
 			$Settings_canvas.visible = false;
-			$Online_library.visible = false;
+			map_source_dialogs.visible = false;
 			$EndScore_canvas.visible = true;
 			$PauseMenu_canvas.visible = false;
 			highscore_canvas.visible = true;
@@ -328,18 +374,35 @@ const beats_ahead = 4.0;
 const CUBE_DISTANCE = 0.5;
 const CUBE_ROTATIONS = [180, 0, 270, 90, -135, 135, -45, 45, 0];
 
-func _spawn_cube(note, current_beat):
-	var cube = null;
+func _spawn_note(note, current_beat):
+	var note_node = null;
+	var is_cube = true
+	var color := COLOR_LEFT
 	if (note._type == 0):
-		cube = cube_left.duplicate();
+		_instance_cube_sw.start()
+		note_node = _cube_pool.acquire()
+		color = COLOR_LEFT
+		_instance_cube_sw.stop()
 	elif (note._type == 1):
-		cube = cube_right.duplicate();
+		_instance_cube_sw.start()
+		note_node = _cube_pool.acquire()
+		color = COLOR_RIGHT
+		_instance_cube_sw.stop()
+	elif (note._type == 3) and bombs_enabled:
+		is_cube = false
+		note_node = bomb_template.instance()
 	else:
 		return;
+	
+	if note_node == null:
+		print("Failed to acquire a new note from scene pool")
+		return
+	
+	# disable collision until it gets nearer to player (helps with performance)
+	note_node.collision_disabled = true
 
 	if menu._map_difficulty_noteJumpMovementSpeed > 0:
-		cube.speed = float(menu._map_difficulty_noteJumpMovementSpeed)/9
-	track.add_child(cube);
+		note_node.speed = float(menu._map_difficulty_noteJumpMovementSpeed)/9
 
 	var line = -(CUBE_DISTANCE * 3.0 / 2.0) + note._lineIndex * CUBE_DISTANCE;
 	var layer = CUBE_DISTANCE + note._lineLayer * CUBE_DISTANCE;
@@ -348,16 +411,25 @@ func _spawn_cube(note, current_beat):
 
 	var distance = note._time - current_beat;
 
-	cube.transform.origin = Vector3(
+	note_node.transform.origin = Vector3(
 		line,
 		CUBE_HEIGHT_OFFSET + layer,
 		-distance * beat_distance);
 
-	cube._cube_mesh_orientation.rotation.z = rotation_z;
-	if note._cutDirection==8:
-		cube._cube_mesh_orientation.rotation.y = deg2rad(180);
+	if is_cube:
+		var is_dot = note._cutDirection == 8
+		note_node._cube_mesh_orientation.rotation.z = rotation_z;
+		note_node._cube_mesh_orientation.rotation.y = (PI if is_dot else 0)
 
-	cube._note = note;
+	note_node._note = note;
+	
+	if note_node is BeepCube:
+		_add_cube_to_scene_sw.start()
+		note_node.spawn(note._type, color)
+		_add_cube_to_scene_sw.stop()
+	else:
+		# spawn bombs by adding to track
+		track.add_child(note_node);
 
 # constants used to interpret the '_type' field in map obstacles
 const WALL_TYPE_FULL_HEIGHT = 0;
@@ -399,7 +471,9 @@ func _spawn_wall(obstacle, current_beat):
 func _process_map(dt):
 	if (_current_map == null):
 		return;
-
+	
+	_proc_map_sw.start()
+	
 	var current_time = song_player.get_playback_position();
 	
 	var current_beat = current_time * _current_info._beatsPerMinute / 60.0;
@@ -407,7 +481,7 @@ func _process_map(dt):
 	# spawn notes
 	var n =_current_map._notes;
 	while (_current_note < n.size() && n[_current_note]._time <= current_beat+beats_ahead):
-		_spawn_cube(n[_current_note], current_beat);
+		_spawn_note(n[_current_note], current_beat);
 		_current_note += 1;
 
 	# spawn obstacles (walls)
@@ -418,19 +492,31 @@ func _process_map(dt):
 
 	var speed = Vector3(0.0, 0.0, beat_distance * _current_info._beatsPerMinute / 60.0) * dt;
 
-	for c in track.get_children():
+	for c_idx in track.get_child_count():
+		var c = track.get_child(c_idx)
+		if ! c.visible:
+			continue
+		
 		c.translate(speed);
 
 		var depth = CUBE_DISTANCE
 		if c is Wall:
 			# compute wall's depth based on duration
 			depth = beat_distance * c._obstacle._duration
+		else:
+			# enable bomb/cube collision when it gets closer enough to player
+			if c.global_transform.origin.z > -3.0:
+				c.collision_disabled = false
 
 		# remove children that go to far
 		if ((c.global_transform.origin.z - depth) > 2.0):
-			if not c is Wall:
+			if c is BeepCube:
 				_reset_combo();
-			c.queue_free();
+				# cubes must be released() instead of queue_free() because they
+				# are part of a pool.
+				c.release()
+			else:
+				c.queue_free();
 
 	var e = _current_map._events;
 	while (_current_event < e.size() && e[_current_event]._time <= current_beat):#+beats_ahead):
@@ -439,6 +525,8 @@ func _process_map(dt):
 
 	if (song_player.get_playback_position() >= song_player.stream.get_length()-1):
 		_on_song_ended();
+		
+	_proc_map_sw.stop()
 
 func _spawn_event(data,beat):
 	$event_driver.procces_event(data,beat)
@@ -496,8 +584,11 @@ func _update_saber_end_variabless(dt):
 
 
 func _physics_process(dt):
+	if fps_label.visible:
+		fps_label.set_label_text("FPS: %d" % Engine.get_frames_per_second())
+	
 	# pause game when player presses menu button
-	if vr.button_just_released(vr.BUTTON.ENTER):
+	if (vr.button_just_released(vr.BUTTON.ENTER)):
 		if _current_game_state == GameState.Playing:
 			_transition_game_state(GameState.Paused)
 
@@ -525,12 +616,7 @@ var _lpf = null;
 func _ready():
 	_main_menu = $MainMenu_OQ_UI2DCanvas.find_node("BeepSaberMainMenu", true, false);
 	_main_menu.initialize(self);
-
-	cube_left = cube_template.duplicate();
-	cube_right = cube_template.duplicate();
-	cube_left.duplicate_create(COLOR_LEFT);
-	cube_right.duplicate_create(COLOR_RIGHT);
-	update_cube_colors()
+	$MapSourceDialogs/BeatSaver_Canvas.ui_control.main_menu_node = _main_menu
 
 	update_saber_colors()
 	
@@ -540,17 +626,22 @@ func _ready():
 		right_saber.rotation_degrees.x = -90;
 		ui_raycast.rotation_degrees.x = 0;
 
-	_transition_game_state(GameState.MapSelection)
+	# initialize list of cut cube resources
+	for _i in range(MAX_CUT_CUBE_RESOURCES):
+		var new_res := CutCubeResources.new()
+		add_child(new_res.particles)
+		add_child(new_res.piece1.rigid_body)
+		add_child(new_res.piece2.rigid_body)
+		_cut_cube_resources.push_back(new_res)
 
-func update_cube_colors():
-	cube_left.update_color_only(COLOR_LEFT);
-	cube_right.update_color_only(COLOR_RIGHT);
+	UI_AudioEngine.attach_children(highscore_keyboard)
+	UI_AudioEngine.attach_children(online_search_keyboard)
+
+	_transition_game_state(GameState.MapSelection)
 
 func update_saber_colors():
 	left_saber.set_color(COLOR_LEFT)
-	left_saber.type = 0;
 	right_saber.set_color(COLOR_RIGHT)
-	right_saber.type = 1;
 	#also updates map colors
 	$event_driver.update_colors()
 	$StandingGround.update_colors(COLOR_LEFT,COLOR_RIGHT)
@@ -565,73 +656,61 @@ func disable_events(disabled):
 
 # cut the cube by creating two rigid bodies and using a CSGBox to create
 # the cut plane
-func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distance, controller_speed, saber_ends):
+func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distance, controller_speed, saber_ends, cut_res: CutCubeResources):
 	if not cube_cuts_falloff: 
 		return
-	#remove cutted cubes when there are more than max_cutted_cubes
-	var cutted_cubes_group = get_tree().get_nodes_in_group("cutted_cube")
-	if cutted_cubes_group.size() >= max_cutted_cubes:
-		cutted_cubes_group[0].remove_from_group("cutted_cube")
-		cutted_cubes_group[0].queue_free()
-		
-	var rigid_body_half = RigidBody.new();
-	rigid_body_half.add_to_group("cutted_cube")
-	rigid_body_half.collision_layer = 8
-	rigid_body_half.collision_mask = 0
-	rigid_body_half.gravity_scale = 1
+	
+	# this function gets run twice, one for each piece of the cube
+	var piece : CutPieceNodes = cut_res.piece1
+	if is_equal_approx(_sign,1):
+		piece = cut_res.piece2
+	
+	# make piece invisible and stop it's processing while we're updating it
+	piece.rigid_body.reset()
 	
 	# the original cube mesh
-	var cutted_cube = MeshInstance.new();
-	cutted_cube.mesh = cube._mesh;
-	cutted_cube.transform = cube._cube_mesh_orientation.transform;
-	cutted_cube.material_override = cube._mat.duplicate()
+	piece.mesh.mesh = cube._mesh;
+	piece.mesh.transform = cube._cube_mesh_orientation.transform;
+	piece.mesh.material_override = cube._mat.duplicate()
 	
 	# calculate angle and position of the cut
-	cutted_cube.material_override.set_shader_param("cutted",true)
-	cutted_cube.material_override.set_shader_param("inverted_cut",!bool((_sign+1)/2))
+	piece.mesh.material_override.set_shader_param("cutted",true)
+	piece.mesh.material_override.set_shader_param("inverted_cut",!bool((_sign+1)/2))
 	# TODO: cutplane is unused and replaced by this? what
 	var saber_end_mov = saber_ends[0]-saber_ends[1]
 	var saber_end_angle = rad2deg(Vector2(saber_end_mov.x,saber_end_mov.y).angle())
-	var saber_end_angle_rel = (int(((saber_end_angle+90)+(360-cutted_cube.rotation_degrees.z))+180)%360)-180
+	var saber_end_angle_rel = (int(((saber_end_angle+90)+(360-piece.mesh.rotation_degrees.z))+180)%360)-180
 	
 	var rot_dir = saber_end_angle_rel > 90 or saber_end_angle_rel < -90
 	var rot_dir_flt = (float(rot_dir)*2)-1
-	cutted_cube.material_override.set_shader_param("cut_pos",cut_distance*rot_dir_flt)
-	cutted_cube.material_override.set_shader_param("cut_angle",deg2rad(saber_end_angle_rel))
+	piece.mesh.material_override.set_shader_param("cut_pos",cut_distance*rot_dir_flt)
+	piece.mesh.material_override.set_shader_param("cut_angle",deg2rad(saber_end_angle_rel))
 
 	# transform the normal into the orientation of the actual cube mesh
-	var normal = cutted_cube.transform.basis.inverse() * cutplane.normal;
+	var normal = piece.mesh.transform.basis.inverse() * cutplane.normal;
 	
 	# Next we are adding a simple collision cube to the rigid body. Note that
 	# his is really just a very crude approximation of the actual cut geometry
 	# but for now it's enough to give them some physics behaviour
-	var coll = CollisionShape.new()
-	coll.shape = BoxShape.new()
-	coll.shape.extents = Vector3(0.25, 0.25, 0.125)
-	coll.look_at_from_position(-cutplane.normal*_sign*0.125, cutplane.normal, Vector3(0,1,0))
-	rigid_body_half.add_child(coll)
+	piece.coll.shape.extents = Vector3(0.25, 0.25, 0.125)
+	piece.coll.look_at_from_position(-cutplane.normal*_sign*0.125, cutplane.normal, Vector3(0,1,0))
 
-	# set a phyiscs material for some more bouncy behaviour
-	rigid_body_half.physics_material_override = load("res://game/BeepCube_Cut.phymat")
-
-	rigid_body_half.add_child(cutted_cube)
-	rigid_body_half.set_script(cube_half_template)
-	add_child(rigid_body_half)
-	rigid_body_half.global_transform = cube.global_transform
+	piece.rigid_body.global_transform = cube.global_transform
+	# make piece visible and start its simulation
+	piece.rigid_body.fire()
 	
 	# some impulse so the cube half moves
 	var cutplane_2d = Vector3(saber_end_mov.x,saber_end_mov.y,0.0)
-	var splitplane_2d = cutplane_2d.cross(cutted_cube.transform.basis.z)
+	var splitplane_2d = cutplane_2d.cross(piece.mesh.transform.basis.z)
 #	_sign *= rot_dir_flt
-	rigid_body_half.apply_central_impulse((_sign * splitplane_2d * 15) + (cutplane_2d*10))
-	rigid_body_half.apply_torque_impulse((_sign) * Vector3.FORWARD * 0.15)
+	piece.rigid_body.apply_central_impulse((_sign * splitplane_2d * 15) + (cutplane_2d*10))
+	piece.rigid_body.apply_torque_impulse((_sign) * Vector3.FORWARD * 0.15)
 	
 	# This function gets run twice so we don't want two particle effects
 	if is_equal_approx(_sign,1):
-		var particles = cube_particles_template.instance()
-		particles.transform.origin = cutted_cube.global_transform.origin
-		particles.rotation_degrees.z = saber_end_angle+90
-		add_child(particles)
+		cut_res.particles.transform.origin = cube.global_transform.origin
+		cut_res.particles.rotation_degrees.z = saber_end_angle+90
+		cut_res.particles.fire()
 
 func _reset_combo():
 	_current_multiplier = 1;
@@ -641,9 +720,13 @@ func _reset_combo():
 	
 func _clear_track():
 	for c in track.get_children():
-		c.visible = false;
-		track.remove_child(c);
-		c.queue_free();
+		if c is BeepCube:
+			if c.visible:
+				c.release()
+		else:
+			c.visible = false;
+			track.remove_child(c);
+			c.queue_free();
 
 func _update_points_from_cut(saber, cube, beat_accuracy, cut_angle_accuracy, cut_distance_accuracy, travel_distance_factor):
 	#if (beat_accuracy == 0.0 || cut_angle_accuracy == 0.0 || cut_distance_accuracy == 0.0):
@@ -695,6 +778,8 @@ func _display_points():
 
 # perform the necessay computations to cut a cube with the saber
 func _cut_cube(controller : ARVRController, saber : Area, cube : Spatial):
+	_cut_cube_sw.start()
+	
 	# perform haptic feedback for the cut
 	controller.simple_rumble(0.75, 0.1);
 	var o = controller.global_transform.origin;
@@ -722,20 +807,30 @@ func _cut_cube(controller : ARVRController, saber : Area, cube : Spatial):
 	var travel_distance_factor = _controller_movement_aabb[controller.controller_id].get_longest_axis_size();
 	travel_distance_factor = clamp((travel_distance_factor-0.5)/0.5, 0.0, 1.0);
 
-	_create_cut_rigid_body(-1, cube, cutplane, cut_distance, controller_speed, [saber_end,saber_end_past]);
-	_create_cut_rigid_body( 1, cube, cutplane, cut_distance, controller_speed, [saber_end,saber_end_past]);
+	_create_cut_pieces_sw.start()
+	# acquire oldest CutCubeResources to use for this event. we reused these
+	# resource for performance reasons. it gets placed onto the back of the
+	# list so that it won't get used again for a couple more cycles.
+	var cut_res : CutCubeResources = _cut_cube_resources.pop_front()
+	_cut_cube_resources.push_back(cut_res)
+	_create_cut_rigid_body(-1, cube, cutplane, cut_distance, controller_speed, [saber_end,saber_end_past], cut_res);
+	_create_cut_rigid_body( 1, cube, cutplane, cut_distance, controller_speed, [saber_end,saber_end_past], cut_res);
+	_create_cut_pieces_sw.stop()
 	
 	# allows a bit of save margin where the beat is considered 100% correct
 	var beat_accuracy = clamp((1.0 - abs(cube.global_transform.origin.z)) / 0.5, 0.0, 1.0);
 
+	_update_points_sw.start()
 	_update_points_from_cut(saber, cube, beat_accuracy, cut_angle_accuracy, cut_distance_accuracy, travel_distance_factor);
+	_update_points_sw.stop()
 
 	# reset the movement tracking volume for the next cut
 	_controller_movement_aabb[controller.controller_id] = AABB(controller.global_transform.origin, Vector3(0,0,0));
 
 	#vr.show_dbg_info("cut_accuracy", str(beat_accuracy) + ", " + str(cut_angle_accuracy) + ", " + str(cut_distance_accuracy) + ", " + str(travel_distance_factor));
-	# delete the original cube; we have two new halfs created above
-	cube.queue_free();
+	cube.release();
+	
+	_cut_cube_sw.stop()
 
 # quiets song when player enters into a wall
 func _quiet_song():
@@ -755,15 +850,6 @@ func _endscore_panel() -> EndScorePanel:
 # accessor method for the player name selector UI element
 func _name_selector() -> NameSelector:
 	return name_selector_canvas.ui_control
-	
-func _on_LeftLightSaber_area_entered(area : Area):
-	if song_player.playing and (area.is_in_group("beepcube")):
-		_cut_cube(left_controller, left_saber, area.get_parent().get_parent());
-
-
-func _on_RightLightSaber_area_entered(area : Area):
-	if song_player.playing and (area.is_in_group("beepcube")):
-		_cut_cube(right_controller, right_saber, area.get_parent().get_parent());
 
 func _on_PlayerHead_area_entered(area):
 	if area.is_in_group("wall"):
@@ -831,3 +917,39 @@ func _on_Keyboard_highscore_text_input_enter(text):
 func _on_NameSelector_name_selected(name):
 	if _current_game_state == GameState.NewHighscore:
 		_submit_highscore(name)
+
+func _on_LeftLightSaber_cube_collide(cube):
+	# check 'playing' to prevent cutting items while resuming from pause menu
+	# where items are visible at this point, but there a count down before the
+	# song starts to play again
+	if song_player.playing:
+		_cut_cube(left_controller, left_saber, cube);
+
+func _on_RightLightSaber_cube_collide(cube):
+	# check 'playing' to prevent cutting items while resuming from pause menu
+	# where items are visible at this point, but there a count down before the
+	# song starts to play again
+	if song_player.playing:
+		_cut_cube(right_controller, right_saber, cube);
+
+func _on_LeftLightSaber_bomb_collide(bomb):
+	# check 'playing' to prevent cutting items while resuming from pause menu
+	# where items are visible at this point, but there a count down before the
+	# song starts to play again
+	if song_player.playing:
+		_reset_combo()
+		bomb.queue_free()
+		left_controller.simple_rumble(1.0, 0.15);
+
+func _on_RightLightSaber_bomb_collide(bomb):
+	# check 'playing' to prevent cutting items while resuming from pause menu
+	# where items are visible at this point, but there a count down before the
+	# song starts to play again
+	if song_player.playing:
+		_reset_combo()
+		bomb.queue_free()
+		right_controller.simple_rumble(1.0, 0.15);
+
+func _on_BeepCubePool_scene_instanced(cube):
+	cube.visible = false
+	$Track.add_child(cube)

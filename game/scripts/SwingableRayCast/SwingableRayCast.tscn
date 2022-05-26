@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://game/scripts/SwingableRayCast/SwingableRayCast.gd" type="Script" id=1]
+
+[sub_resource type="SphereMesh" id=1]
+
+[node name="SwingableRayCast" type="RayCast"]
+collision_mask = 0
+script = ExtResource( 1 )
+
+[node name="debug_ball" type="MeshInstance" parent="."]
+transform = Transform( 0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 0, 0, 0 )
+visible = false
+mesh = SubResource( 1 )
+material/0 = null
+
+[connection signal="tree_entered" from="." to="." method="_on_SwingableRayCast_tree_entered"]

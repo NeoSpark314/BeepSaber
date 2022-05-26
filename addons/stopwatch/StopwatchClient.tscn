@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/stopwatch/StopwatchClient.gd" type="Script" id=1]
+
+[node name="StopwatchClient" type="Node"]
+script = ExtResource( 1 )
+
+[node name="ReconnectTimer" type="Timer" parent="."]
+
+[node name="WatchdogTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="ReconnectTimer" to="." method="_on_ReconnectTimer_timeout"]
+[connection signal="timeout" from="WatchdogTimer" to="." method="_on_WatchdogTimer_timeout"]
