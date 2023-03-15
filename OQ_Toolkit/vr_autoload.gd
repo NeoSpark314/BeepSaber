@@ -4,6 +4,8 @@ extends Node
 
 const UI_PIXELS_TO_METER = 1.0 / 1024; # defines the (auto) size of UI elements in 3D
 
+var toolkit_version = "0.4.3_dev"
+
 var inVR = false;
 var active_arvr_interface_name = "Unknown";
 
@@ -118,6 +120,10 @@ func randomArrayElement(rng, array):
 	return array[rng.randi_range(0, array.size()-1)];
 
 
+# helper function to read and parse a JSON file and return the contents as a dictionary
+# Note: if you want to use it with .json files that are part of your project you 
+#       need to make sure they are exported by including *.json in the 
+#       ExportSettings->Resources->Filters options
 func load_json_file(filename):
 	var save = File.new();
 	var err = save.open(filename, File.READ)
@@ -155,6 +161,12 @@ func set_dominant_controller_left(is_left_handed):
 		
 func is_dominant_controller_left():
 	return dominantController == leftController;
+	
+
+enum VR_CONTROLLER_TYPE {
+	OCULUS_TOUCH,
+	WEBXR
+}
 
 enum AXIS {
 	None = -1,
@@ -233,6 +245,71 @@ enum CONTROLLER_BUTTON {
 	INDEX_TRIGGER = 15, # index trigger pressed over threshold
 }
 
+func remap_controller_axis_and_buttons(controller_type = VR_CONTROLLER_TYPE.OCULUS_TOUCH):
+	
+	if (controller_type == VR_CONTROLLER_TYPE.OCULUS_TOUCH):
+		# for now nothing to do here as this is the default when the dictionary 
+		# variables are created above
+		BUTTON.ENTER = 3; # this is a special case for the oculus touch controller
+	elif (controller_type == VR_CONTROLLER_TYPE.WEBXR):
+		# reset everything
+		for k in CONTROLLER_AXIS: CONTROLLER_AXIS[k] = -1;
+		for k in CONTROLLER_BUTTON: CONTROLLER_BUTTON[k] = -1;
+		
+		CONTROLLER_AXIS.JOYSTICK_X = 2;
+		CONTROLLER_AXIS.JOYSTICK_Y = 3
+		
+		#CONTROLLER_AXIS.INDEX_TRIGGER = 
+		CONTROLLER_BUTTON.INDEX_TRIGGER = 0;
+		CONTROLLER_BUTTON.GRIP_TRIGGER = 1;
+		CONTROLLER_BUTTON.THUMBSTICK = 3;
+		CONTROLLER_BUTTON.XA = 4;
+		CONTROLLER_BUTTON.YB = 5;
+		
+
+	# now we assign AXIS and BUTTON dictionaries that are used to identify
+	# individual buttons on each controller via name
+	AXIS.LEFT_JOYSTICK_X = CONTROLLER_AXIS.JOYSTICK_X;
+	AXIS.LEFT_JOYSTICK_Y = CONTROLLER_AXIS.JOYSTICK_Y;
+	AXIS.LEFT_INDEX_TRIGGER = CONTROLLER_AXIS.INDEX_TRIGGER;
+	AXIS.LEFT_GRIP_TRIGGER = CONTROLLER_AXIS.GRIP_TRIGGER;
+	if (CONTROLLER_AXIS.JOYSTICK_X!=-1): AXIS.RIGHT_JOYSTICK_X = CONTROLLER_AXIS.JOYSTICK_X + 16;
+	if (CONTROLLER_AXIS.JOYSTICK_Y!=-1): AXIS.RIGHT_JOYSTICK_Y = CONTROLLER_AXIS.JOYSTICK_Y + 16;
+	if (CONTROLLER_AXIS.INDEX_TRIGGER!=-1): AXIS.RIGHT_INDEX_TRIGGER = CONTROLLER_AXIS.INDEX_TRIGGER + 16;
+	if (CONTROLLER_AXIS.GRIP_TRIGGER!=-1): AXIS.RIGHT_GRIP_TRIGGER = CONTROLLER_AXIS.GRIP_TRIGGER + 16;
+	
+	BUTTON.Y = CONTROLLER_BUTTON.YB;
+	BUTTON.LEFT_GRIP_TRIGGER = CONTROLLER_BUTTON.GRIP_TRIGGER;
+	BUTTON.TOUCH_X = CONTROLLER_BUTTON.TOUCH_XA;
+	BUTTON.TOUCH_Y = CONTROLLER_BUTTON.TOUCH_YB;
+	BUTTON.X = CONTROLLER_BUTTON.XA;
+
+	BUTTON.LEFT_TOUCH_THUMB_UP = CONTROLLER_BUTTON.TOUCH_THUMB_UP;
+	BUTTON.LEFT_TOUCH_INDEX_TRIGGER = CONTROLLER_BUTTON.TOUCH_INDEX_TRIGGER;
+	BUTTON.LEFT_TOUCH_INDEX_POINTING = CONTROLLER_BUTTON.TOUCH_INDEX_POINTING;
+
+	BUTTON.LEFT_THUMBSTICK = CONTROLLER_BUTTON.THUMBSTICK;
+	BUTTON.LEFT_INDEX_TRIGGER = CONTROLLER_BUTTON.INDEX_TRIGGER;
+	
+	if (CONTROLLER_BUTTON.YB!=-1): BUTTON.B = CONTROLLER_BUTTON.YB + 16;
+	if (CONTROLLER_BUTTON.GRIP_TRIGGER!=-1): BUTTON.RIGHT_GRIP_TRIGGER = CONTROLLER_BUTTON.GRIP_TRIGGER + 16;
+	if (CONTROLLER_BUTTON.TOUCH_XA!=-1): BUTTON.TOUCH_A = CONTROLLER_BUTTON.TOUCH_XA + 16;
+	if (CONTROLLER_BUTTON.TOUCH_YB!=-1): BUTTON.TOUCH_B = CONTROLLER_BUTTON.TOUCH_YB + 16;
+	if (CONTROLLER_BUTTON.XA!=-1): BUTTON.A = CONTROLLER_BUTTON.XA + 16;
+	
+	if (CONTROLLER_BUTTON.TOUCH_THUMB_UP!=-1): BUTTON.RIGHT_TOUCH_THUMB_UP = CONTROLLER_BUTTON.TOUCH_THUMB_UP + 16;
+	if (CONTROLLER_BUTTON.TOUCH_INDEX_TRIGGER!=-1): BUTTON.RIGHT_TOUCH_INDEX_TRIGGER = CONTROLLER_BUTTON.TOUCH_INDEX_TRIGGER + 16;
+	if (CONTROLLER_BUTTON.TOUCH_INDEX_POINTING!=-1): BUTTON.RIGHT_TOUCH_INDEX_POINTING = CONTROLLER_BUTTON.TOUCH_INDEX_POINTING + 16;
+
+	if (CONTROLLER_BUTTON.THUMBSTICK!=-1): BUTTON.RIGHT_THUMBSTICK = CONTROLLER_BUTTON.THUMBSTICK + 16;
+	if (CONTROLLER_BUTTON.INDEX_TRIGGER!=-1): BUTTON.RIGHT_INDEX_TRIGGER = CONTROLLER_BUTTON.INDEX_TRIGGER + 16;
+	
+	log_info("Current Controller Mapping: ");
+	for k in CONTROLLER_AXIS:
+		log_info(" Axis " + k + " = " + str(CONTROLLER_AXIS[k]));
+	for k in CONTROLLER_BUTTON:
+		log_info(" Button " + k + " = " + str(CONTROLLER_BUTTON[k]));
+
 func get_controller_axis(axis_id):
 	if (axis_id == AXIS.None) : return 0.0;
 	if (axis_id < 16):
@@ -292,13 +369,9 @@ enum LocomotionStickTurnType {
 ###############################################################################
 
 # Oculus VR Api Classes
-var ovrDisplayRefreshRate = null;
-var ovrGuardianSystem = null;
-var ovrInitConfig = null;
-var ovrPerformance = null;
-var ovrTrackingTransform = null;
+var ovrBaseAPI = null;
+var ovrInitAPI = null;
 var ovrUtilities = null;
-var ovrHandTracking = null;
 var ovrVrApiProxy = null;
 # for the types we need to assume it is always available
 var ovrVrApiTypes = load("res://addons/godot_ovrmobile/OvrVrApiTypes.gd").new();
@@ -308,33 +381,29 @@ var _need_settings_refresh = false;
 
 func _initialize_OVR_API():
 	# load all native interfaces to the vrApi
-	var OvrDisplayRefreshRate = load("res://addons/godot_ovrmobile/OvrDisplayRefreshRate.gdns");
-	var OvrGuardianSystem = load("res://addons/godot_ovrmobile/OvrGuardianSystem.gdns");
-	var OvrInitConfig = load("res://addons/godot_ovrmobile/OvrInitConfig.gdns");
-	var OvrPerformance = load("res://addons/godot_ovrmobile/OvrPerformance.gdns");
-	var OvrTrackingTransform = load("res://addons/godot_ovrmobile/OvrTrackingTransform.gdns");
-	var OvrUtilities = load("res://addons/godot_ovrmobile/OvrUtilities.gdns");
-	var OvrHandTracking = load("res://addons/godot_ovrmobile/OvrHandTracking.gdns");
-	var OvrVrApiProxy = load("res://addons/godot_ovrmobile/OvrVrApiProxy.gdns");
+	var _OvrBaseAPI = load("res://addons/godot_ovrmobile/OvrBaseAPI.gdns");
+	var _OvrInitAPI = load("res://addons/godot_ovrmobile/OvrInitAPI.gdns");
+	var _OvrUtilities = load("res://addons/godot_ovrmobile/OvrUtilities.gdns");
+	var _OvrVrApiProxy = load("res://addons/godot_ovrmobile/OvrVrApiProxy.gdns");
 	
-	if (OvrDisplayRefreshRate): ovrDisplayRefreshRate = OvrDisplayRefreshRate.new();
-	else: log_error("Failed to load OvrDisplayRefreshRate.gdns");
-	if (OvrGuardianSystem): ovrGuardianSystem = OvrGuardianSystem.new();
-	else: log_error("Failed to load OvrGuardianSystem.gdns");
-	if (OvrInitConfig): ovrInitConfig = OvrInitConfig.new();
-	else: log_error("Failed to load OvrInitConfig.gdns");
-	if (OvrPerformance): ovrPerformance = OvrPerformance.new();
-	else: log_error("Failed to load OvrPerformance.gdns");
-	if (OvrTrackingTransform): ovrTrackingTransform = OvrTrackingTransform.new();
-	else: log_error("Failed to load OvrTrackingTransform.gdns");
-	if (OvrUtilities): ovrUtilities = OvrUtilities.new();
+	if (_OvrBaseAPI): ovrBaseAPI = _OvrBaseAPI.new();
+	else: log_error("Failed to load OvrBaseAPI.gdns");
+	if (_OvrInitAPI): ovrInitAPI = _OvrInitAPI.new();
+	else: log_error("Failed to load OvrInitAPI.gdns");
+	if (_OvrUtilities): ovrUtilities = _OvrUtilities.new();
 	else: log_error("Failed to load OvrUtilities.gdns");
-	if (OvrHandTracking): ovrHandTracking = OvrHandTracking.new();
-	else: log_error("Failed to load OvrHandTracking.gdns");
-	if (OvrVrApiProxy): ovrVrApiProxy = OvrVrApiProxy.new();
+	if (_OvrVrApiProxy): ovrVrApiProxy = _OvrVrApiProxy.new();
 	else: log_error("Failed to load OvrVrApiProxy.gdns");
+
+	# print out a warning message if ovrBaseAPI is not found because it likely means that
+	# an incompatible version of the godot_ovrmobile version is used; the toolkit comes with a version
+	# that is compatible in https://github.com/NeoSpark314/godot_oculus_quest_toolkit
+	if (not ovrBaseAPI):
+		log_error("No OvrBaseAPI found; please make sure to use a godot_ovrmobile addon version compatible with the toolkit!; A compatible version is part of https://github.com/NeoSpark314/godot_oculus_quest_toolkit")
 	
-	#log_info(str("    Supported display refresh rates: ", get_supported_display_refresh_rates()));
+	log_info(str("    Quest Supported display refresh rates: ", get_supported_display_refresh_rates()));
+	#log_info(str("      is_oculus_quest_1_device: ", is_oculus_quest_1_device()));
+	#log_info(str("      is_oculus_quest_2_device: ", is_oculus_quest_2_device()));
 
 
 # When the android application gets paused it will destroy the VR context
@@ -382,66 +451,66 @@ var oculus_mobile_settings_cache = {
 # wrapper for accessing the VrAPI helper functions that check for availability
 
 func get_supported_display_refresh_rates():
-	if (!ovrDisplayRefreshRate):
-		log_error("get_supported_display_refresh_rates(): no ovrDisplayRefreshRate object.");
+	if (!ovrBaseAPI):
+		log_error("get_supported_display_refresh_rates(): no ovrBaseAPI object.");
 		return [];
 	else:
-		return ovrDisplayRefreshRate.get_supported_display_refresh_rates();
+		return ovrBaseAPI.get_supported_display_refresh_rates();
 
 func set_display_refresh_rate(value):
-	if (!ovrDisplayRefreshRate):
-		log_error("set_display_refresh_rate(): no ovrDisplayRefreshRate object.");
+	if (!ovrBaseAPI):
+		log_error("set_display_refresh_rate(): no ovrBaseAPI object.");
 	else:
 		oculus_mobile_settings_cache["display_refresh_rate"] = value;
-		ovrDisplayRefreshRate.set_display_refresh_rate(value);
+		ovrBaseAPI.set_display_refresh_rate(value);
 
 func get_boundary_oriented_bounding_box():
-	if (!ovrGuardianSystem):
-		log_error("get_boundary_oriented_bounding_box(): no ovrGuardianSystem object.");
+	if (!ovrBaseAPI):
+		log_error("get_boundary_oriented_bounding_box(): no ovrBaseAPI object.");
 		return [Transform(), Vector3(1.93, 2.5, 2.25)]; # return a default value
 	else:
-		var ret = ovrGuardianSystem.get_boundary_oriented_bounding_box();
+		var ret = ovrBaseAPI.get_boundary_oriented_bounding_box();
 		if ((ret == null) || !(ret is Array) || (ret.size() != 2)):
 			log_error(str("get_boundary_oriented_bounding_box(): invalid return value: ", ret));
 			return [Transform(), Vector3(0, 0, 0)]; # return a default value
 		return ret;
 		
 func request_boundary_visible(val):
-	if (!ovrGuardianSystem):
-		log_error("request_boundary_visible(): no ovrGuardianSystem object.");
+	if (!ovrBaseAPI):
+		log_error("request_boundary_visible(): no ovrBaseAPI object.");
 		return false;
 	else:
 		oculus_mobile_settings_cache["boundary_visible"] = val;
-		return ovrGuardianSystem.request_boundary_visible(val);
+		return ovrBaseAPI.request_boundary_visible(val);
 		
 func get_boundary_visible():
-	if (!ovrGuardianSystem):
-		log_error("get_boundary_visible(): no ovrGuardianSystem object.");
+	if (!ovrBaseAPI):
+		log_error("get_boundary_visible(): no ovrBaseAPI object.");
 		return false;
 	else:
-		return ovrGuardianSystem.get_boundary_visible();
+		return ovrBaseAPI.get_boundary_visible();
 
 func get_tracking_space():
-	if (!ovrTrackingTransform):
-		log_error("get_tracking_space(): no ovrTrackingTransform object.");
+	if (!ovrBaseAPI):
+		log_error("get_tracking_space(): no ovrBaseAPI object.");
 		return -1;
 	else:
-		return ovrTrackingTransform.get_tracking_space();
+		return ovrBaseAPI.get_tracking_space();
 		
 func set_tracking_space(tracking_space):
-	if (!ovrTrackingTransform):
-		log_error("set_tracking_space(): no ovrTrackingTransform object.");
+	if (!ovrBaseAPI):
+		log_error("set_tracking_space(): no ovrBaseAPI object.");
 		return false;
 	else:
 		oculus_mobile_settings_cache["tracking_space"] = tracking_space;
-		return ovrTrackingTransform.set_tracking_space(tracking_space);
+		return ovrBaseAPI.set_tracking_space(tracking_space);
 		
 func locate_tracking_space(target_tracking_space):
-	if (!ovrTrackingTransform):
-		log_error("set_tracking_space(): no ovrTrackingTransform object.");
+	if (!ovrBaseAPI):
+		log_error("set_tracking_space(): no ovrBaseAPI object.");
 		return Transform();
 	else:
-		return ovrTrackingTransform.locate_tracking_space(target_tracking_space);
+		return ovrBaseAPI.locate_tracking_space(target_tracking_space);
 
 
 # these variables are currently only used by the recording playback
@@ -544,13 +613,26 @@ func set_default_layer_color_scale(color : Color):
 		return ovrUtilities.set_default_layer_color_scale(color);
 
 
+func is_oculus_quest_1_device():
+	if (!ovrUtilities):
+		return false;
+	else:
+		return ovrUtilities.is_oculus_quest_1_device();
+	
+func is_oculus_quest_2_device():
+	if (!ovrUtilities):
+		return false;
+	else:
+		return ovrUtilities.is_oculus_quest_2_device();
+
+
 func set_extra_latency_mode(latency_mode):
-	if (!ovrPerformance):
-		log_error("set_tracking_space(): no ovrPerformance object.");
+	if (!ovrBaseAPI):
+		log_error("set_tracking_space(): no ovrBaseAPI object.");
 		return false;
 	else:
 		oculus_mobile_settings_cache["extra_latency_mode"] = latency_mode;
-		return ovrPerformance.set_extra_latency_mode(latency_mode);
+		return ovrBaseAPI.set_extra_latency_mode(latency_mode);
 
 
 enum FoveatedRenderingLevel {
@@ -562,37 +644,37 @@ enum FoveatedRenderingLevel {
 }
 
 func set_foveation_level(ffr_level):
-	if (!ovrPerformance):
-		log_error("set_foveation_level(): no ovrPerformance object.");
+	if (!ovrBaseAPI):
+		log_error("set_foveation_level(): no ovrBaseAPI object.");
 		return false;
 	else:
 		oculus_mobile_settings_cache["foveation_level"] = ffr_level;
-		return ovrPerformance.set_foveation_level(ffr_level);
+		return ovrBaseAPI.set_foveation_level(ffr_level);
 
 func set_enable_dynamic_foveation(ffr_dynamic):
-	if (!ovrPerformance):
-		log_error("set_enable_dynamic_foveation(): no ovrPerformance object.");
+	if (!ovrBaseAPI):
+		log_error("set_enable_dynamic_foveation(): no ovrBaseAPI object.");
 		return false;
 	else:
 		oculus_mobile_settings_cache["foveation_dynamic"] = ffr_dynamic;
-		return ovrPerformance.set_enable_dynamic_foveation(ffr_dynamic);
+		return ovrBaseAPI.set_enable_dynamic_foveation(ffr_dynamic);
 
 func set_swap_interval(interval):
-	if (!ovrPerformance):
-		log_error("set_swap_interval(): no ovrPerformance object.");
+	if (!ovrBaseAPI):
+		log_error("set_swap_interval(): no ovrBaseAPI object.");
 		return false;
 	else:
 		oculus_mobile_settings_cache["swap_interval"] = interval;
-		return ovrPerformance.set_swap_interval(interval);
+		return ovrBaseAPI.set_swap_interval(interval);
 	
 func set_clock_levels(cpu_level, gpu_level):
-	if (!ovrPerformance):
-		log_error("set_clock_levels(): no ovrPerformance object.");
+	if (!ovrBaseAPI):
+		log_error("set_clock_levels(): no ovrBaseAPI object.");
 		return false;
 	else:
 		oculus_mobile_settings_cache["clock_levels_cpu"] = cpu_level;
 		oculus_mobile_settings_cache["clock_levels_gpu"] = gpu_level;
-		return ovrPerformance.set_clock_levels(cpu_level, gpu_level);
+		return ovrBaseAPI.set_clock_levels(cpu_level, gpu_level);
 
 
 ###############################################################################
@@ -701,20 +783,79 @@ func _process(dt):
 	_check_for_scene_switch_and_fade(dt);
 
 
+# webxr callback
+func _webxr_cb_session_supported(a, b):
+	log_info("WebXR session is supported: " + str(a) + ", " + str(b));
+	pass
+
+func _webxr_cb_session_started():
+	get_viewport().arvr = true
+	log_info("WebXR Session Started; reference space type: " + arvr_webxr_interface.reference_space_type);
+
+signal signal_webxr_started;
+
+func _webxr_initialize(enable_vr):
+	if (!enable_vr):
+		inVR = false;
+		log_info("  WebXR starting only in simulator mode.");
+		emit_signal("signal_webxr_started");
+		return;
+		
+	if (arvr_webxr_interface.initialize()):
+		get_viewport().arvr = true;
+		OS.vsync_enabled = false;
+		inVR = true;
+		log_info("  Success initializing WebXR Interface.");
+		emit_signal("signal_webxr_started")
+	else:
+		OS.alert("Failed to initialize WebXR Interface")
+		inVR = false;
+		emit_signal("signal_webxr_started");
+		
+# create two buttons and connect them to _webxr_initialize; this is required
+# for WebXR because initializing it on webpage load might fail
+func _webxr_create_entervr_buttons():
+	var enter_vr_button = Button.new();
+	var simulate_vr_button = Button.new();
+	
+	# the info label here is only for info during dev right now; it will be replaced
+	# in the future by something more generic
+	var info_label = Label.new();
+	info_label.text = "Godot Oculus Quest Toolkit Demo\n  " + toolkit_version + "\n";
+	
+	enter_vr_button.text = "Enter VR";
+	simulate_vr_button.text = "Simulator Only"
+
+	var vbox = VBoxContainer.new();
+	vbox.add_child(info_label);
+	vbox.add_child(enter_vr_button);
+	vbox.add_child(simulate_vr_button);
+	var centercontainer = CenterContainer.new();
+	centercontainer.theme = load("res://OQ_Toolkit/OQ_UI2D/theme/oq_ui2d_standard.theme")
+	centercontainer.rect_size = OS.get_real_window_size();
+	centercontainer.add_child(vbox);
+	get_tree().get_current_scene().add_child(centercontainer);
+
+	enter_vr_button.connect("pressed", self, "_webxr_initialize", [true]);
+	simulate_vr_button.connect("pressed", self, "_webxr_initialize", [false]);
+
+var arvr_ovr_mobile_interface = null;
+var arvr_oculus_interface = null;
+var arvr_open_vr_interface = null;
+var arvr_webxr_interface = null;
+var arvr_openxr_interface = null;
+
 func initialize(initialize_vr = true):
 	_init_vr_log();
 	
 	var available_interfaces = ARVRServer.get_interfaces();
 	
-	log_info("Initializing VR");
+	log_info("Initializing VR (Toolkit version %s)" % toolkit_version);
 	log_info("  Available Interfaces are %s: " % str(available_interfaces));
 	
 	inVR = false;
 	if (!initialize_vr): return true;
 	
-	var arvr_ovr_mobile_interface = null;
-	var arvr_oculus_interface = null;
-	var arvr_open_vr_interface = null;
 	for interface in available_interfaces:
 		match interface.name:
 			"OVRMobile":
@@ -723,8 +864,22 @@ func initialize(initialize_vr = true):
 				arvr_oculus_interface = ARVRServer.find_interface("Oculus");
 			"OpenVR":
 				arvr_open_vr_interface = ARVRServer.find_interface("OpenVR");
+			"WebXR":
+				arvr_webxr_interface = ARVRServer.find_interface("WebXR");
+			"OpenXR":
+				arvr_openxr_interface = ARVRServer.find_interface("OpenXR");
 	
-	if arvr_ovr_mobile_interface:
+	if arvr_openxr_interface:
+		log_info("  Found OpenXR Interface.");
+		if arvr_openxr_interface.initialize():
+			active_arvr_interface_name = "OpenVR"
+			get_viewport().arvr = true;
+			get_viewport().keep_3d_linear = false;
+			Engine.target_fps = 72 
+			OS.vsync_enabled = false;
+			inVR = true;
+			log_info("  Success initializing OpenXR Interface.");
+	elif arvr_ovr_mobile_interface:
 		log_info("  Found OVRMobile Interface.");
 		if arvr_ovr_mobile_interface.initialize():
 			active_arvr_interface_name = "OVRMobile";
@@ -735,6 +890,7 @@ func initialize(initialize_vr = true):
 			# this will initialize the default
 			_refresh_settings();
 			log_info("  Success initializing OVRMobile Interface.");
+			remap_controller_axis_and_buttons(VR_CONTROLLER_TYPE.OCULUS_TOUCH);
 			# TODO: set physics FPS here too instead of in the project settings
 			return true;
 	elif arvr_oculus_interface:
@@ -742,10 +898,14 @@ func initialize(initialize_vr = true):
 		if arvr_oculus_interface.initialize():
 			active_arvr_interface_name = "Oculus";
 			get_viewport().arvr = true;
-			Engine.target_fps = 80 # TODO: this is headset dependent (RiftS == 80)=> figure out how to get this info at runtime
+			# Oculus on PC appears to select the correct refresh rate automatically.
+			# Rift and Quest 2 via Link can handle 90 Hz, but Quest 1 via link and Rift S will run at 72 and 80 respectively.
+			# Setting this below 90 will cap Q2 and Rift to what ever that is set to which is not ideal.
+			Engine.target_fps = 90
 			OS.vsync_enabled = false;
 			inVR = true;
 			log_info("  Success initializing Oculus Interface.");
+			remap_controller_axis_and_buttons(VR_CONTROLLER_TYPE.OCULUS_TOUCH);
 	elif arvr_open_vr_interface:
 		log_info("  Found OpenVR Interface.");
 		if arvr_open_vr_interface.initialize():
@@ -756,8 +916,23 @@ func initialize(initialize_vr = true):
 			OS.vsync_enabled = false;
 			inVR = true;
 			log_info("  Success initializing OpenVR Interface.");
+	elif arvr_webxr_interface:
+		log_info("  Found WebXR Interface.");
+		active_arvr_interface_name = "WebXR"
+		arvr_webxr_interface.connect("session_supported", self, "_webxr_cb_session_supported")
+		arvr_webxr_interface.connect("session_started", self, "_webxr_cb_session_started")
+		arvr_webxr_interface.session_mode = 'immersive-vr'
+		arvr_webxr_interface.required_features = 'local-floor'
+		arvr_webxr_interface.optional_features = 'bounded-floor'
+		arvr_webxr_interface.requested_reference_space_types = 'bounded-floor, local-floor, local'
+		arvr_webxr_interface.is_session_supported("immersive-vr")
+		remap_controller_axis_and_buttons(VR_CONTROLLER_TYPE.WEBXR);
+		_webxr_create_entervr_buttons();
+
 	else:
 		inVR = false;
 		log_warning("No compatible ARVR Interface could be found.");
+		# Simulator uses Oculus Touch
+		remap_controller_axis_and_buttons(VR_CONTROLLER_TYPE.OCULUS_TOUCH);
 		return false;
 
