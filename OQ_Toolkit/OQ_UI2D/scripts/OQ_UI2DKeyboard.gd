@@ -1,9 +1,9 @@
 extends Spatial
 
 export var show_text_input := true;
-# if 'show_text_input' is enabled and this flag is set ture, then
+# if 'show_text_input' is enabled and this flag is set true, then
 # the text input box will aquire focus when then keyboard gains visibilty
-export var focus_on_visible := true;
+export var focus_on_visible := false;
 export var cancelable := true setget _set_cancelable
 # the minimum number of characters needed to be entered before the enter button
 # will be enabled
