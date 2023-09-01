@@ -243,7 +243,6 @@ __meta__ = {
 [node name="wipe_check" type="Timer" parent="."]
 wait_time = 5.0
 autostart = true
-
 [connection signal="toggled" from="cuttedBlocks" to="." method="_on_cuttedBlocks_toggled"]
 [connection signal="toggled" from="saber_tail" to="." method="_on_saber_tail_toggled"]
 [connection signal="value_changed" from="saber_thicknes" to="." method="_on_HSlider_value_changed"]
