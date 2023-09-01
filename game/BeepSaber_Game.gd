@@ -93,6 +93,7 @@ var _in_wall = false;
 
 var _right_notes = 0;
 var _wrong_notes = 0;
+var _full_combo = true;
 
 #settings
 var cube_cuts_falloff = true
@@ -150,6 +151,7 @@ func restart_map():
 	#set_percent_to_null
 	_right_notes = 0.0
 	_wrong_notes = 0.0
+	_full_combo = true;
 
 	_display_points();
 	$event_driver.update_colors()
@@ -334,6 +336,7 @@ func _on_song_ended():
 	song_player.stop();
 	PlayCount.increment_play_count(_current_info,_current_diff_rank)
 	
+	var new_record = false
 	var highscore = Highscores.get_highscore(_current_info,_current_diff_rank)
 	if highscore == null:
 		# no highscores exist yet
@@ -341,6 +344,7 @@ func _on_song_ended():
 	elif _current_points > highscore:
 		# player's score is the new highscore!
 		highscore = _current_points;
+		new_record = true
 
 	var current_percent = int((_right_notes/(_right_notes+_wrong_notes))*100)
 	$EndScore_canvas.ui_control.show_score(
@@ -351,7 +355,10 @@ func _on_song_ended():
 			_current_info["_songName"],
 			_current_info["_songAuthorName"],
 			menu._map_difficulty_name,
-			_current_info["_levelAuthorName"]])
+			_current_info["_levelAuthorName"]],
+		_full_combo,
+		new_record
+		)
 	
 	if Highscores.is_new_highscore(_current_info,_current_diff_rank,_current_points):
 		_transition_game_state(GameState.NewHighscore)
@@ -715,7 +722,8 @@ func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distanc
 func _reset_combo():
 	_current_multiplier = 1;
 	_current_combo = 0;
-	_wrong_notes += 1.0
+	_wrong_notes += 1.0;
+	_full_combo = false;
 	_display_points();
 	
 func _clear_track():
@@ -758,7 +766,8 @@ func _update_points_from_cut(saber, cube, beat_accuracy, cut_angle_accuracy, cut
 #	print(points)
 	$Points_label_driver.show_points(cube.transform.origin,points)
 	# track acurracy percent
-	var normalized_points = clamp(points/100, 0.0, 1.0);
+	var normalized_points = clamp(points/80, 0.0, 1.0);
+#	var normalized_points = clamp(points/100, 0.0, 1.0);
 #	print(normalized_points)
 	_right_notes += normalized_points;
 	_wrong_notes += 1.0-normalized_points;

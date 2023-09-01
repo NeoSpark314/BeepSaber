@@ -5,9 +5,14 @@ var animated_percent = 0
 signal repeat()
 signal goto_mainmenu()
 
-func show_score(score,record,percent,song_string=""):
+func show_score(score,record,percent,song_string="",is_full_combo=false,is_new_record=false):
 	$details.modulate = Color(1,1,1,0)
 	$char.modulate = Color(1,1,1,0)
+	$full_combo_label.modulate = Color(1,1,1,0)
+	$new_record_label.modulate = Color(1,1,1,0)
+	
+	$full_combo_label.visible = is_full_combo
+	$new_record_label.visible = is_new_record
 	
 	$name.text = song_string
 	
@@ -15,7 +20,7 @@ func show_score(score,record,percent,song_string=""):
 	
 	var letter_score = "N"
 	if percent >= 98:
-		letter_score = "S"
+		letter_score = "[rainbow freq=0.5 sat=0.7 val=2]S"
 	elif percent >= 90:
 		letter_score = "A"
 	elif percent >= 80:
@@ -29,7 +34,7 @@ func show_score(score,record,percent,song_string=""):
 	else:
 		letter_score = "F"
 	
-	$char.text = letter_score
+	$char.bbcode_text = "[center]"+letter_score
 	
 	$Tween.interpolate_property(self,"animated_percent",0,percent,3,Tween.TRANS_QUAD,Tween.EASE_OUT)
 	$Tween.start()
@@ -47,6 +52,8 @@ func _on_Tween_tween_completed(object, key):
 		$pi/percent_indicator.set_percent(animated_percent,true)
 		$Tween.interpolate_property($details,"modulate",Color(1,1,1,0),Color(1,1,1,1),2,Tween.TRANS_QUAD,Tween.TRANS_LINEAR)
 		$Tween.interpolate_property($char,"modulate",Color(1,1,1,0),Color(1,1,1,1),2,Tween.TRANS_QUAD,Tween.TRANS_LINEAR)
+		$Tween.interpolate_property($full_combo_label,"modulate",Color(1,1,1,0),Color(1,1,1,1),2,Tween.TRANS_QUAD,Tween.TRANS_LINEAR)
+		$Tween.interpolate_property($new_record_label,"modulate",Color(1,1,1,0),Color(1,1,1,1),2,Tween.TRANS_QUAD,Tween.TRANS_LINEAR)
 		$Tween.start()
 
 
